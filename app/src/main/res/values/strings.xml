@@ -3,4 +3,7 @@
     <string name="log_in">Log In</string>
     <string name="enter_username">Enter Username</string>
     <string name="enter_password">enter password</string>
+    <string name="submit">Submit</string>
+    <string name="create_password">create password</string>
+    <string name="create_username">create username</string>
 </resources>
