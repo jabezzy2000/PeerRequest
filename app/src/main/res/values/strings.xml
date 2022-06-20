@@ -6,4 +6,5 @@
     <string name="submit">Submit</string>
     <string name="create_password">create password</string>
     <string name="create_username">create username</string>
+    <string name="home">Home</string>
 </resources>
