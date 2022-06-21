@@ -10,6 +10,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.fragments.InProgress;
+import com.example.peerrequest.fragments.ProfileFragment;
+import com.example.peerrequest.fragments.SearchFragment;
+import com.example.peerrequest.fragments.TimelineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -26,27 +30,27 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment fragment;
+                Fragment fragment = null;
                 switch (menuItem.getItemId()) {
                     case R.id.action_Profile:
-//                        fragment = fragment1;
+                      fragment = new ProfileFragment();
                         Toast.makeText(MainActivity.this, "profile clicked", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_In_Progress:
-//                        fragment = fragment2;
+                        fragment = new InProgress();
                         Toast.makeText(MainActivity.this, "in progress", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_Search:
-//                        fragment = fragment3;
+                        fragment = new SearchFragment();
                         Toast.makeText(MainActivity.this, "search", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_Home:
                     default:
                         Toast.makeText(MainActivity.this, "home", Toast.LENGTH_SHORT).show();
-//                        fragment = fragment4;
+                        fragment = new TimelineFragment();
                         break;
                 }
-//                fragmentManager.beginTransaction().replace(R.id.rlContainer, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
                 return true;
             }
         });
