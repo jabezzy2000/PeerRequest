@@ -36,6 +36,9 @@ WIREFRAMES:
 ![](https://i.imgur.com/bcFepF9.jpg)
 ![](https://i.imgur.com/MIn15jk.jpg)
 
+![IMG_5370](https://user-images.githubusercontent.com/90366540/174722719-58c721ee-07b4-4e66-9a78-269862100776.JPG)
+
+
 
 **USER CLASS**
 
@@ -91,9 +94,7 @@ Visuals and interactions: 1. Gesture: Implement pinch to zoom in and out of maps
                           2. Uses External Library Glide
                           3. Implements basic fade in/out transitions
                           4. Might use GIF as visual eye catcher on splash screen
-                          
-Milestones: 
-1. Develop Sign up/log in page. Integrate app with parse and allow for successful log ins. Develop home page/fragment with timeline and map toggle, add task button. Develop profile page
-2. Successfully implement map page ( from toggle) ande in progress page( logic: If User== currentUser and taskcompleted = no, display )
-3. Implement search feature and filters in search fragment. Implement drawable animations where possible and implement pinch feature for map
-            
+
+
+MVP:
+Users should be able to Sign up, log in and Log out. In addition to these, Users must be able to view listed tasks in the home timeline, add tasks, request to complete tasks and mark tasks as completed.
