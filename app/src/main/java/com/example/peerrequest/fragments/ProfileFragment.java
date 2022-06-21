@@ -1,5 +1,6 @@
 package com.example.peerrequest.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,16 +10,21 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.activities.LoginActivity;
+import com.example.peerrequest.activities.MainActivity;
+import com.parse.ParseUser;
 
 public class ProfileFragment extends Fragment {
 
     TextView Name;
     TextView Rating;
     ImageView ProfileImage;
+    ImageButton LogOut;
 
 
     public ProfileFragment() {
@@ -49,5 +55,21 @@ public class ProfileFragment extends Fragment {
         Name = view.findViewById(R.id.tvName);
         Rating = view.findViewById(R.id.tvRating);
         ProfileImage = view.findViewById(R.id.ivProfileImage);
+        LogOut = view.findViewById(R.id.ibLogOut);
+        
+        LogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+    }
+
+    private void logout() { //defining method to logout
+        ParseUser.logOut();
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
+
     }
 }

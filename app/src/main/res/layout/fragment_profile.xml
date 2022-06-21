@@ -41,4 +41,14 @@
         android:text="Rating"
         tools:text="Rating" />
 
+    <ImageButton
+        android:id="@+id/ibLogOut"
+        android:layout_width="31dp"
+        android:layout_height="22dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="92dp"
+        android:layout_marginEnd="30dp"
+        android:src="@drawable/ic_exit" />
+
 </RelativeLayout>
