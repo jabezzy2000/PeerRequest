@@ -18,7 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
-   BottomNavigationView bottomNavigationView;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragment = null;
                 switch (menuItem.getItemId()) {
                     case R.id.action_Profile:
-                      fragment = new ProfileFragment();
+                        fragment = new ProfileFragment();
                         Toast.makeText(MainActivity.this, "profile clicked", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_In_Progress:
@@ -54,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        };
-
-
     }
+
+    ;
+
+
+}

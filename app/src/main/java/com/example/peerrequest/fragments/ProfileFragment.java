@@ -56,7 +56,7 @@ public class ProfileFragment extends Fragment {
         Rating = view.findViewById(R.id.tvRating);
         ProfileImage = view.findViewById(R.id.ivProfileImage);
         LogOut = view.findViewById(R.id.ibLogOut);
-        
+
         LogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
