@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.LoginActivity;
-import com.example.peerrequest.activities.MainActivity;
 import com.parse.ParseUser;
 
 public class ProfileFragment extends Fragment {

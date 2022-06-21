@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R  .layout.activity_login);
+        setContentView(R.layout.activity_login);
         btnLogin = findViewById(R.id.btnLogIn);
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
@@ -47,22 +47,23 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("test", "Button clicked");
-                Toast.makeText(LoginActivity.this,"Button was clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Button was clicked", Toast.LENGTH_SHORT).show();
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
-                loginUser(username,password); // from method login defined below
+                loginUser(username, password); // from method login defined below
             }
         });
     }
 
-    private void loginUser(String username, String password) {        Log.i(TAG, "loginUser: Attempting to login user " + username);
+    private void loginUser(String username, String password) {
+        Log.i(TAG, "loginUser: Attempting to login user " + username);
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
-                Log.d(TAG, "Edey work for here");
-                if( e != null) {
-                    Log.e(TAG, "error: It doesn't work here", e );
-                    Toast.makeText(LoginActivity.this,"failure", Toast.LENGTH_SHORT).show();;
+                if (e != null) {
+                    Log.e(TAG, "error: It doesn't work here", e);
+                    Toast.makeText(LoginActivity.this, "failure", Toast.LENGTH_SHORT).show();
+                    ;
                     return;
                 }
                 Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
