@@ -36,7 +36,7 @@ public class TimelineFragment extends Fragment {
     public AlertDialog.Builder dialogBuilder;
     public AlertDialog dialog;
     public EditText popupTaskTitle;
-    public  EditText popupTaskDescription;
+    public EditText popupTaskDescription;
     public Button popupSave, popupCancel;
     FloatingActionButton addTasks;
     RecyclerView recyclerView;
@@ -104,7 +104,7 @@ public class TimelineFragment extends Fragment {
     private void addNewTask() {
     }
 
-    private void createNewContactDialog(){ // did this
+    private void createNewContactDialog() {
         dialogBuilder = new AlertDialog.Builder(getContext());
         final View popup = getLayoutInflater().inflate(R.layout.popup, null);
         dialogBuilder.setView(popup);
