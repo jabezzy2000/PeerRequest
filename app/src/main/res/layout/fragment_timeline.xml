@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.TimelineFragment">
+
+    <Button
+        android:id="@+id/btnList"
+        android:layout_width="42dp"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@+id/btnMaps"
+        android:adjustViewBounds='true'
+        android:background="@drawable/ic_list"
+        android:scaleType="centerInside"
+        android:text="@string/button" />
+
+    <Button
+        android:id="@+id/btnMaps"
+        android:layout_width="36dp"
+        android:layout_height="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="9dp"
+        android:adjustViewBounds='true'
+        android:background="@drawable/ic_map"
+        android:scaleType="centerInside"
+        android:text="Button" />
+
+    <ImageView
+        android:id="@+id/ivProfileImageHome"
+        android:layout_width="63dp"
+        android:layout_height="63dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-3dp"
+        android:layout_marginTop="-1dp"
+        android:contentDescription="@string/profileimage"
+        tools:src="@tools:sample/avatars" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvHomeTimeline"
+        android:layout_width="match_parent"
+        android:layout_height="583dp"
+        android:layout_below="@+id/ivProfileImageHome"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="-3dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="2dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddButton"
+        android:layout_width="56dp"
+        android:layout_height="57dp"
+        android:layout_below="@+id/rvHomeTimeline"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="351dp"
+        android:layout_marginTop="-1dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="-1dp"
+        android:background="@drawable/ic_add"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_add" />
+
+</RelativeLayout>
