@@ -24,6 +24,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,7 @@ public class TimelineFragment extends Fragment {
     FloatingActionButton addTasks;
     RecyclerView recyclerView;
     protected List<Task> allTasks;
-    String TAG = "tag";
+    String TAG = "TImelineFragment";
     String SUCCESS = "task successful";
     String ERROR = "task unsuccessful";
 
@@ -88,17 +90,15 @@ public class TimelineFragment extends Fragment {
         listToggle = view.findViewById(R.id.btnList);
         mapToggle = view.findViewById(R.id.btnMaps);
         addTasks = view.findViewById(R.id.fabAddButton);
-        popupTaskTitle = view.findViewById(R.id.taskTitle);
-        popupTaskDescription = view.findViewById(R.id.taskDescription);
-        popupSave = view.findViewById(R.id.btnOk);
-        popupCancel = view.findViewById(R.id.btnCancel);
         addTasks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createNewContactDialog();
             }
+
         });
         queryTasks();
+
     }
 
     private void addNewTask() {
@@ -107,8 +107,40 @@ public class TimelineFragment extends Fragment {
     private void createNewContactDialog() {
         dialogBuilder = new AlertDialog.Builder(getContext());
         final View popup = getLayoutInflater().inflate(R.layout.popup, null);
+        popupTaskTitle = popup.findViewById(R.id.taskTitle);
+        popupTaskDescription = popup.findViewById(R.id.taskDescription);
+        popupSave = popup.findViewById(R.id.btnOk);
+        popupCancel = popup.findViewById(R.id.btnCancel);
         dialogBuilder.setView(popup);
         dialog = dialogBuilder.create();
         dialog.show();
+        popupSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = popupTaskTitle.getText().toString();
+                String description = popupTaskDescription.getText().toString();
+                Task task = new Task();
+                task.setUser(ParseUser.getCurrentUser());
+                task.setTaskTitle(title);
+                task.setDescription(description);
+                task.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e!=null) {
+                            Log.e(TAG,e.getMessage());
+                        }
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
+
+        popupCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
+
 }

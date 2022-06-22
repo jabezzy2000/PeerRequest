@@ -38,7 +38,7 @@ public class Task extends ParseObject {
         return getParseUser(KEY_USER);
     }
 
-    public void setUser(User user) {
+    public void setUser(ParseUser user) { //changed User to ParseUser for reference
         put(KEY_USER, user);
     }
 
