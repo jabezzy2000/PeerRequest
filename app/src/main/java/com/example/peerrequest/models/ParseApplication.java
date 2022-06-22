@@ -1,8 +1,9 @@
-package com.example.peerrequest;
+package com.example.peerrequest.models;
 
 import android.app.Application;
 
 import com.example.peerrequest.models.Task;
+import com.example.peerrequest.models.User;
 import com.parse.Parse;
 import com.parse.ParseUser;
 

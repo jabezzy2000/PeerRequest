@@ -15,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.activities.MainActivity;
 import com.example.peerrequest.adapters.TaskAdapter;
 import com.example.peerrequest.models.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,8 +35,7 @@ import java.util.List;
 public class TimelineFragment extends Fragment {
     protected TaskAdapter adapter;
     ImageView profileImage;
-    Button listToggle;
-    Button mapToggle;
+    private int limit = 10;
     public AlertDialog.Builder dialogBuilder;
     public AlertDialog dialog;
     public EditText popupTaskTitle;
@@ -42,13 +43,16 @@ public class TimelineFragment extends Fragment {
     public Button popupSave, popupCancel;
     FloatingActionButton addTasks;
     RecyclerView recyclerView;
+    public ImageButton mapButton;
     protected List<Task> allTasks;
     String TAG = "TImelineFragment";
     String SUCCESS = "task successful";
     String ERROR = "task unsuccessful";
+    private MainActivity mainActivity;
 
-    public TimelineFragment() {
+    public TimelineFragment(MainActivity mainActivity) {
         // Required empty public constructor
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -61,7 +65,7 @@ public class TimelineFragment extends Fragment {
     private void queryTasks() {
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
         query.include(Task.KEY_USER);
-        query.setLimit(20);
+        query.setLimit(limit);
         query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Task>() {
             @Override
@@ -87,9 +91,8 @@ public class TimelineFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         profileImage = view.findViewById(R.id.ivProfileImage);
-        listToggle = view.findViewById(R.id.btnList);
-        mapToggle = view.findViewById(R.id.btnMaps);
         addTasks = view.findViewById(R.id.fabAddButton);
+        mapButton = view.findViewById(R.id.ibMap);
         addTasks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +100,15 @@ public class TimelineFragment extends Fragment {
             }
 
         });
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.changetoMapFragment();
+            }
+        });
+
         queryTasks();
+
 
     }
 
@@ -126,8 +137,8 @@ public class TimelineFragment extends Fragment {
                 task.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        if(e!=null) {
-                            Log.e(TAG,e.getMessage());
+                        if (e != null) {
+                            Log.e(TAG, e.getMessage());
                         }
                     }
                 });
