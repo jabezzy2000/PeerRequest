@@ -1,4 +1,4 @@
-package com.example.peerrequest;
+package com.example.peerrequest.models;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.peerrequest.R;
 import com.parse.ParseException;
 import com.parse.SignUpCallback;
 
@@ -43,7 +44,7 @@ public class SignUp extends AppCompatActivity {
                         if (e == null) {
                             //navigate to timeline
                         } else {
-                            Toast.makeText(SignUp.this,"Something went wrong",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUp.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                             // Sign up didn't succeed.
                         }
                     }

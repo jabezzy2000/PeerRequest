@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".ParseApplication"
+        android:name=".models.ParseApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -21,7 +21,7 @@
             android:name=".ItemTask"
             android:exported="false" />
         <activity
-            android:name=".SignUp"
+            android:name=".models.SignUp"
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"

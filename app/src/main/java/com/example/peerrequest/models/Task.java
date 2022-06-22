@@ -1,6 +1,5 @@
 package com.example.peerrequest.models;
 
-import com.example.peerrequest.User;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -38,7 +37,7 @@ public class Task extends ParseObject {
         return getParseUser(KEY_USER);
     }
 
-    public void setUser(ParseUser user) { //changed User to ParseUser for reference
+    public void setUser(ParseUser user) {
         put(KEY_USER, user);
     }
 

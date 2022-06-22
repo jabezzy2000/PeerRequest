@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.peerrequest.R;
-import com.example.peerrequest.SignUp;
+import com.example.peerrequest.models.SignUp;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;

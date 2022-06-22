@@ -1,4 +1,4 @@
-package com.example.peerrequest;
+package com.example.peerrequest.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
