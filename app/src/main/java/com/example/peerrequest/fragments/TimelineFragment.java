@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,10 +13,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.peerrequest.R;
 import com.example.peerrequest.adapters.TaskAdapter;
 import com.example.peerrequest.models.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -25,6 +30,15 @@ import java.util.List;
 
 public class TimelineFragment extends Fragment {
     protected TaskAdapter adapter;
+    ImageView profileImage;
+    Button listToggle;
+    Button mapToggle;
+    public AlertDialog.Builder dialogBuilder;
+    public AlertDialog dialog;
+    public EditText popupTaskTitle;
+    public  EditText popupTaskDescription;
+    public Button popupSave, popupCancel;
+    FloatingActionButton addTasks;
     RecyclerView recyclerView;
     protected List<Task> allTasks;
     String TAG = "tag";
@@ -70,6 +84,31 @@ public class TimelineFragment extends Fragment {
         adapter = new TaskAdapter(getContext(), allTasks);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        profileImage = view.findViewById(R.id.ivProfileImage);
+        listToggle = view.findViewById(R.id.btnList);
+        mapToggle = view.findViewById(R.id.btnMaps);
+        addTasks = view.findViewById(R.id.fabAddButton);
+        popupTaskTitle = view.findViewById(R.id.taskTitle);
+        popupTaskDescription = view.findViewById(R.id.taskDescription);
+        popupSave = view.findViewById(R.id.btnOk);
+        popupCancel = view.findViewById(R.id.btnCancel);
+        addTasks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewContactDialog();
+            }
+        });
         queryTasks();
+    }
+
+    private void addNewTask() {
+    }
+
+    private void createNewContactDialog(){ // did this
+        dialogBuilder = new AlertDialog.Builder(getContext());
+        final View popup = getLayoutInflater().inflate(R.layout.popup, null);
+        dialogBuilder.setView(popup);
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 }
