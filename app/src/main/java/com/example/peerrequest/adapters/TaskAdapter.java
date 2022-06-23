@@ -19,7 +19,6 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
-    //    private final Context context;
     private final List<Task> tasks;
 
     public TaskAdapter(Context context, List<Task> tasks) {
