@@ -9,6 +9,7 @@ import com.parse.ParseUser;
 
 public class User extends ParseUser {
     public static final String KEY_PROFILE_IMAGE = "profile_image";
+    public static final String KEY_USER_RATING = "UserRating";
 
     public ParseFile getProfileImage() {
         return getParseFile(KEY_PROFILE_IMAGE);
@@ -17,5 +18,15 @@ public class User extends ParseUser {
     public void setProfileImage(ParseFile image) {
         put(KEY_PROFILE_IMAGE, image);
     }
+
+    public String getUserRating() {
+        return getString(KEY_USER_RATING);
+    }
+
+    public void setKeyRating(String rating) {
+        put(KEY_USER_RATING, rating);
+    }
+
+
 }
 

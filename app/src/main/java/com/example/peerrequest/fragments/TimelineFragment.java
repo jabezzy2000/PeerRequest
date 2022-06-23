@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TimelineFragment extends Fragment {
-    protected TaskAdapter adapter;
+    protected TaskAdapter taskAdapter;
     ImageView profileImage;
     private int limit = 10;
     public AlertDialog.Builder dialogBuilder;
@@ -62,7 +62,7 @@ public class TimelineFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_timeline, container, false);
     }
 
-    private void queryTasks() {
+    private void queryTasks() { //specifying data I want to query
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
         query.include(Task.KEY_USER);
         query.setLimit(limit);
@@ -75,7 +75,7 @@ public class TimelineFragment extends Fragment {
                 } else {
                     Log.i(TAG, SUCCESS);
                     allTasks.addAll(tasks);
-                    adapter.notifyDataSetChanged();
+                    taskAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -84,11 +84,10 @@ public class TimelineFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView = view.findViewById(R.id.rvHomeTimeline);
         allTasks = new ArrayList<>();
-        adapter = new TaskAdapter(getContext(), allTasks);
-        recyclerView.setAdapter(adapter);
+        taskAdapter = new TaskAdapter(getContext(), allTasks);
+        recyclerView.setAdapter(taskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         profileImage = view.findViewById(R.id.ivProfileImage);
         addTasks = view.findViewById(R.id.fabAddButton);
