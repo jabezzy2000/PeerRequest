@@ -20,13 +20,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.peerrequest.MapsActivity;
+import com.example.peerrequest.activities.MapsActivity;
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.MainActivity;
-import com.example.peerrequest.adapters.ProfileAdapter;
 import com.example.peerrequest.adapters.TaskAdapter;
 import com.example.peerrequest.models.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
