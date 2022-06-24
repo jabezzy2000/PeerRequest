@@ -50,6 +50,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
 
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView ivProfilePicture;
         TextView tvUsername;
@@ -64,6 +65,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             tvTime = itemView.findViewById(R.id.tvTime);
             tvTaskTitle = itemView.findViewById(R.id.tvTaskTitile);
             tvTaskDescription = itemView.findViewById(R.id.tvTaskDescription);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Task task) {
@@ -81,15 +83,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         @Override
         public void onClick(View view) { // gets position, opens a new activity for the detail
-//            int position = getAdapterPosition();
-//            if(position != RecyclerView.NO_POSITION){
-//                Task task = tasks.get(position);
-//                Intent intent = new Intent (, TaskDetailActivity.class);
-//                intent.putExtra(Task.class.getSimpleName(), Parcels.wrap(task));
-//                    Come back to this
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                Task task = tasks.get(position);
+                Intent intent = new Intent(view.getContext(), TaskDetailActivity.class);
+                intent.putExtra(Task.class.getSimpleName(), Parcels.wrap(task));
+                view.getContext().startActivity(intent);
+
+            }
         }
-    }
-}
+    }}
+
 
 
 

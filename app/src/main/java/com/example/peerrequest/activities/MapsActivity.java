@@ -1,9 +1,10 @@
-package com.example.peerrequest;
+package com.example.peerrequest.activities;
 
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 
+import com.example.peerrequest.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
