@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.TaskDetailActivity">
+
+    <ImageView
+        android:id="@+id/ivTaskDetailProfilePicture"
+        android:layout_width="99dp"
+        android:layout_height="74dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="12dp"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvTaskDetailName"
+        android:layout_width="wrap_content"
+        android:layout_height="31dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="23dp"
+        android:text="@string/jabez_agyemang_p" />
+
+    <TextView
+        android:id="@+id/tvTaskDetailRating"
+        android:layout_width="82dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="89dp"
+        android:layout_marginEnd="17dp"
+        android:text="5.00" />
+
+    <TextView
+        android:id="@+id/tvTaskDetailTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="181dp"
+        tools:text="Pick-Up Groceries At 1011 Ave" />
+
+    <TextView
+        android:id="@+id/tvTaskDetailDescription"
+        android:layout_width="match_parent"
+        android:layout_height="109dp"
+        android:layout_below="@+id/tvTaskDetailTitle"
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="5dp"
+        android:text="Hello, I'd love for someone to pickup some of my groceries form ...... and drop them off near the bus stop at the dexter office. IM willing to offer 20$" />
+
+    <ImageButton
+        android:id="@+id/ibTaskDetailEditBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTaskDetailDescription"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="27dp"
+        android:src="@drawable/ic_edit"
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+    <ImageButton
+        android:id="@+id/ibTaskDetailRequestBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTaskDetailDescription"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="19dp"
+        android:src="@drawable/request"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+</RelativeLayout>
+

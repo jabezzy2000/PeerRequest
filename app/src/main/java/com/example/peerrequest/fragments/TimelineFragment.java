@@ -20,6 +20,7 @@ import android.widget.ImageView;
 
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.MainActivity;
+import com.example.peerrequest.adapters.ProfileAdapter;
 import com.example.peerrequest.adapters.TaskAdapter;
 import com.example.peerrequest.models.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -45,7 +46,7 @@ public class TimelineFragment extends Fragment {
     RecyclerView recyclerView;
     public ImageButton mapButton;
     protected List<Task> allTasks;
-    String TAG = "TImelineFragment";
+    String TAG = "TimelineFragment";
     String SUCCESS = "task successful";
     String ERROR = "task unsuccessful";
     private MainActivity mainActivity;
@@ -54,6 +55,7 @@ public class TimelineFragment extends Fragment {
         // Required empty public constructor
         this.mainActivity = mainActivity;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,11 +112,11 @@ public class TimelineFragment extends Fragment {
 
 
     }
+//
+//    private void addNewTask() {
+//    }
 
-    private void addNewTask() {
-    }
-
-    private void createNewContactDialog() {
+    public void createNewContactDialog() {
         dialogBuilder = new AlertDialog.Builder(getContext());
         final View popup = getLayoutInflater().inflate(R.layout.popup, null);
         popupTaskTitle = popup.findViewById(R.id.taskTitle);
