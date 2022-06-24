@@ -1,10 +1,12 @@
 package com.example.peerrequest.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,20 +31,27 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileFragment extends Fragment {
+    ProfileAdapter profileAdapter;
 
     TextView Name;
     TextView Rating;
+    public AlertDialog.Builder dialogBuilder;
+    public AlertDialog dialog;
+    public EditText popupTaskTitle;
+    public EditText popupTaskDescription;
+    public Button popupSave, popupCancel;
     ImageView ProfileImage;
     ImageButton LogOut;
     private int limit = 10;
     protected List<Task> allTasks;
     RecyclerView recyclerView;
-    protected ProfileAdapter profileAdapter;
+//    protected ProfileAdapter profileAdapter;
     String TAG = "TImelineFragment";
     String SUCCESS = "task successful";
     String ERROR = "task unsuccessful";
@@ -49,6 +60,7 @@ public class ProfileFragment extends Fragment {
     public ProfileFragment() {
         // Required empty public constructor
     }
+
 
     private void queryTasks() { //specifying data I want to query
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
@@ -101,10 +113,12 @@ public class ProfileFragment extends Fragment {
                 logout();
             }
         });
+
         Name.setText(User.getCurrentUser().getUsername());
         queryTasks();
 
     }
+
 
     private void logout() { //defining method to logout
         ParseUser.logOut();

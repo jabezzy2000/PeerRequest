@@ -6,13 +6,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.peerrequest.R;
 import com.example.peerrequest.fragments.InProgress;
-import com.example.peerrequest.fragments.MapsFragment;
 import com.example.peerrequest.fragments.ProfileFragment;
 import com.example.peerrequest.fragments.SearchFragment;
 import com.example.peerrequest.fragments.TimelineFragment;
@@ -23,11 +23,6 @@ public class MainActivity extends AppCompatActivity {
     public final FragmentManager fragmentManager = getSupportFragmentManager();
     Fragment fragment;
     BottomNavigationView bottomNavigationView;
-
-    public void changetoMapFragment() {
-        fragment = new MapsFragment();
-        fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +58,5 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
 }

@@ -1,5 +1,6 @@
 package com.example.peerrequest.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,9 +18,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.peerrequest.MapsActivity;
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.MainActivity;
+import com.example.peerrequest.adapters.ProfileAdapter;
 import com.example.peerrequest.adapters.TaskAdapter;
 import com.example.peerrequest.models.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -41,11 +45,11 @@ public class TimelineFragment extends Fragment {
     public EditText popupTaskTitle;
     public EditText popupTaskDescription;
     public Button popupSave, popupCancel;
-    FloatingActionButton addTasks;
+    ImageButton addTasks;
     RecyclerView recyclerView;
     public ImageButton mapButton;
     protected List<Task> allTasks;
-    String TAG = "TImelineFragment";
+    String TAG = "TimelineFragment";
     String SUCCESS = "task successful";
     String ERROR = "task unsuccessful";
     private MainActivity mainActivity;
@@ -54,6 +58,7 @@ public class TimelineFragment extends Fragment {
         // Required empty public constructor
         this.mainActivity = mainActivity;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,19 +95,19 @@ public class TimelineFragment extends Fragment {
         recyclerView.setAdapter(taskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         profileImage = view.findViewById(R.id.ivProfileImage);
-        addTasks = view.findViewById(R.id.fabAddButton);
+        addTasks = view.findViewById(R.id.fabAddTask);
         mapButton = view.findViewById(R.id.ibMap);
         addTasks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(mainActivity, "button clicked", Toast.LENGTH_SHORT).show();
                 createNewContactDialog();
             }
-
         });
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.changetoMapFragment();
+                changeToMapActivity();
             }
         });
 
@@ -111,10 +116,15 @@ public class TimelineFragment extends Fragment {
 
     }
 
-    private void addNewTask() {
+    private void changeToMapActivity() {
+        Intent intent = new Intent(getActivity(), MapsActivity.class);
+        startActivity(intent);
     }
+//
+//    private void addNewTask() {
+//    }
 
-    private void createNewContactDialog() {
+    public void createNewContactDialog() {
         dialogBuilder = new AlertDialog.Builder(getContext());
         final View popup = getLayoutInflater().inflate(R.layout.popup, null);
         popupTaskTitle = popup.findViewById(R.id.taskTitle);

@@ -4,6 +4,9 @@ import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import org.parceler.Parcel;
+
+//@Parcel
 @ParseClassName("Tasks")
 public class Task extends ParseObject {
     public static final String KEY_USER = "UserPointer";
