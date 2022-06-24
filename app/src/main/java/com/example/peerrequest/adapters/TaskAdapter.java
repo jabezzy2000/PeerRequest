@@ -26,7 +26,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     Fragment fragment;
 
 
-
     public TaskAdapter(Context context, List<Task> tasks) {
 //        this.context = context;
         this.tasks = tasks;
@@ -81,15 +80,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
 
         @Override
-        public void onClick(View view) {
+        public void onClick(View view) { // gets position, opens a new activity for the detail
 //            int position = getAdapterPosition();
 //            if(position != RecyclerView.NO_POSITION){
 //                Task task = tasks.get(position);
 //                Intent intent = new Intent (, TaskDetailActivity.class);
 //                intent.putExtra(Task.class.getSimpleName(), Parcels.wrap(task));
 //                    Come back to this
-               }}
+        }
     }
+}
 
 
 

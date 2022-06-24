@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.MainActivity;
@@ -42,7 +43,7 @@ public class TimelineFragment extends Fragment {
     public EditText popupTaskTitle;
     public EditText popupTaskDescription;
     public Button popupSave, popupCancel;
-    FloatingActionButton addTasks;
+    ImageButton addTasks;
     RecyclerView recyclerView;
     public ImageButton mapButton;
     protected List<Task> allTasks;
@@ -92,14 +93,14 @@ public class TimelineFragment extends Fragment {
         recyclerView.setAdapter(taskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         profileImage = view.findViewById(R.id.ivProfileImage);
-        addTasks = view.findViewById(R.id.fabAddButton);
+        addTasks = view.findViewById(R.id.fabAddTask);
         mapButton = view.findViewById(R.id.ibMap);
         addTasks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(mainActivity, "button clicked", Toast.LENGTH_SHORT).show();
                 createNewContactDialog();
             }
-
         });
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
