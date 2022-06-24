@@ -1,5 +1,6 @@
 package com.example.peerrequest.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.peerrequest.MapsActivity;
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.MainActivity;
 import com.example.peerrequest.adapters.ProfileAdapter;
@@ -105,13 +107,18 @@ public class TimelineFragment extends Fragment {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mainActivity.changetoMapFragment();
+                changeToMapActivity();
             }
         });
 
         queryTasks();
 
 
+    }
+
+    private void changeToMapActivity() {
+        Intent intent = new Intent(getActivity(), MapsActivity.class);
+        startActivity(intent);
     }
 //
 //    private void addNewTask() {

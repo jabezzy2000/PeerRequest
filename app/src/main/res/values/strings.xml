@@ -17,4 +17,5 @@
     <string name="profileimage">profileimage</string>
     <string name="edit_task">Edit Task</string>
     <string name="title_description">Title: Description</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
