@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsFragment extends Fragment {
 
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
