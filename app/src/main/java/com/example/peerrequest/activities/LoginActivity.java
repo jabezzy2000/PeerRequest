@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.peerrequest.R;
-import com.example.peerrequest.models.SignUp;
+import com.example.peerrequest.models.SignUpActivity;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -31,13 +31,10 @@ public class LoginActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnSignUp = findViewById(R.id.btnSignUp);
-
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(LoginActivity.this, "Sign up button was clicked", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, SignUp.class);
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });
@@ -47,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i("test", "Button clicked");
-                Toast.makeText(LoginActivity.this, "Button was clicked", Toast.LENGTH_SHORT).show();
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
                 loginUser(username, password); // from method login defined below
@@ -61,12 +57,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, "error: It doesn't work here", e);
-                    Toast.makeText(LoginActivity.this, "failure", Toast.LENGTH_SHORT).show();
-                    ;
                     return;
                 }
-                Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
                 goMainActivity();
             }
         });

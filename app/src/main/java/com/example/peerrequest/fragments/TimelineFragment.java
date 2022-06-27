@@ -48,8 +48,8 @@ public class TimelineFragment extends Fragment {
     public ImageButton mapButton;
     protected List<Task> allTasks;
     String TAG = "TimelineFragment";
-    String SUCCESS = "task successful";
-    String ERROR = "task unsuccessful";
+    String SUCCESS = "Task Successful";
+    String ERROR = "Task Unsuccessful";
     private MainActivity mainActivity;
 
     public TimelineFragment(MainActivity mainActivity) {
@@ -98,7 +98,6 @@ public class TimelineFragment extends Fragment {
         addTasks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mainActivity, "button clicked", Toast.LENGTH_SHORT).show();
                 createNewContactDialog();
             }
         });
@@ -108,19 +107,13 @@ public class TimelineFragment extends Fragment {
                 changeToMapActivity();
             }
         });
-
         queryTasks();
-
-
     }
 
     private void changeToMapActivity() {
         Intent intent = new Intent(getActivity(), MapsActivity.class);
         startActivity(intent);
     }
-//
-//    private void addNewTask() {
-//    }
 
     public void createNewContactDialog() {
         dialogBuilder = new AlertDialog.Builder(getContext());

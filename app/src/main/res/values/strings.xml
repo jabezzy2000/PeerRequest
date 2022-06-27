@@ -2,10 +2,10 @@
     <string name="app_name">PeerRequest</string>
     <string name="log_in">Log In</string>
     <string name="enter_username">Enter Username</string>
-    <string name="enter_password">enter password</string>
+    <string name="Enter_Password">Enter Password</string>
     <string name="submit">Submit</string>
-    <string name="create_password">create password</string>
-    <string name="create_username">create username</string>
+    <string name="create_password">Create Password</string>
+    <string name="create_username">Create Username</string>
     <string name="home">Home</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

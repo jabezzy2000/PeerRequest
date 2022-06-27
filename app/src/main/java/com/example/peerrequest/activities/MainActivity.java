@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem fragmentNavigation) {
 
-                switch (menuItem.getItemId()) {
+                switch (fragmentNavigation.getItemId()) {
                     case R.id.action_Profile:
                         fragment = new ProfileFragment();
                         break;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new InProgress();
                         break;
                     case R.id.action_Search:
-                        fragment = new SearchFragment();
+                        fragment = new SearchFragment(MainActivity.this);
                         break;
                     case R.id.action_Home:
                     default:

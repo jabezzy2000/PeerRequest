@@ -9,24 +9,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.models.Task;
-import com.example.peerrequest.models.User;
 
 import org.parceler.Parcels;
 
 import java.util.List;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
     private final List<Task> tasks;
 
-    public TaskAdapter(Context context, List<Task> tasks) {
-//        this.context = context;
+    public SearchAdapter(Context context, List<Task> tasks) {
         this.tasks = tasks;
     }
 
@@ -41,13 +37,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Task task = tasks.get(position);
         holder.bind(task);
+
     }
 
     @Override
     public int getItemCount() {
         return tasks.size();
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView ivProfilePicture;
@@ -71,24 +67,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             tvTaskTitle.setText(task.getTaskTitle());
             tvTaskDescription.setText(task.getDescription());
             tvTime.setText(task.getCreatedAt().toString());
-
-            //implement glide method to see if user has a profile picture
         }
 
         @Override
-        public void onClick(View view) { // gets position, opens a new activity for the detail
+        public void onClick(View v) {
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
                 Task task = tasks.get(position);
-                Intent intent = new Intent(view.getContext(), TaskDetailActivity.class);
+                Intent intent = new Intent(v.getContext(), TaskDetailActivity.class);
                 intent.putExtra(Task.class.getSimpleName(), Parcels.wrap(task));
-                view.getContext().startActivity(intent);
+                v.getContext().startActivity(intent);
 
             }
         }
     }
 }
-
-
-
-

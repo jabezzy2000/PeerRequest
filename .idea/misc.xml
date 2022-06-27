@@ -18,7 +18,7 @@
         <entry key="app/src/main/res/layout/fragment_in_progress.xml" value="0.8255208333333334" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.6536458333333334" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.8255208333333334" />
-        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.8114583333333333" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.5079908675799086" />
         <entry key="app/src/main/res/layout/fragment_task_detail.xml" value="0.3974358974358974" />
         <entry key="app/src/main/res/layout/fragment_timeline.xml" value="0.4837688044338876" />
         <entry key="app/src/main/res/layout/main.xml" value="0.8244791666666667" />
@@ -33,5 +33,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.4837688044338876" />
+      </ProjectState>
+    </option>
   </component>
 </project>

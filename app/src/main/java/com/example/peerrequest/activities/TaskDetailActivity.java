@@ -44,7 +44,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
-
+        user = (User) task.getUser();
         name= findViewById(R.id.tvTaskDetailName);
         taskTitle = findViewById(R.id.tvTaskDetailTitle);
         taskDescription = findViewById(R.id.tvTaskDetailDescription);
@@ -52,34 +52,31 @@ public class TaskDetailActivity extends AppCompatActivity {
         rating = findViewById(R.id.tvTaskDetailRating);
         request = findViewById(R.id.ibTaskDetailRequestBtn);
         edit = findViewById(R.id.ibTaskDetailEditBtn);
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //edit button
-                createNewEditDialog();
-            }
-        });
-
+        Log.i(TAG, "onCreate: " + User.getCurrentUser().getUsername());
+        Log.i(TAG, "other: " + task.getUser().getUsername());
+        if(User.getCurrentUser().getUsername()!=task.getUser().getUsername()){
+            edit.setVisibility(View.GONE);
+        }//if the current user is the author of the task, make button invisible
+        else{
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //edit button
+                    createNewEditDialog();
+                }
+            });
+        }
         request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TaskDetailActivity.this,"button clicked", Toast.LENGTH_SHORT).show();
             }
         });
-
         task = (Task) Parcels.unwrap(getIntent().getParcelableExtra(Task.class.getSimpleName()));
         name.setText(User.getCurrentUser().getUsername());
         taskTitle.setText(task.getTaskTitle());
         taskDescription.setText(task.getDescription());
         user = (User) task.getUser();
         rating.setText(user.getUserRating());
-
-
-
-
-
-
-
     }
 
     private void createNewEditDialog() {

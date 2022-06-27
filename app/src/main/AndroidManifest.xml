@@ -43,7 +43,7 @@
             android:name=".activities.TaskDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".models.SignUp"
+            android:name=".models.SignUpActivity"
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"
