@@ -25,6 +25,7 @@ import com.example.peerrequest.R;
 import com.example.peerrequest.activities.MainActivity;
 import com.example.peerrequest.adapters.TaskAdapter;
 import com.example.peerrequest.models.Task;
+import com.example.peerrequest.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -131,7 +132,7 @@ public class TimelineFragment extends Fragment {
                 String title = popupTaskTitle.getText().toString();
                 String description = popupTaskDescription.getText().toString();
                 Task task = new Task();
-                task.setUser(ParseUser.getCurrentUser());
+                task.setUser((User) ParseUser.getCurrentUser());
                 task.setTaskTitle(title);
                 task.setDescription(description);
                 task.saveInBackground(new SaveCallback() {

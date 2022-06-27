@@ -36,11 +36,11 @@ public class Task extends ParseObject {
         put(KEY_REQUEST_DESCRIPTION, description);
     }
 
-    public ParseUser getUser() {
-        return getParseUser(KEY_USER);
+    public User getUser() {
+        return (User)getParseUser(KEY_USER);
     }
 
-    public void setUser(ParseUser user) {
+    public void setUser(User user) {
         put(KEY_USER, user);
     }
 

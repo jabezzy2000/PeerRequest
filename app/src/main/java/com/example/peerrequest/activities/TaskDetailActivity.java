@@ -44,7 +44,8 @@ public class TaskDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
-        user = (User) task.getUser();
+        task = (Task) Parcels.unwrap(getIntent().getParcelableExtra(Task.class.getSimpleName()));
+
         name= findViewById(R.id.tvTaskDetailName);
         taskTitle = findViewById(R.id.tvTaskDetailTitle);
         taskDescription = findViewById(R.id.tvTaskDetailDescription);
@@ -92,7 +93,6 @@ public class TaskDetailActivity extends AppCompatActivity {
         popupSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                task = (Task) Parcels.unwrap(getIntent().getParcelableExtra(Task.class.getSimpleName()));
                 String title = popupTaskTitle.getText().toString();
                 String description = popupTaskDescription.getText().toString();
                 task.setTaskTitle(title);
