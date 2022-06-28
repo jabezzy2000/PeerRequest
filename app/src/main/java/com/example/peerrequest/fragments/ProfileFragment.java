@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
 import com.example.peerrequest.activities.LoginActivity;
 import com.example.peerrequest.adapters.ProfileAdapter;
 import com.example.peerrequest.adapters.TaskAdapter;
@@ -47,6 +48,7 @@ public class ProfileFragment extends Fragment {
     public RecyclerView recyclerView;
     private final String TAG = "TImelineFragment";
     private final String ERROR = "task unsuccessful";
+    private User user;
 
 
     public ProfileFragment() {
@@ -89,6 +91,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        user = (User) User.getCurrentUser();
         name = view.findViewById(R.id.tvName);
         rating = view.findViewById(R.id.tvRating);
         profileImage = view.findViewById(R.id.ivProfileImage);
@@ -106,6 +109,8 @@ public class ProfileFragment extends Fragment {
         });
 
         name.setText(User.getCurrentUser().getUsername());
+        rating.setText(user.getUserRating());
+        Utilities.roundedImage(getContext(),user.getProfilePicture().getUrl(),profileImage,50);
         queryTasks();
 
     }

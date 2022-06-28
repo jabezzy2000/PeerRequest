@@ -10,35 +10,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Title"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.045"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Title" />
 
     <TextView
         android:id="@+id/tvProfileTaskDescription"
         android:layout_width="match_parent"
         android:layout_height="83dp"
         android:layout_marginTop="4dp"
-        android:text="Description"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.095"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvProfileTaskTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/tvProfileTaskTitle"
+        tools:text="Description" />
 
     <TextView
         android:id="@+id/tvProfileTime"
         android:layout_width="118dp"
         android:layout_height="18dp"
         android:layout_marginTop="16dp"
-        android:text="Time"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.404"
         app:layout_constraintStart_toEndOf="@+id/tvProfileTaskTitle"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,7 +27,7 @@ import com.parse.SaveCallback;
 
 import java.util.List;
 
-public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
+public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder> {
     private final List<Task> tasks;
     Context context;
     String TAG = "ProfileAdapter";
@@ -41,13 +41,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ProfileViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_profile_item_task, parent, false);
-        return new ViewHolder(view);
+        return new ProfileViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ProfileViewHolder holder, int position) {
         Task task = tasks.get(position);
         holder.bind(task);
 
@@ -58,12 +58,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         return tasks.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ProfileViewHolder extends RecyclerView.ViewHolder {
         TextView taskTitle;
         TextView taskDescription;
         TextView time;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ProfileViewHolder(@NonNull View itemView) {
             super(itemView);
             taskTitle = itemView.findViewById(R.id.tvProfileTaskTitle);
             taskDescription = itemView.findViewById(R.id.tvProfileTaskDescription);

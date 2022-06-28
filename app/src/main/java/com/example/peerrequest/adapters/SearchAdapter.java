@@ -19,7 +19,7 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
     private final List<Task> tasks;
 
     public SearchAdapter(Context context, List<Task> tasks) {
@@ -28,13 +28,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_item_task, parent, false);
-        return new ViewHolder(view);
+        return new SearchViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
         Task task = tasks.get(position);
         holder.bind(task);
 
@@ -45,14 +45,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         return tasks.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class SearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView profilePicture;
         TextView username;
         TextView time;
         TextView taskTitle;
         TextView taskDescription;
 
-        public ViewHolder(@NonNull View itemView) {
+        public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
             profilePicture = itemView.findViewById(R.id.ivProfilePicture);
             username = itemView.findViewById(R.id.tvUserName);

@@ -31,6 +31,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,11 +50,11 @@ public class TimelineFragment extends Fragment {
     protected List<Task> allTasks;
     String TAG = "TimelineFragment";
     String ERROR = "Task Unsuccessful";
-    private HomeActivity homeActivity;
+    private final WeakReference<HomeActivity> homeActivityWeakReference;
 
     public TimelineFragment(HomeActivity homeActivity) {
         // Required empty public constructor
-        this.homeActivity = homeActivity;
+        homeActivityWeakReference = new WeakReference<HomeActivity>(homeActivity);
     }
 
 
@@ -121,9 +122,6 @@ public class TimelineFragment extends Fragment {
         popupTaskDescription = popup.findViewById(R.id.taskDescription);
         popupSave = popup.findViewById(R.id.btnOk);
         popupCancel = popup.findViewById(R.id.btnCancel);
-        dialogBuilder.setView(popup);
-        dialog = dialogBuilder.create();
-        dialog.show();
         popupSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,6 +149,9 @@ public class TimelineFragment extends Fragment {
                 dialog.dismiss();
             }
         });
+        dialogBuilder.setView(popup);
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 
 }

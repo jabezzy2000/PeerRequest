@@ -2,9 +2,6 @@ package com.example.peerrequest.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
-
-import org.parceler.Parcel;
 
 
 @ParseClassName("Tasks")
@@ -37,7 +34,7 @@ public class Task extends ParseObject {
     }
 
     public User getUser() {
-        return (User)getParseUser(KEY_USER);
+        return (User) getParseUser(KEY_USER);
     }
 
     public void setUser(User user) {
