@@ -14,6 +14,7 @@ public class ParseApplication extends Application {
         super.onCreate();
         ParseUser.registerSubclass(User.class);
         ParseUser.registerSubclass(Task.class);
+        ParseUser.registerSubclass(Requests.class);
 
         // initializing parse application and registering parse models
         Parse.initialize(new Parse.Configuration.Builder(this)

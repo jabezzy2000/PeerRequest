@@ -57,7 +57,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         Log.i(TAG, "other: " + task.getUser().getUsername());
         if (!User.getCurrentUser().getUsername().equals(task.getUser().getUsername())) {
             edit.setVisibility(View.GONE);
-        }//if the current user is the author of the task, make button invisible
+        }//if the current user isn't the author of the task, make button invisible
         else {
             edit.setVisibility(View.VISIBLE);
             Toast.makeText(this, "button visible", Toast.LENGTH_SHORT).show();
@@ -69,17 +69,30 @@ public class TaskDetailActivity extends AppCompatActivity {
                 }
             });
         }
-        request.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
+        //setting request button visible/invisible depending on current user
+        if (!User.getCurrentUser().getUsername().equals(task.getUser().getUsername())) {
+            request.setVisibility(View.GONE);
+        }//if the current user isn't the author of the task, make button visible
+        else {
+            request.setVisibility(View.VISIBLE);
+            request.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //edit button
+                    createNewRequest();
+                }
+            });
+        }
         task = (Task) Parcels.unwrap(getIntent().getParcelableExtra(Task.class.getSimpleName()));
         name.setText(User.getCurrentUser().getUsername());
         taskTitle.setText(task.getTaskTitle());
         taskDescription.setText(task.getDescription());
         user = (User) task.getUser();
         rating.setText(user.getUserRating());
+    }
+
+    private void createNewRequest() {
+
     }
 
     private void createNewEditDialog() {
