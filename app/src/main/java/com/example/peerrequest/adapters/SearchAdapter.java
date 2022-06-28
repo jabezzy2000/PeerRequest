@@ -46,27 +46,27 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView ivProfilePicture;
-        TextView tvUsername;
-        TextView tvTime;
-        TextView tvTaskTitle;
-        TextView tvTaskDescription;
+        ImageView profilePicture;
+        TextView username;
+        TextView time;
+        TextView taskTitle;
+        TextView taskDescription;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ivProfilePicture = itemView.findViewById(R.id.ivProfilePicture);
-            tvUsername = itemView.findViewById(R.id.tvUserName);
-            tvTime = itemView.findViewById(R.id.tvTime);
-            tvTaskTitle = itemView.findViewById(R.id.tvTaskTitile);
-            tvTaskDescription = itemView.findViewById(R.id.tvTaskDescription);
+            profilePicture = itemView.findViewById(R.id.ivProfilePicture);
+            username = itemView.findViewById(R.id.tvUserName);
+            time = itemView.findViewById(R.id.tvTime);
+            taskTitle = itemView.findViewById(R.id.tvTaskTitile);
+            taskDescription = itemView.findViewById(R.id.tvTaskDescription);
             itemView.setOnClickListener(this);
         }
 
         public void bind(Task task) {
-            tvUsername.setText(task.getUser().getUsername());
-            tvTaskTitle.setText(task.getTaskTitle());
-            tvTaskDescription.setText(task.getDescription());
-            tvTime.setText(task.getCreatedAt().toString());
+            username.setText(task.getUser().getUsername());
+            taskTitle.setText(task.getTaskTitle());
+            taskDescription.setText(task.getDescription());
+            time.setText(task.getCreatedAt().toString());
         }
 
         @Override

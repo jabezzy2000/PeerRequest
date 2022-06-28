@@ -54,14 +54,11 @@ public class TaskDetailActivity extends AppCompatActivity {
         rating = findViewById(R.id.tvTaskDetailRating);
         requestbutton = findViewById(R.id.ibTaskDetailRequestBtn);
         edit = findViewById(R.id.ibTaskDetailEditBtn);
-        Log.i(TAG, "onCreate: " + User.getCurrentUser().getUsername());
-        Log.i(TAG, "other: " + task.getUser().getUsername());
         if (!User.getCurrentUser().getUsername().equals(task.getUser().getUsername())) {
             edit.setVisibility(View.GONE);
         }//if the current user isn't the author of the task, make button invisible
         else {
             edit.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "button visible", Toast.LENGTH_SHORT).show();
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -85,7 +82,7 @@ public class TaskDetailActivity extends AppCompatActivity {
             });
         }
         task = (Task) Parcels.unwrap(getIntent().getParcelableExtra(Task.class.getSimpleName()));
-        name.setText(User.getCurrentUser().getUsername());
+        name.setText(task.getUser().getUsername());
         taskTitle.setText(task.getTaskTitle());
         taskDescription.setText(task.getDescription());
         user = (User) task.getUser();
@@ -117,6 +114,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                         }
                     }
                 });
+                Toast.makeText(TaskDetailActivity.this, "Requested", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });

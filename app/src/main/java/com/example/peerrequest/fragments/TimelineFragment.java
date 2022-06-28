@@ -18,11 +18,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.peerrequest.activities.MapsActivity;
 import com.example.peerrequest.R;
-import com.example.peerrequest.activities.MainActivity;
+import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.adapters.TaskAdapter;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
@@ -49,13 +48,12 @@ public class TimelineFragment extends Fragment {
     public ImageButton mapButton;
     protected List<Task> allTasks;
     String TAG = "TimelineFragment";
-    String SUCCESS = "Task Successful";
     String ERROR = "Task Unsuccessful";
-    private MainActivity mainActivity;
+    private HomeActivity homeActivity;
 
-    public TimelineFragment(MainActivity mainActivity) {
+    public TimelineFragment(HomeActivity homeActivity) {
         // Required empty public constructor
-        this.mainActivity = mainActivity;
+        this.homeActivity = homeActivity;
     }
 
 
@@ -66,7 +64,8 @@ public class TimelineFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_timeline, container, false);
     }
 
-    private void queryTasks() { //specifying data I want to query
+    //specifying data I want to query
+    private void queryTasks() {
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
         query.include(Task.KEY_USER);
         query.setLimit(limit);
@@ -77,7 +76,6 @@ public class TimelineFragment extends Fragment {
                 if (e != null) {
                     Log.e(TAG, ERROR, e);
                 } else {
-                    Log.i(TAG, SUCCESS);
                     allTasks.addAll(tasks);
                     taskAdapter.notifyDataSetChanged();
                 }

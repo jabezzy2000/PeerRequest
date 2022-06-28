@@ -1,4 +1,4 @@
-package com.example.peerrequest.models;
+package com.example.peerrequest.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.peerrequest.R;
-import com.example.peerrequest.activities.MainActivity;
+import com.example.peerrequest.models.User;
 import com.parse.ParseException;
 import com.parse.SignUpCallback;
 
@@ -35,16 +35,16 @@ public class SignUpActivity extends AppCompatActivity {
                 //getting text from editText
                 String username = signUpUsername.getText().toString();
                 String password = signUpPassword.getText().toString();
-
-                user.setUsername(username); //setting the username to username inputted by user
-                user.setPassword(password); // setting the password to password inputted by user
+                //setting the username and password to username and password inputted by user
+                user.setUsername(username);
+                user.setPassword(password);
 
                 // Invoking signUpInBackground
                 user.signUpInBackground(new SignUpCallback() {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
-                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                            Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
                             startActivity(intent);
                         } else {
                             Toast.makeText(SignUpActivity.this, "Something went wrong: " + e.getMessage(), Toast.LENGTH_SHORT).show();

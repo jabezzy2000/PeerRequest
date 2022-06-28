@@ -37,24 +37,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileFragment extends Fragment {
-    ProfileAdapter profileAdapter;
-
-    TextView Name;
-    TextView Rating;
-    public AlertDialog.Builder dialogBuilder;
-    public AlertDialog dialog;
-    public EditText popupTaskTitle;
-    public EditText popupTaskDescription;
-    public Button popupSave, popupCancel;
-    ImageView ProfileImage;
-    ImageButton LogOut;
-    private int limit = 10;
+    public ProfileAdapter profileAdapter;
+    public TextView name;
+    public TextView rating;
+    public ImageView profileImage;
+    public ImageButton logOut;
+    private final int limit = 10;
     protected List<Task> allTasks;
-    RecyclerView recyclerView;
-//    protected ProfileAdapter profileAdapter;
-    String TAG = "TImelineFragment";
-    String SUCCESS = "task successful";
-    String ERROR = "task unsuccessful";
+    public RecyclerView recyclerView;
+    private final String TAG = "TImelineFragment";
+    private final String ERROR = "task unsuccessful";
 
 
     public ProfileFragment() {
@@ -74,7 +66,6 @@ public class ProfileFragment extends Fragment {
                 if (e != null) {
                     Log.e(TAG, ERROR, e);
                 } else {
-                    Log.i(TAG, SUCCESS);
                     allTasks.addAll(tasks);
                     profileAdapter.notifyDataSetChanged();
                 }
@@ -98,23 +89,23 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Name = view.findViewById(R.id.tvName);
-        Rating = view.findViewById(R.id.tvRating);
-        ProfileImage = view.findViewById(R.id.ivProfileImage);
-        LogOut = view.findViewById(R.id.ibLogOut);
+        name = view.findViewById(R.id.tvName);
+        rating = view.findViewById(R.id.tvRating);
+        profileImage = view.findViewById(R.id.ivProfileImage);
+        logOut = view.findViewById(R.id.ibLogOut);
         recyclerView = view.findViewById(R.id.rvProfileTasks);
         allTasks = new ArrayList<>();
         profileAdapter = new ProfileAdapter(getContext(), allTasks);
         recyclerView.setAdapter(profileAdapter); //attaching adapter
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        LogOut.setOnClickListener(new View.OnClickListener() {
+        logOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 logout();
             }
         });
 
-        Name.setText(User.getCurrentUser().getUsername());
+        name.setText(User.getCurrentUser().getUsername());
         queryTasks();
 
     }
@@ -122,7 +113,6 @@ public class ProfileFragment extends Fragment {
 
     private void logout() { //defining method to logout
         ParseUser.logOut();
-        ParseUser currentUser = ParseUser.getCurrentUser();
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);
 

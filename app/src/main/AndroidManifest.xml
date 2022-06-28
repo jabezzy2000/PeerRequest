@@ -32,10 +32,10 @@
             android:name=".activities.TaskDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".models.SignUpActivity"
+            android:name=".activities.SignUpActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.HomeActivity"
             android:exported="true" />
         <activity
             android:name=".activities.LoginActivity"

@@ -31,11 +31,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     private final List<Task> tasks;
     Context context;
     String TAG = "ProfileAdapter";
-    public AlertDialog.Builder dialogBuilder;
-    public AlertDialog dialog;
-    public EditText popupTaskTitle;
-    public EditText popupTaskDescription;
-    public Button popupSave, popupCancel;
+
 
     public ProfileAdapter(Context context, List<Task> tasks) {
         this.tasks = tasks;
@@ -63,30 +59,22 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTaskTitle;
-        TextView tvTaskDescription;
-        TextView tvTime;
-        ImageButton ibEditButton;
+        TextView taskTitle;
+        TextView taskDescription;
+        TextView time;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTaskTitle = itemView.findViewById(R.id.tvProfileTaskTitle);
-            tvTaskDescription = itemView.findViewById(R.id.tvProfileTaskDescription);
-            tvTime = itemView.findViewById(R.id.tvProfileTime);
+            taskTitle = itemView.findViewById(R.id.tvProfileTaskTitle);
+            taskDescription = itemView.findViewById(R.id.tvProfileTaskDescription);
+            time = itemView.findViewById(R.id.tvProfileTime);
 
-//            ibEditButton.setOnClickListener(new View.OnClickListener() { // try moving to a new fragment instead
-//                @Override
-//                public void onClick(View v) {
-////                    createNewContactDialog();
-//                }
-//            });
-//        }
-       }
+        }
 
         public void bind(Task task) {
-            tvTaskTitle.setText(task.getTaskTitle());
-            tvTaskDescription.setText(task.getDescription());
-            tvTime.setText(task.getCreatedAt().toString());
+            taskTitle.setText(task.getTaskTitle());
+            taskDescription.setText(task.getDescription());
+            time.setText(task.getCreatedAt().toString());
 
         }
     }
