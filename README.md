@@ -31,11 +31,6 @@ Person B then goes to the laundromat, picks up the laundry, delivers it to the l
 
 WIREFRAMES:
 
-![](https://i.imgur.com/rj8vNkj.jpg)
-![](https://i.imgur.com/PDWYnbF.jpg)
-![](https://i.imgur.com/bcFepF9.jpg)
-![](https://i.imgur.com/MIn15jk.jpg)
-
 ![IMG_5370](https://user-images.githubusercontent.com/90366540/174722719-58c721ee-07b4-4e66-9a78-269862100776.JPG)
 
 
