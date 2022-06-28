@@ -26,5 +26,14 @@ public class Requests extends ParseObject {
         return getString(KEY_COVER_LETTER);
     }
 
+    public void setKeyCoverLetter(String string) {
+        put(KEY_COVER_LETTER, string);
+    }
+
+    public void setKeyUser(User user) {
+        put(KEY_USER, user);
+    }
+
 
 }
+

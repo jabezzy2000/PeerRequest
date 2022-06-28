@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.parse.ParseException;
@@ -30,13 +31,13 @@ public class TaskDetailActivity extends AppCompatActivity {
     TextView taskDescription;
     ImageView profilePicture;
     TextView rating;
-    ImageButton request;
+    ImageButton requestbutton;
     ImageButton edit;
     Task task;
     public AlertDialog.Builder dialogBuilder;
     public AlertDialog dialog;
-    public EditText popupTaskTitle;
-    public EditText popupTaskDescription;
+    public EditText etCoverLetter;
+    public EditText popupTaskTitle, popupTaskDescription;
     public Button popupSave, popupCancel;
     public String TAG = "TaskDetailActivity";
 
@@ -51,7 +52,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         taskDescription = findViewById(R.id.tvTaskDetailDescription);
         profilePicture = findViewById(R.id.ivTaskDetailProfilePicture);
         rating = findViewById(R.id.tvTaskDetailRating);
-        request = findViewById(R.id.ibTaskDetailRequestBtn);
+        requestbutton = findViewById(R.id.ibTaskDetailRequestBtn);
         edit = findViewById(R.id.ibTaskDetailEditBtn);
         Log.i(TAG, "onCreate: " + User.getCurrentUser().getUsername());
         Log.i(TAG, "other: " + task.getUser().getUsername());
@@ -70,12 +71,12 @@ public class TaskDetailActivity extends AppCompatActivity {
             });
         }
         //setting request button visible/invisible depending on current user
-        if (!User.getCurrentUser().getUsername().equals(task.getUser().getUsername())) {
-            request.setVisibility(View.GONE);
+        if (User.getCurrentUser().getUsername().equals(task.getUser().getUsername())) {
+            requestbutton.setVisibility(View.GONE);
         }//if the current user isn't the author of the task, make button visible
         else {
-            request.setVisibility(View.VISIBLE);
-            request.setOnClickListener(new View.OnClickListener() {
+            requestbutton.setVisibility(View.VISIBLE);
+            requestbutton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //edit button
@@ -92,8 +93,44 @@ public class TaskDetailActivity extends AppCompatActivity {
     }
 
     private void createNewRequest() {
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View request_task_popup = getLayoutInflater().inflate(R.layout.request_task_popup, null);
+        etCoverLetter = request_task_popup.findViewById(R.id.etCoverLetter);
+        popupSave = request_task_popup.findViewById(R.id.btnOk);
+        popupCancel = request_task_popup.findViewById(R.id.btnCancel);
+        dialogBuilder.setView(request_task_popup);
+        dialog = dialogBuilder.create();
+        dialog.show();
+        popupSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Requests requests = new Requests();
+                String CoverLetter = etCoverLetter.getText().toString();
+                requests.setKeyCoverLetter(CoverLetter);
+                requests.setTask(task);
+                requests.setKeyUser(user);
+                requests.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
 
+        popupCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
+
+
+
 
     private void createNewEditDialog() {
         dialogBuilder = new AlertDialog.Builder(this);
