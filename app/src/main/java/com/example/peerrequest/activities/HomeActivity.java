@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 import com.example.peerrequest.R;
 import com.example.peerrequest.fragments.InProgressFragment;
-import com.example.peerrequest.fragments.ProfileFragment;
+import com.example.peerrequest.fragments.ProfileTasksFragment;
 import com.example.peerrequest.fragments.SearchFragment;
 import com.example.peerrequest.fragments.TimelineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 switch (fragmentNavigation.getItemId()) {
                     case R.id.action_Profile:
-                        navigationFragment = new ProfileFragment();
+                        navigationFragment = new ProfileTasksFragment();
                         break;
                     case R.id.action_In_Progress:
                         navigationFragment = new InProgressFragment();

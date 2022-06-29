@@ -1,39 +1,30 @@
 package com.example.peerrequest.adapters;
 
-import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peerrequest.R;
-import com.example.peerrequest.fragments.TimelineFragment;
+import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.models.Task;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
-public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder> {
+public class ProfileTasksAdapter extends RecyclerView.Adapter<ProfileTasksAdapter.ProfileViewHolder> {
     private final List<Task> tasks;
     Context context;
-    String TAG = "ProfileAdapter";
+    String TAG = "ProfileTasksAdapter";
 
 
-    public ProfileAdapter(Context context, List<Task> tasks) {
+    public ProfileTasksAdapter(Context context, List<Task> tasks) {
         this.tasks = tasks;
         this.context = context;
 
@@ -58,7 +49,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
         return tasks.size();
     }
 
-    public class ProfileViewHolder extends RecyclerView.ViewHolder {
+    public class ProfileViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView taskTitle;
         TextView taskDescription;
         TextView time;
@@ -68,6 +59,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
             taskTitle = itemView.findViewById(R.id.tvProfileTaskTitle);
             taskDescription = itemView.findViewById(R.id.tvProfileTaskDescription);
             time = itemView.findViewById(R.id.tvProfileTime);
+            itemView.setOnClickListener(this);
 
         }
 
@@ -76,6 +68,18 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
             taskDescription.setText(task.getDescription());
             time.setText(task.getCreatedAt().toString());
 
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                Task task = tasks.get(position);
+                Intent intent = new Intent(v.getContext(), TaskDetailActivity.class);
+                intent.putExtra(Task.class.getSimpleName(), Parcels.wrap(task));
+                v.getContext().startActivity(intent);
+
+            }
         }
     }
 }

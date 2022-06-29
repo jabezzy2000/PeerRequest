@@ -71,7 +71,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             tvTaskDescription.setText(task.getDescription());
             tvTime.setText(task.getCreatedAt().toString());
 
-            //implement glide method to see if user has a profile picture
         }
 
         @Override

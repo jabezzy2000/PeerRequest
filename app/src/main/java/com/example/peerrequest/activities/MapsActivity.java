@@ -18,7 +18,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
     private double latitude = 47.608013;
-    private double longitude =  -122.335167 ;
+    private double longitude = -122.335167;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +36,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
+        //created marker in seattle
         LatLng seattle = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(seattle).title("Marker in Seattle"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(seattle));

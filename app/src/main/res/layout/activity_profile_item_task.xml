@@ -9,18 +9,18 @@
         android:id="@+id/tvProfileTaskTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintHorizontal_bias="0.041"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Title" />
 
     <TextView
         android:id="@+id/tvProfileTaskDescription"
-        android:layout_width="match_parent"
-        android:layout_height="83dp"
+        android:layout_width="416dp"
+        android:layout_height="53dp"
         android:layout_marginTop="4dp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,12 +33,24 @@
         android:id="@+id/tvProfileTime"
         android:layout_width="118dp"
         android:layout_height="18dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.404"
+        app:layout_constraintHorizontal_bias="0.306"
         app:layout_constraintStart_toEndOf="@+id/tvProfileTaskTitle"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Time" />
+
+    <TextView
+        android:id="@+id/tvRequestsNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:text="6 requests"
+        android:textColor="@android:color/holo_green_dark"
+        app:layout_constraintBottom_toTopOf="@+id/tvProfileTaskDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvProfileTime"
+        tools:text="6 requests" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

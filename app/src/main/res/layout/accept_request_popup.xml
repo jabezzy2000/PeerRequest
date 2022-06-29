@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/submitRequestProfilePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/acceptRequestName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/submitRequestProfilePicture"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/submitRequestProfilePicture"
+        tools:layout_editor_absoluteY="228dp" />
+
+    <TextView
+        android:id="@+id/acceptRequestCoverLetter"
+        android:layout_width="132dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="28dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/submitRequestProfilePicture"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/submitRequestProfilePicture"
+        app:layout_constraintTop_toBottomOf="@+id/acceptRequestName" />
+
+    <TextView
+        android:id="@+id/acceptRequestRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/acceptRequestCoverLetter"
+        app:layout_constraintEnd_toEndOf="@+id/submitRequestProfilePicture"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/submitRequestProfilePicture" />
+
+    <Button
+        android:id="@+id/acceptRequestBtn"
+        android:layout_width="87dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="76dp"
+        android:text="Accept"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="8sp"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="355dp" />
+
+    <Button
+        android:id="@+id/cancelRequestBtn"
+        android:layout_width="87dp"
+        android:layout_height="42dp"
+        android:text="Cancel"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="8sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.291"
+        app:layout_constraintStart_toEndOf="@+id/acceptRequestBtn"
+        tools:layout_editor_absoluteY="355dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

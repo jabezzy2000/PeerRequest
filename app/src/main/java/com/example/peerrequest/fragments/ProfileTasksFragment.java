@@ -1,12 +1,10 @@
 package com.example.peerrequest.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,8 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,25 +20,25 @@ import android.widget.TextView;
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
 import com.example.peerrequest.activities.LoginActivity;
-import com.example.peerrequest.adapters.ProfileAdapter;
-import com.example.peerrequest.adapters.TaskAdapter;
+import com.example.peerrequest.adapters.ProfileTasksAdapter;
+import com.example.peerrequest.adapters.TaskDetailAdapter;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileFragment extends Fragment {
-    public ProfileAdapter profileAdapter;
+public class ProfileTasksFragment extends Fragment {
+    public ProfileTasksAdapter profileTasksAdapter;
     public TextView name;
     public TextView rating;
     public ImageView profileImage;
     public ImageButton logOut;
+    public TextView requestsNumber;
     private final int limit = 10;
     protected List<Task> allTasks;
     public RecyclerView recyclerView;
@@ -51,7 +47,7 @@ public class ProfileFragment extends Fragment {
     private User user;
 
 
-    public ProfileFragment() {
+    public ProfileTasksFragment() {
         // Required empty public constructor
     }
 
@@ -69,14 +65,14 @@ public class ProfileFragment extends Fragment {
                     Log.e(TAG, ERROR, e);
                 } else {
                     allTasks.addAll(tasks);
-                    profileAdapter.notifyDataSetChanged();
+                    profileTasksAdapter.notifyDataSetChanged();
                 }
             }
         });
     }
 
-    public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
+    public static ProfileTasksFragment newInstance() {
+        ProfileTasksFragment fragment = new ProfileTasksFragment();
         return fragment;
     }
 
@@ -97,9 +93,10 @@ public class ProfileFragment extends Fragment {
         profileImage = view.findViewById(R.id.ivProfileImage);
         logOut = view.findViewById(R.id.ibLogOut);
         recyclerView = view.findViewById(R.id.rvProfileTasks);
+        requestsNumber = view.findViewById(R.id.tvRequestsNumber);
         allTasks = new ArrayList<>();
-        profileAdapter = new ProfileAdapter(getContext(), allTasks);
-        recyclerView.setAdapter(profileAdapter); //attaching adapter
+        profileTasksAdapter = new ProfileTasksAdapter(getContext(), allTasks);
+        recyclerView.setAdapter(profileTasksAdapter); //attaching adapter
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         logOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +107,9 @@ public class ProfileFragment extends Fragment {
 
         name.setText(User.getCurrentUser().getUsername());
         rating.setText(user.getUserRating());
-        Utilities.roundedImage(getContext(),user.getProfilePicture().getUrl(),profileImage,50);
+        if (user.getProfilePicture() != null) {
+            Utilities.roundedImage(getContext(), user.getProfilePicture().getUrl(), profileImage, 50);
+        }
         queryTasks();
 
     }

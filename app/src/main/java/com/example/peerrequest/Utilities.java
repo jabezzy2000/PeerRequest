@@ -1,12 +1,22 @@
 package com.example.peerrequest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.peerrequest.activities.TaskDetailActivity;
+import com.example.peerrequest.models.Requests;
+import com.example.peerrequest.models.User;
 import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,6 +61,37 @@ public class Utilities {
             return diff / DAY_MILLIS + " days ago";
         }
     }
+
+//    public static void createNewSubmitDialog(Requests request) {
+//          AlertDialog.Builder dialogBuilder;
+//          AlertDialog dialog;
+//
+//        dialogBuilder = new AlertDialog.Builder(dialog.getContext());
+//        final View popup = TaskDetailActivity.getLayoutInflater().inflate(R.layout.accept_request_popup, null);
+//         ImageView submitRequestProfileImage =popup.findViewById(R.id.submitRequestProfilePicture);
+//        TextView submitRequestName = popup.findViewById(R.id.acceptRequestName);
+//        TextView acceptRequestRating = popup.findViewById(R.id.acceptRequestRating);
+//        TextView acceptRequestCoverLetter = popup.findViewById(R.id.acceptRequestCoverLetter);
+//        Button acceptRequest = popup.findViewById(R.id.acceptRequestBtn);
+//        Button popupCancel = popup.findViewById(R.id.cancelRequestBtn);
+//        dialogBuilder.setView(popup);
+//        dialog = dialogBuilder.create();
+//        acceptRequest.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                request.setAccepted("true");
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        popupCancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+//        dialog.show();
+//    }
 
 
 }

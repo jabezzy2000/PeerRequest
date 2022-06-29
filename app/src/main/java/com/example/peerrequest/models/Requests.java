@@ -9,9 +9,18 @@ public class Requests extends ParseObject {
     public static final String KEY_USER = "userPointer";
     public static final String KEY_TASK = "taskPointer";
     public static final String KEY_COVER_LETTER = "coverLetter";
+    public static final String KEY_ACCEPTED = "accepted";
 
     public User getUser() {
-        return (User) getParseUser(KEY_USER);
+        return ((User) getParseUser(KEY_USER));
+    }
+
+    public Boolean getAccepted() {
+        return(Boolean.parseBoolean(KEY_ACCEPTED));
+    }
+
+    public void setAccepted(String string) {
+        put(KEY_ACCEPTED,Boolean.parseBoolean("true"));
     }
 
     public Task getTask() {
