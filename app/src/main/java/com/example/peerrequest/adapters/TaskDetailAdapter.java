@@ -1,5 +1,6 @@
 package com.example.peerrequest.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,19 +25,21 @@ import com.parse.SaveCallback;
 import java.util.List;
 
 public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.TaskDetailViewHolder> {
-    private  List<Requests> requests;
+    private final List<Requests> requests;
     Context context;
-    String TAG = "TaskDetailAdapter";
+    TaskDetailActivity taskDetailActivity;
 
-    public TaskDetailAdapter(Context context, List<Requests> requests) {
+    public TaskDetailAdapter(TaskDetailActivity context, List<Requests> requests, TaskDetailActivity taskDetailActivity) {
         this.requests = requests;
+        this.taskDetailActivity = taskDetailActivity;
         this.context = context;
+
     }
 
     @NonNull
     @Override
     public TaskDetailViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.task_detail_item_task,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.task_detail_item_task, parent, false);
         return new TaskDetailViewHolder(view);
     }
 
@@ -52,7 +55,7 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Ta
         return requests.size();
     }
 
-    public class TaskDetailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class TaskDetailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView username;
         TextView userRating;
         TextView itemTaskTimeRequested;
@@ -65,6 +68,7 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Ta
             userRating = itemView.findViewById(R.id.itemTaskRating);
             itemTaskTimeRequested = itemView.findViewById(R.id.itemTaskTime);
             itemTaskCoverLetter = itemView.findViewById(R.id.itemTaskCoverLetter);
+            itemView.setOnClickListener(this);
 
         }
 
@@ -79,44 +83,14 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Ta
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            if(position != RecyclerView.NO_POSITION){
+            if (position != RecyclerView.NO_POSITION) {
                 Requests request = requests.get(position);
-                //createNewSubmitDialog
+                Utilities.createNewSubmitDialog(request, context, taskDetailActivity);
             }
 
         }
-
-//        private void createNewSubmitDialog() {
-//                AlertDialog.Builder dialogBuilder;
-//                AlertDialog dialog;
-//
-//                dialogBuilder = new AlertDialog.Builder(context);
-//                final View popup = getLayoutInflater().inflate(R.layout.accept_request_popup, null);
-//                ImageView submitRequestProfileImage =popup.findViewById(R.id.submitRequestProfilePicture);
-//                TextView submitRequestName = popup.findViewById(R.id.acceptRequestName);
-//                TextView acceptRequestRating = popup.findViewById(R.id.acceptRequestRating);
-//                TextView acceptRequestCoverLetter = popup.findViewById(R.id.acceptRequestCoverLetter);
-//                Button acceptRequest = popup.findViewById(R.id.acceptRequestBtn);
-//                Button popupCancel = popup.findViewById(R.id.cancelRequestBtn);
-//                dialogBuilder.setView(popup);
-//                dialog = dialogBuilder.create();
-//                acceptRequest.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        request.setAccepted("true");
-//                        dialog.dismiss();
-//                    }
-//                });
-//
-//                popupCancel.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//                dialog.show();
-        }
-
-
     }
+
+
+}
 

@@ -1,12 +1,14 @@
 package com.example.peerrequest;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -22,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Utilities {
+public class Utilities extends TaskDetailActivity {
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
@@ -62,36 +64,40 @@ public class Utilities {
         }
     }
 
-//    public static void createNewSubmitDialog(Requests request) {
-//          AlertDialog.Builder dialogBuilder;
-//          AlertDialog dialog;
-//
-//        dialogBuilder = new AlertDialog.Builder(dialog.getContext());
-//        final View popup = TaskDetailActivity.getLayoutInflater().inflate(R.layout.accept_request_popup, null);
-//         ImageView submitRequestProfileImage =popup.findViewById(R.id.submitRequestProfilePicture);
-//        TextView submitRequestName = popup.findViewById(R.id.acceptRequestName);
-//        TextView acceptRequestRating = popup.findViewById(R.id.acceptRequestRating);
-//        TextView acceptRequestCoverLetter = popup.findViewById(R.id.acceptRequestCoverLetter);
-//        Button acceptRequest = popup.findViewById(R.id.acceptRequestBtn);
-//        Button popupCancel = popup.findViewById(R.id.cancelRequestBtn);
-//        dialogBuilder.setView(popup);
-//        dialog = dialogBuilder.create();
-//        acceptRequest.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                request.setAccepted("true");
-//                dialog.dismiss();
-//            }
-//        });
-//
-//        popupCancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//            }
-//        });
-//        dialog.show();
-//    }
+    public static void createNewSubmitDialog(Requests request,Context context,Activity TaskDetailActivity) {
+          AlertDialog.Builder dialogBuilder;
+          AlertDialog dialog;
+
+        dialogBuilder = new AlertDialog.Builder(context);
+        final View popup = TaskDetailActivity.getLayoutInflater().inflate(R.layout.accept_request_popup, null);
+         ImageView submitRequestProfileImage =popup.findViewById(R.id.submitRequestProfilePicture);
+        TextView submitRequestName = popup.findViewById(R.id.acceptRequestName);
+        TextView acceptRequestRating = popup.findViewById(R.id.acceptRequestRating);
+        TextView acceptRequestCoverLetter = popup.findViewById(R.id.acceptRequestCoverLetter);
+        Button acceptRequest = popup.findViewById(R.id.acceptRequestBtn);
+        Button popupCancel = popup.findViewById(R.id.cancelRequestBtn);
+        submitRequestName.setText(request.getUser().getUsername());
+        acceptRequestRating.setText(String.format("rating: %s", request.getUser().getUserRating()));
+        acceptRequestCoverLetter.setText(request.getKeyCoverLetter());
+        dialogBuilder.setView(popup);
+        dialog = dialogBuilder.create();
+        acceptRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                request.setAccepted("True");
+                Toast.makeText(context,"Request Accepted", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        popupCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
 
 }

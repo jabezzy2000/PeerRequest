@@ -24,6 +24,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +36,13 @@ public class SearchFragment extends Fragment {
     public Button searchButton;
     public RecyclerView recyclerView;
     protected List<Task> allTasks;
-    private HomeActivity homeActivity;
+    private final WeakReference<HomeActivity> homeActivityWeakReference;
     private final String TAG = "SearchFragment";
     private final String ERROR = "task unsuccessful";
 
 
     public SearchFragment(HomeActivity homeActivity) {
-        this.homeActivity = homeActivity;
+        homeActivityWeakReference = new WeakReference<HomeActivity>(homeActivity);
         // Required empty public constructor
     }
 
@@ -83,7 +84,6 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 querySearch = search.getText().toString();
-                Toast.makeText(homeActivity, "Search for:" + querySearch, Toast.LENGTH_SHORT).show();
                 queryTasks(querySearch);
             }
         });

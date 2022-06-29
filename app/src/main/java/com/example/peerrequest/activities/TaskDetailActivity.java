@@ -63,7 +63,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         task = (Task) Parcels.unwrap(getIntent().getParcelableExtra(Task.class.getSimpleName()));
         recyclerView = findViewById(R.id.rvTaskDetailTasks);
         allRequests = new ArrayList<>();
-        taskDetailAdapter = new TaskDetailAdapter(this, allRequests);
+        taskDetailAdapter = new TaskDetailAdapter(this, allRequests,this);
         recyclerView.setAdapter(taskDetailAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         user = task.getUser();

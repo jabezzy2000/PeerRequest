@@ -16,11 +16,12 @@ public class Requests extends ParseObject {
     }
 
     public Boolean getAccepted() {
-        return(Boolean.parseBoolean(KEY_ACCEPTED));
+        Boolean.parseBoolean(KEY_ACCEPTED);
+        return false;
     }
 
     public void setAccepted(String string) {
-        put(KEY_ACCEPTED,Boolean.parseBoolean("true"));
+        put(KEY_ACCEPTED,Boolean.parseBoolean("True"));
     }
 
     public Task getTask() {

@@ -23,7 +23,7 @@ public class Task extends ParseObject {
 
     public void setTaskCompleted() {
         put(String.valueOf(KEY_COMPLETED), true);
-    } //come back to this
+    }
 
     public void setTaskTitle(String description) {
         put(KEY_REQUESTS_TITLE, description);
