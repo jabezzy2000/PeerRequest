@@ -45,7 +45,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final long FASTEST_INTERVAL = 5000; /* 5 sec */
     private double latitude ;
     private double longitude ;
-    private Toolbar toolbar;
+    private String TAG = "MapsActivity";
     private FusedLocationProviderClient locationClient;
 
 
@@ -71,14 +71,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
     }
 
     // Trigger new location updates at interval
@@ -149,7 +141,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("MapDemoActivity", "Error trying to get last GPS location");
+                        Log.d(TAG, "Error trying to get last GPS location: " + e.getMessage());
                         e.printStackTrace();
                     }
                 });
@@ -164,9 +156,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        //created marker in seattle
-        LatLng seattle = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(seattle).title("Marker in Seattle"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(seattle));
+        //creating marker at current position
+        LatLng currentLocation = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Position"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
     }
 }
