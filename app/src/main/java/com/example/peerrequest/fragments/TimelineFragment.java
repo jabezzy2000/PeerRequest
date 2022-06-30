@@ -75,7 +75,7 @@ public class TimelineFragment extends Fragment {
             @Override
             public void done(List<Task> tasks, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, ERROR, e);
+                    Log.e(TAG, ERROR + e.getMessage(), e);
                 } else {
                     allTasks.addAll(tasks);
                     taskAdapter.notifyDataSetChanged();
