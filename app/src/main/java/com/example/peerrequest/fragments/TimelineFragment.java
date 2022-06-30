@@ -51,9 +51,15 @@ public class TimelineFragment extends Fragment {
     String TAG = "TimelineFragment";
     String ERROR = "Task Unsuccessful";
     private final WeakReference<HomeActivity> homeActivityWeakReference;
+    private MapsActivity activity;
 
-    public TimelineFragment(HomeActivity homeActivity) {
+    public TimelineFragment(HomeActivity homeActivity, MapsActivity mapsActivity) {
         // Required empty public constructor
+        homeActivityWeakReference = new WeakReference<HomeActivity>(homeActivity);
+        activity = mapsActivity;
+    }
+
+    public TimelineFragment(HomeActivity homeActivity) { // did this
         homeActivityWeakReference = new WeakReference<HomeActivity>(homeActivity);
     }
 
@@ -131,6 +137,7 @@ public class TimelineFragment extends Fragment {
                 task.setUser((User) ParseUser.getCurrentUser());
                 task.setTaskTitle(title);
                 task.setDescription(description);
+
                 task.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {

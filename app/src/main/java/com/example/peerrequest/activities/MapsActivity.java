@@ -4,9 +4,7 @@ import static com.google.android.gms.location.LocationServices.getFusedLocationP
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -35,7 +33,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity {
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
@@ -55,12 +53,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
         startLocationUpdates();
 
     }
@@ -119,6 +111,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void onLocationChanged(Location location) {
         setLatitude(location.getLatitude());
         setLongitude(location.getLongitude());
+        setMapToLocation();
     }
 
     public void getLastLocation() {
@@ -153,12 +146,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 REQUEST_LOCATION_PERMISSION);
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+
+    private void setMapToLocation() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull GoogleMap googleMap) {
+                mMap = googleMap;
         //creating marker at current position
         LatLng currentLocation = new LatLng(latitude, longitude);
+        Log.i(TAG, "onMapReady: current location" + currentLocation);
         mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Position"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,17));
+            }
+        });
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void createMarker(String longitude, String latitude, String taskTitle) {
+        double lat = Double.parseDouble(latitude);
+        double log = Double.parseDouble(longitude);
+        LatLng location = new LatLng(lat,log);
+        mMap.addMarker(new MarkerOptions().position(location).title(taskTitle));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,17));
     }
 }
