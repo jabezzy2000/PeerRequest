@@ -6,6 +6,8 @@ import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.parse.Parse;
 import com.parse.ParseUser;
+import com.parse.facebook.ParseFacebookUtils;
+
 
 public class ParseApplication extends Application {
 
@@ -15,6 +17,7 @@ public class ParseApplication extends Application {
         ParseUser.registerSubclass(User.class);
         ParseUser.registerSubclass(Task.class);
         ParseUser.registerSubclass(Requests.class);
+
 
         // initializing parse application and registering parse models
         Parse.initialize(new Parse.Configuration.Builder(this)

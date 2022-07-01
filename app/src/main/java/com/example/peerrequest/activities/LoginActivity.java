@@ -13,22 +13,49 @@ import com.example.peerrequest.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import androidx.appcompat.app.AppCompatActivity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+import com.facebook.login.LoginManager;
+import com.parse.ParseUser;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.Toast;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.parse.ParseUser;
+import com.parse.facebook.ParseFacebookUtils;
+import org.json.JSONException;
+import java.util.Arrays;
+import java.util.Collection;
+
 
 public class LoginActivity extends AppCompatActivity {
     public final String TAG = "LoginActivity";
     public EditText loginUsername;
     public EditText loginPassword;
     public Button loginBtn;
+    public Button loginWithFacebook;
     public Button signUpBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loginBtn = findViewById(R.id.btnLogIn);
         loginUsername = findViewById(R.id.etUsername);
         loginPassword = findViewById(R.id.etPassword);
         signUpBtn = findViewById(R.id.btnSignUp);
+        loginBtn = findViewById(R.id.btnLogIn);
+        loginWithFacebook = findViewById(R.id.logInFB);
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,6 +75,18 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void showAlert(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    dialog.cancel();
+                });
+        AlertDialog ok = builder.create();
+        ok.show();
+
+    }
+
     private void loginUser(String username, String password) {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
@@ -64,4 +103,5 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
     }
+
 }
