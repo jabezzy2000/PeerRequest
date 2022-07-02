@@ -55,42 +55,16 @@ public class TimelineFragment extends Fragment {
     String TAG = "TimelineFragment";
     String ERROR = "Task Unsuccessful";
     private FusedLocationProviderClient locationClient;
-//    private final WeakReference<HomeActivity> homeActivityWeakReference;
-    private  HomeActivity homeActivity;
-    private MapsActivity MapsActivity;
 
-//    public TimelineFragment(HomeActivity homeActivity) {
-//        // Required empty public constructor
-//        homeActivityWeakReference = new WeakReference<HomeActivity>(homeActivity);
-//    }
-//
-//
-//    public void setLat(double lat) {
-//        this.lat = lat;
-//    }
-//
-//    public void setLog(double log) {
-//        this.log = log;
-//    }
 
       public TimelineFragment() {
       }
-//    public TimelineFragment(HomeActivity homeActivityIn){
-//        this.homeActivity = homeActivityIn;
-//    }
 
-//    public TimelineFragment(HomeActivity homeActivity) { // did this
-//        homeActivityWeakReference = new WeakReference<HomeActivity>(homeActivity);
-//    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-//         latitude = this.getArguments().getDouble("latitude");
-//         longitude = this.getArguments().getDouble("longitude");
-//        Log.i(TAG, "latitude: " + longitude);
         return inflater.inflate(R.layout.fragment_timeline, container, false);
     }
 
@@ -155,15 +129,12 @@ public class TimelineFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Task task = new Task();
-//                HomeActivity.saveWithLocation(task);
                 String title = popupTaskTitle.getText().toString();
                 String description = popupTaskDescription.getText().toString();
 
                 task.setUser((User) ParseUser.getCurrentUser());
                 task.setTaskTitle(title);
                 task.setDescription(description);
-//                HomeActivity homeMap = (HomeActivity) getActivity();
-                MapsActivity.createMarker(longitude,latitude,title);
                 task.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {

@@ -99,5 +99,17 @@ public class Utilities extends TaskDetailActivity {
         dialog.show();
     }
 
+    private static void showAlert(String title, String message, Context context) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    dialog.cancel();
+                });
+        android.app.AlertDialog ok = builder.create();
+        ok.show();
+
+    }
+
 
 }

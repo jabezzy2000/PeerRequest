@@ -75,17 +75,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void showAlert(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("OK", (dialog, which) -> {
-                    dialog.cancel();
-                });
-        AlertDialog ok = builder.create();
-        ok.show();
-
-    }
 
     private void loginUser(String username, String password) {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
