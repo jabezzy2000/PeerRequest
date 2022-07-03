@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
 import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
@@ -24,6 +25,7 @@ import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private final List<Task> tasks;
+    private User user;
 
     public TaskAdapter(Context context, List<Task> tasks) {
         this.tasks = tasks;
@@ -66,10 +68,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
 
         public void bind(Task task) {
+            user = task.getUser();
             tvUsername.setText(task.getUser().getUsername());
             tvTaskTitle.setText(task.getTaskTitle());
             tvTaskDescription.setText(task.getDescription());
-            tvTime.setText(task.getCreatedAt().toString());
+            tvTime.setText(Utilities.getSimpleTime(task.getCreatedAt()));
+            if(user.getProfilePicture()!= null){
+                Utilities.roundedImage(itemView.getContext(), user.getProfilePicture().getUrl(),ivProfilePicture,80);
+            }
 
         }
 

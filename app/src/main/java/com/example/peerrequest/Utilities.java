@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.User;
@@ -64,13 +65,13 @@ public class Utilities extends TaskDetailActivity {
         }
     }
 
-    public static void createNewSubmitDialog(Requests request,Context context,Activity TaskDetailActivity) {
-          AlertDialog.Builder dialogBuilder;
-          AlertDialog dialog;
+    public static void createNewSubmitDialog(Requests request, Context context, Activity TaskDetailActivity) {
+        AlertDialog.Builder dialogBuilder;
+        AlertDialog dialog;
 
         dialogBuilder = new AlertDialog.Builder(context);
         final View popup = TaskDetailActivity.getLayoutInflater().inflate(R.layout.accept_request_popup, null);
-         ImageView submitRequestProfileImage =popup.findViewById(R.id.submitRequestProfilePicture);
+        ImageView submitRequestProfileImage = popup.findViewById(R.id.submitRequestProfilePicture);
         TextView submitRequestName = popup.findViewById(R.id.acceptRequestName);
         TextView acceptRequestRating = popup.findViewById(R.id.acceptRequestRating);
         TextView acceptRequestCoverLetter = popup.findViewById(R.id.acceptRequestCoverLetter);
@@ -85,7 +86,7 @@ public class Utilities extends TaskDetailActivity {
             @Override
             public void onClick(View v) {
                 request.setAccepted("True");
-                Toast.makeText(context,"Request Accepted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Request Accepted", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
