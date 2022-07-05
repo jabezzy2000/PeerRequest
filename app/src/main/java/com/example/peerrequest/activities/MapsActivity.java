@@ -43,8 +43,8 @@ public class MapsActivity extends AppCompatActivity {
     private final int REQUEST_LOCATION_PERMISSION = 1;
     private final long UPDATE_INTERVAL = 10 * 2000;  /* 10 secs */
     private final long FASTEST_INTERVAL = 5000; /* 5 sec */
-    public double latitude ;
-    public double longitude ;
+    public double latitude;
+    public double longitude;
     private String TAG = "MapsActivity";
     public FusedLocationProviderClient locationClient;
 
@@ -156,11 +156,11 @@ public class MapsActivity extends AppCompatActivity {
             @Override
             public void onMapReady(@NonNull GoogleMap googleMap) {
                 mMap = googleMap;
-        //creating marker at current position
-        LatLng currentLocation = new LatLng(latitude, longitude);
-        Log.i(TAG, "onMapReady: current location" + currentLocation);
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Position"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,17));
+                //creating marker at current position
+                LatLng currentLocation = new LatLng(latitude, longitude);
+                Log.i(TAG, "onMapReady: current location" + currentLocation);
+                mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Position"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17));
             }
         });
     }
@@ -174,11 +174,11 @@ public class MapsActivity extends AppCompatActivity {
     }
 
     public void createMarker(Double longitude, double latitude, String taskTitle) {
-        LatLng location = new LatLng(latitude,longitude);
+        LatLng location = new LatLng(latitude, longitude);
         BitmapDescriptor defaultMarker =
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
         mMap.addMarker(new MarkerOptions().position(location).title(taskTitle).icon(defaultMarker));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,17));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 17));
     }
 
 

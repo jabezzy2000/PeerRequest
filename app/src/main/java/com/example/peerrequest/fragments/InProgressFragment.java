@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.example.peerrequest.R;
 import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.adapters.MessageAdapter;
 import com.example.peerrequest.models.Message;
+import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -36,16 +38,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InProgressFragment extends Fragment {
+    User user;
     ImageButton send;
     EditText typeMessage;
     String data;
     Button completedBtn;
     String TAG = "InProgressFragment";
     RecyclerView chatRecyclerView;
+    public static final String particularRequest = "request";
     protected List<Message> mMessages;
     boolean mFirstLoad;
     protected MessageAdapter messageAdapter;
     private String userID;
+    Requests requests;
     static final int MAX_CHAT_MESSAGES_TO_SHOW = 50;
 
 
@@ -58,6 +63,7 @@ public class InProgressFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+//        requests = getArguments().getParcelable(particularRequest);
         return inflater.inflate(R.layout.fragment_in_progress, container, false);
     }
 
@@ -71,6 +77,7 @@ public class InProgressFragment extends Fragment {
         mMessages = new ArrayList<>();
         mFirstLoad = true;
         userID = User.getCurrentUser().getObjectId();
+        user = (User) User.getCurrentUser();
         messageAdapter = new MessageAdapter(getContext(), userID, mMessages);
         chatRecyclerView.setAdapter(messageAdapter);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -86,16 +93,16 @@ public class InProgressFragment extends Fragment {
         completedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createRateUserDialog(getContext());
+                createRateUserDialog(getContext(), user);
             }
         });
 
     }
 
-    private void createRateUserDialog(Context context) {
+    private void createRateUserDialog(Context context, User user) {
         AlertDialog.Builder dialogBuilder;
         AlertDialog dialog;
-
+        Toast.makeText(context, "request created by " + requests.getUser().getUsername(), Toast.LENGTH_SHORT).show();
         dialogBuilder = new AlertDialog.Builder(context);
         View popup = View.inflate(context, R.layout.rating_dialog, null);
         RatingBar ratingBar = popup.findViewById(R.id.rating);
@@ -106,6 +113,12 @@ public class InProgressFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Rating is " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
+                double rating = ratingBar.getRating(); // this will be added to the total rating
+                double currrentRating = Double.parseDouble(user.getUserRating());
+                int currentNumberOfRating = Integer.parseInt(user.getNumberOfRating());
+                String newNumberOfRating = String.valueOf(currentNumberOfRating + 1);
+                user.setNumberOfRating(newNumberOfRating);
+                user.setKeyRating(String.valueOf(currrentRating + rating));
                 dialog.dismiss();
             }
         });
