@@ -2,11 +2,8 @@ package com.example.peerrequest.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
-import com.parse.ParseUser;
 
-import org.parceler.Parcel;
 
-//@Parcel
 @ParseClassName("Tasks")
 public class Task extends ParseObject {
     public static final String KEY_USER = "UserPointer";
@@ -26,7 +23,7 @@ public class Task extends ParseObject {
 
     public void setTaskCompleted() {
         put(String.valueOf(KEY_COMPLETED), true);
-    } //come back to this
+    }
 
     public void setTaskTitle(String description) {
         put(KEY_REQUESTS_TITLE, description);
@@ -36,11 +33,11 @@ public class Task extends ParseObject {
         put(KEY_REQUEST_DESCRIPTION, description);
     }
 
-    public ParseUser getUser() {
-        return getParseUser(KEY_USER);
+    public User getUser() {
+        return (User) getParseUser(KEY_USER);
     }
 
-    public void setUser(ParseUser user) {
+    public void setUser(User user) {
         put(KEY_USER, user);
     }
 

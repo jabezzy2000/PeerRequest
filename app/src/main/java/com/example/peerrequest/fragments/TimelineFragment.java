@@ -18,19 +18,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.peerrequest.activities.MapsActivity;
 import com.example.peerrequest.R;
-import com.example.peerrequest.activities.MainActivity;
+import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.adapters.TaskAdapter;
 import com.example.peerrequest.models.Task;
+import com.example.peerrequest.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,13 +49,18 @@ public class TimelineFragment extends Fragment {
     public ImageButton mapButton;
     protected List<Task> allTasks;
     String TAG = "TimelineFragment";
-    String SUCCESS = "task successful";
-    String ERROR = "task unsuccessful";
-    private MainActivity mainActivity;
+    String ERROR = "Task Unsuccessful";
+    private final WeakReference<HomeActivity> homeActivityWeakReference;
+    private MapsActivity activity;
 
-    public TimelineFragment(MainActivity mainActivity) {
+    public TimelineFragment(HomeActivity homeActivity, MapsActivity mapsActivity) {
         // Required empty public constructor
-        this.mainActivity = mainActivity;
+        homeActivityWeakReference = new WeakReference<HomeActivity>(homeActivity);
+        activity = mapsActivity;
+    }
+
+    public TimelineFragment(HomeActivity homeActivity) { // did this
+        homeActivityWeakReference = new WeakReference<HomeActivity>(homeActivity);
     }
 
 
@@ -65,7 +71,8 @@ public class TimelineFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_timeline, container, false);
     }
 
-    private void queryTasks() { //specifying data I want to query
+    //specifying data I want to query
+    private void queryTasks() {
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
         query.include(Task.KEY_USER);
         query.setLimit(limit);
@@ -74,9 +81,8 @@ public class TimelineFragment extends Fragment {
             @Override
             public void done(List<Task> tasks, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, ERROR, e);
+                    Log.e(TAG, ERROR + e.getMessage(), e);
                 } else {
-                    Log.i(TAG, SUCCESS);
                     allTasks.addAll(tasks);
                     taskAdapter.notifyDataSetChanged();
                 }
@@ -98,7 +104,6 @@ public class TimelineFragment extends Fragment {
         addTasks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mainActivity, "button clicked", Toast.LENGTH_SHORT).show();
                 createNewContactDialog();
             }
         });
@@ -108,19 +113,13 @@ public class TimelineFragment extends Fragment {
                 changeToMapActivity();
             }
         });
-
         queryTasks();
-
-
     }
 
     private void changeToMapActivity() {
         Intent intent = new Intent(getActivity(), MapsActivity.class);
         startActivity(intent);
     }
-//
-//    private void addNewTask() {
-//    }
 
     public void createNewContactDialog() {
         dialogBuilder = new AlertDialog.Builder(getContext());
@@ -129,18 +128,16 @@ public class TimelineFragment extends Fragment {
         popupTaskDescription = popup.findViewById(R.id.taskDescription);
         popupSave = popup.findViewById(R.id.btnOk);
         popupCancel = popup.findViewById(R.id.btnCancel);
-        dialogBuilder.setView(popup);
-        dialog = dialogBuilder.create();
-        dialog.show();
         popupSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String title = popupTaskTitle.getText().toString();
                 String description = popupTaskDescription.getText().toString();
                 Task task = new Task();
-                task.setUser(ParseUser.getCurrentUser());
+                task.setUser((User) ParseUser.getCurrentUser());
                 task.setTaskTitle(title);
                 task.setDescription(description);
+
                 task.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -159,6 +156,9 @@ public class TimelineFragment extends Fragment {
                 dialog.dismiss();
             }
         });
+        dialogBuilder.setView(popup);
+        dialog = dialogBuilder.create();
+        dialog.show();
     }
 
 }

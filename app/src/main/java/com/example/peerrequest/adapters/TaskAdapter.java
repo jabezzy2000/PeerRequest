@@ -16,30 +16,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.models.Task;
+import com.example.peerrequest.models.User;
 
 import org.parceler.Parcels;
 
 import java.util.List;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private final List<Task> tasks;
-    Fragment fragment;
-
 
     public TaskAdapter(Context context, List<Task> tasks) {
-//        this.context = context;
         this.tasks = tasks;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_item_task, parent, false);
-        return new ViewHolder(view);
+        return new TaskViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
         holder.bind(task);
     }
@@ -50,15 +48,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView ivProfilePicture;
         TextView tvUsername;
         TextView tvTime;
         TextView tvTaskTitle;
         TextView tvTaskDescription;
 
-        public ViewHolder(@NonNull View itemView) {
+        public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             ivProfilePicture = itemView.findViewById(R.id.ivProfilePicture);
             tvUsername = itemView.findViewById(R.id.tvUserName);
@@ -74,11 +71,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             tvTaskDescription.setText(task.getDescription());
             tvTime.setText(task.getCreatedAt().toString());
 
-//            ParseFile profileImage = task.getUser().getProfileImage();
-//            if(profileImage!= null) {
-//                //implement glide method to add profile picture if user has one
-//            }
-
         }
 
         @Override
@@ -92,7 +84,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
             }
         }
-    }}
+    }
+}
 
 
 

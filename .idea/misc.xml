@@ -7,22 +7,29 @@
         <entry key="app/src/main/res/drawable/ic_exit.xml" value="0.1305" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1305" />
         <entry key="app/src/main/res/drawable/ic_login_24.xml" value="0.1305" />
+        <entry key="app/src/main/res/layout/accept_request_popup.xml" value="0.36666666666666664" />
         <entry key="app/src/main/res/layout/activity_item_task.xml" value="0.8255208333333334" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3885416666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.9318048206937096" />
-        <entry key="app/src/main/res/layout/activity_profile_item_task.xml" value="0.6763149906919841" />
+        <entry key="app/src/main/res/layout/activity_maps.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_pop_up.xml" value="0.2861111111111111" />
+        <entry key="app/src/main/res/layout/activity_profile_item_task.xml" value="0.5753424657534246" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.8255208333333334" />
-        <entry key="app/src/main/res/layout/activity_task_detail.xml" value="0.2857737223307292" />
+        <entry key="app/src/main/res/layout/activity_task_detail.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.5010416666666667" />
         <entry key="app/src/main/res/layout/fragment_edit.xml" value="0.3702896118164063" />
         <entry key="app/src/main/res/layout/fragment_in_progress.xml" value="0.8255208333333334" />
+        <entry key="app/src/main/res/layout/fragment_in_progress_worker.xml" value="0.21666666666666667" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.6536458333333334" />
-        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.8255208333333334" />
-        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.8114583333333333" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.5920550038197097" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.5079908675799086" />
         <entry key="app/src/main/res/layout/fragment_task_detail.xml" value="0.3974358974358974" />
         <entry key="app/src/main/res/layout/fragment_timeline.xml" value="0.4837688044338876" />
         <entry key="app/src/main/res/layout/main.xml" value="0.8244791666666667" />
         <entry key="app/src/main/res/layout/popup.xml" value="0.40677083333333336" />
+        <entry key="app/src/main/res/layout/request_task_popup.xml" value="0.3574074074074074" />
+        <entry key="app/src/main/res/layout/task_detail_item_task.xml" value="0.4009259259259259" />
+        <entry key="app/src/main/res/layout/taskdetailitemtask.xml" value="0.4009259259259259" />
         <entry key="app/src/main/res/layout/test.xml" value="0.14537037037037037" />
         <entry key="app/src/main/res/menu/menu_bottom_navigation.xml" value="0.8244791666666667" />
       </map>
@@ -33,5 +40,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.4837688044338876" />
+      </ProjectState>
+    </option>
   </component>
 </project>
