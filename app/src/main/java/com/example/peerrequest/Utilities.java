@@ -86,8 +86,8 @@ public class Utilities extends TaskDetailActivity {
             @Override
             public void onClick(View v) {
                 request.setAccepted("True");
-                Toast.makeText(context, "Request Accepted", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+                //move from here to the chat screen
             }
         });
 
@@ -111,6 +111,8 @@ public class Utilities extends TaskDetailActivity {
         ok.show();
 
     }
+
+
 
 
 }

@@ -10,24 +10,11 @@
     tools:context=".fragments.TimelineFragment">
 
 
-    <ImageView
-        android:id="@+id/ivProfileImageHome"
-        android:layout_width="64dp"
-        android:layout_height="65dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="345dp"
-        android:contentDescription="@string/profileimage"
-        tools:src="@tools:sample/avatars" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvHomeTimeline"
         android:layout_width="409dp"
         android:layout_height="556dp"
-        android:layout_below="@+id/ivProfileImageHome"
+        android:layout_below="@+id/textView2"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
@@ -39,10 +26,12 @@
         android:id="@+id/ibMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/textView2"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="26dp"
+        android:layout_marginStart="210dp"
+        android:layout_marginTop="-2dp"
+        android:layout_marginEnd="25dp"
+        android:layout_toEndOf="@+id/textView2"
         android:src="@drawable/ic_map" />
 
     <ImageButton
@@ -54,5 +43,19 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="18dp"
         android:src="@drawable/ic_add" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="33dp"
+        android:text="Timeline"
+        android:textColorHighlight="@color/black"
+        android:textColor="@color/purple_500"
+        android:textSize="30sp"
+        android:textStyle="italic" />
 
 </RelativeLayout>

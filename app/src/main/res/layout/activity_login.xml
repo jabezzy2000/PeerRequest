@@ -9,6 +9,7 @@
 
     <ImageView
         android:id="@+id/ivLogo"
+        android:src="@drawable/peer"
         android:layout_width="137dp"
         android:layout_height="129dp"
         android:layout_marginTop="169dp"
@@ -17,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_foreground" />
+         />
 
     <Button
         android:id="@+id/btnLogIn"

@@ -53,7 +53,7 @@ public class SearchFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
-    private void queryTasks(String querySearch) { //added a string param
+    private void queryTasks(String querySearch) {
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
         query.whereEqualTo(Task.KEY_REQUESTS_TITLE, querySearch);
         query.setLimit(limit);
