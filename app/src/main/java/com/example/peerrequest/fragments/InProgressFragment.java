@@ -1,9 +1,11 @@
 package com.example.peerrequest.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,8 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.adapters.MessageAdapter;
 import com.example.peerrequest.models.Message;
 import com.example.peerrequest.models.User;
@@ -34,6 +39,7 @@ public class InProgressFragment extends Fragment {
     ImageButton send;
     EditText typeMessage;
     String data;
+    Button completedBtn;
     String TAG = "InProgressFragment";
     RecyclerView chatRecyclerView;
     protected List<Message> mMessages;
@@ -41,8 +47,6 @@ public class InProgressFragment extends Fragment {
     protected MessageAdapter messageAdapter;
     private String userID;
     static final int MAX_CHAT_MESSAGES_TO_SHOW = 50;
-
-
 
 
     public InProgressFragment() {
@@ -61,12 +65,13 @@ public class InProgressFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         send = view.findViewById(R.id.ibSend);
+        completedBtn = view.findViewById(R.id.completedBtn);
         typeMessage = view.findViewById(R.id.etMessage);
         chatRecyclerView = view.findViewById(R.id.messageRecyclerView);
         mMessages = new ArrayList<>();
         mFirstLoad = true;
         userID = User.getCurrentUser().getObjectId();
-        messageAdapter = new MessageAdapter(getContext(),userID,mMessages);
+        messageAdapter = new MessageAdapter(getContext(), userID, mMessages);
         chatRecyclerView.setAdapter(messageAdapter);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
@@ -77,6 +82,35 @@ public class InProgressFragment extends Fragment {
                 setUpMessagePosting();
             }
         });
+        refreshMessages();
+        completedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createRateUserDialog(getContext());
+            }
+        });
+
+    }
+
+    private void createRateUserDialog(Context context) {
+        AlertDialog.Builder dialogBuilder;
+        AlertDialog dialog;
+
+        dialogBuilder = new AlertDialog.Builder(context);
+        View popup = View.inflate(context, R.layout.rating_dialog, null);
+        RatingBar ratingBar = popup.findViewById(R.id.rating);
+        Button setRating = popup.findViewById(R.id.setRating);
+        dialogBuilder.setView(popup);
+        dialog = dialogBuilder.create();
+        setRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Rating is " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
 
     }
 
@@ -88,14 +122,14 @@ public class InProgressFragment extends Fragment {
         message.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if (e!= null) {
+                if (e != null) {
                     Log.e(TAG, "done: " + e.getMessage());
                 }
             }
         });
     }
 
-    void refreshMessages(){
+    public void refreshMessages() {
         ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
         // Configure limit and sort order
         query.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
@@ -116,4 +150,5 @@ public class InProgressFragment extends Fragment {
             }
         });
     }
+
 }

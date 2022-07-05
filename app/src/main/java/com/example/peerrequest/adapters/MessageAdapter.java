@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
 import com.example.peerrequest.models.Message;
+import com.example.peerrequest.models.User;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -22,13 +24,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private List<Message> mMessages;
     private Context mContext;
     private String mUserId;
+    private User user;
     private static final int MESSAGE_OUTGOING = 123;
     private static final int MESSAGE_INCOMING = 321;
+
+    public MessageAdapter(Context context, String userId, List<Message> messages) {
+        mMessages = messages;
+        this.mUserId = userId;
+        mContext = context;
+    }
+
 
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -51,7 +60,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
 
-
     @Override
     public int getItemViewType(int position) {
         if (isMe(position)) {
@@ -61,7 +69,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
     }
 
-public abstract class MessageViewHolder extends RecyclerView.ViewHolder {
+    public abstract class MessageViewHolder extends RecyclerView.ViewHolder {
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,13 +85,15 @@ public abstract class MessageViewHolder extends RecyclerView.ViewHolder {
 
         public IncomingMessageViewHolder(View itemView) {
             super(itemView);
-            imageOther = (ImageView)itemView.findViewById(R.id.ivProfileOther);
-            body = (TextView)itemView.findViewById(R.id.tvBody);
-            name = (TextView)itemView.findViewById(R.id.tvName);
+            imageOther = (ImageView) itemView.findViewById(R.id.ivProfileOther);
+            body = (TextView) itemView.findViewById(R.id.tvBody);
+            name = (TextView) itemView.findViewById(R.id.tvName);
+            user = (User) User.getCurrentUser();
         }
 
         @Override
         public void bindMessage(Message message) {
+            Utilities.roundedImage(mContext,user.getProfilePicture().getUrl(),imageOther,80 );
             body.setText(message.getBody());
             name.setText(message.getUserId());
         }
@@ -95,7 +105,7 @@ public abstract class MessageViewHolder extends RecyclerView.ViewHolder {
 
         public OutgoingMessageViewHolder(View itemView) {
             super(itemView);
-            imageMe = (ImageView)itemView.findViewById(R.id.ivProfileMe);
+            imageMe = (ImageView) itemView.findViewById(R.id.ivProfileMe);
             body = itemView.findViewById(R.id.tvBody);
         }
 
@@ -124,18 +134,10 @@ public abstract class MessageViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-
-    public MessageAdapter(Context context, String userId, List<Message> messages) {
-        mMessages = messages;
-        this.mUserId = userId;
-        mContext = context;
-    }
-
     @Override
     public int getItemCount() {
         return mMessages.size();
     }
-
 
 
 }

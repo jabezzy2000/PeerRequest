@@ -57,9 +57,8 @@ public class TimelineFragment extends Fragment {
     private FusedLocationProviderClient locationClient;
 
 
-      public TimelineFragment() {
-      }
-
+    public TimelineFragment() {
+    }
 
 
     @Override
