@@ -26,6 +26,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.peerrequest.databinding.ActivityMapsBinding;
@@ -41,10 +43,10 @@ public class MapsActivity extends AppCompatActivity {
     private final int REQUEST_LOCATION_PERMISSION = 1;
     private final long UPDATE_INTERVAL = 10 * 2000;  /* 10 secs */
     private final long FASTEST_INTERVAL = 5000; /* 5 sec */
-    private double latitude ;
-    private double longitude ;
+    public double latitude ;
+    public double longitude ;
     private String TAG = "MapsActivity";
-    private FusedLocationProviderClient locationClient;
+    public FusedLocationProviderClient locationClient;
 
 
     @Override
@@ -171,11 +173,13 @@ public class MapsActivity extends AppCompatActivity {
         return longitude;
     }
 
-    public void createMarker(String longitude, String latitude, String taskTitle) {
-        double lat = Double.parseDouble(latitude);
-        double log = Double.parseDouble(longitude);
-        LatLng location = new LatLng(lat,log);
-        mMap.addMarker(new MarkerOptions().position(location).title(taskTitle));
+    public void createMarker(Double longitude, double latitude, String taskTitle) {
+        LatLng location = new LatLng(latitude,longitude);
+        BitmapDescriptor defaultMarker =
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+        mMap.addMarker(new MarkerOptions().position(location).title(taskTitle).icon(defaultMarker));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,17));
     }
+
+
 }

@@ -6,6 +6,11 @@ import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.parse.Parse;
 import com.parse.ParseUser;
+import com.parse.facebook.ParseFacebookUtils;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+
 
 public class ParseApplication extends Application {
 
@@ -15,6 +20,14 @@ public class ParseApplication extends Application {
         ParseUser.registerSubclass(User.class);
         ParseUser.registerSubclass(Task.class);
         ParseUser.registerSubclass(Requests.class);
+        ParseUser.registerSubclass(Message.class);
+        //monitoring parse network
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        builder.networkInterceptors().add(httpLoggingInterceptor);
 
         // initializing parse application and registering parse models
         Parse.initialize(new Parse.Configuration.Builder(this)

@@ -25,6 +25,7 @@ import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.adapters.TaskAdapter;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -32,6 +33,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.lang.ref.WeakReference;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,26 +50,21 @@ public class TimelineFragment extends Fragment {
     RecyclerView recyclerView;
     public ImageButton mapButton;
     protected List<Task> allTasks;
+    Double latitude;
+    Double longitude;
     String TAG = "TimelineFragment";
     String ERROR = "Task Unsuccessful";
-    private final WeakReference<HomeActivity> homeActivityWeakReference;
-    private MapsActivity activity;
+    private FusedLocationProviderClient locationClient;
 
-    public TimelineFragment(HomeActivity homeActivity, MapsActivity mapsActivity) {
-        // Required empty public constructor
-        homeActivityWeakReference = new WeakReference<HomeActivity>(homeActivity);
-        activity = mapsActivity;
-    }
 
-    public TimelineFragment(HomeActivity homeActivity) { // did this
-        homeActivityWeakReference = new WeakReference<HomeActivity>(homeActivity);
-    }
+      public TimelineFragment() {
+      }
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_timeline, container, false);
     }
 
@@ -131,13 +128,13 @@ public class TimelineFragment extends Fragment {
         popupSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Task task = new Task();
                 String title = popupTaskTitle.getText().toString();
                 String description = popupTaskDescription.getText().toString();
-                Task task = new Task();
+
                 task.setUser((User) ParseUser.getCurrentUser());
                 task.setTaskTitle(title);
                 task.setDescription(description);
-
                 task.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
