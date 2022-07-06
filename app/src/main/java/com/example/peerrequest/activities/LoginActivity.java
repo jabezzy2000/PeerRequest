@@ -13,16 +13,20 @@ import com.example.peerrequest.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+
 import com.facebook.login.LoginManager;
 import com.parse.ParseUser;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -30,11 +34,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.parse.ParseUser;
 import com.parse.facebook.ParseFacebookUtils;
+
 import org.json.JSONException;
+
 import java.util.Arrays;
 import java.util.Collection;
 
