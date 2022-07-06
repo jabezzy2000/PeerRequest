@@ -13,16 +13,20 @@ import com.example.peerrequest.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+
 import com.facebook.login.LoginManager;
 import com.parse.ParseUser;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -30,11 +34,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.parse.ParseUser;
 import com.parse.facebook.ParseFacebookUtils;
+
 import org.json.JSONException;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -46,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
     public Button loginBtn;
     public Button loginWithFacebook;
     public Button signUpBtn;
-    public Button checkChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
         signUpBtn = findViewById(R.id.btnSignUp);
         loginBtn = findViewById(R.id.btnLogIn);
         loginWithFacebook = findViewById(R.id.logInFB);
-        checkChat = findViewById(R.id.checkChat);
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,16 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser(username, password);
             }
         });
-
-        checkChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this,ChatActivity.class);
-                startActivity(intent);
-            }
-        });
     }
-
 
 
     private void loginUser(String username, String password) {

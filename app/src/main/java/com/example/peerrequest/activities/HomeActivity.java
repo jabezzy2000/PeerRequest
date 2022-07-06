@@ -168,7 +168,7 @@ public class HomeActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putDouble("latitude", latitude);
         bundle.putDouble("longitude",longitude);
-// set Fragmentclass Arguments
+
         TimelineFragment timelineFragment = new TimelineFragment();
         timelineFragment.setArguments(bundle);
     }

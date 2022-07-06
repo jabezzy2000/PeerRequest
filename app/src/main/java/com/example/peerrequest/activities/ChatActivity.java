@@ -68,32 +68,31 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         if (ParseUser.getCurrentUser() != null) {
-            startWithCurrentUser(); //TODO: We will build out this method in the next step
+            startWithCurrentUser();
         } else {
-            login();
+            Toast.makeText(this, "User has to be logged in", Toast.LENGTH_SHORT).show();
         }
     }
 
     // Get the userId from the cached currentUser object
     void startWithCurrentUser() {
-        // TODO:
         setupMessagePosting();
     }
 
 
     // Create an anonymous user using ParseAnonymousUtils and set sUserId
-    void login() {
-        ParseAnonymousUtils.logIn(new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Anonymous login failed: ", e);
-                } else {
-                    startWithCurrentUser();
-                }
-            }
-        });
-    }
+//    void login() {
+//        ParseAnonymousUtils.logIn(new LogInCallback() {
+//            @Override
+//            public void done(ParseUser user, ParseException e) {
+//                if (e != null) {
+//                    Log.e(TAG, "Anonymous login failed: ", e);
+//                } else {
+//                    startWithCurrentUser();
+//                }
+//            }
+//        });
+//    }
 
     @Override
     protected void onResume() {
@@ -199,7 +198,6 @@ public class ChatActivity extends AppCompatActivity {
         setRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Rating is " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
                 double rating = ratingBar.getRating(); // this will be added to the total rating
                 double currrentRating = Double.parseDouble(requests.getUser().getUserRating());
                 int currentNumberOfRatings = requests.getUser().getNumberOfRating();
@@ -213,7 +211,7 @@ public class ChatActivity extends AppCompatActivity {
                 requests.increment("numberOfRating");
                 dialog.dismiss();
                 try {
-                    requests.save();
+                    requests.save(); //Cannot save a ParseUser that is not authenticated.
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
