@@ -3,6 +3,7 @@ package com.example.peerrequest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,12 +15,15 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.peerrequest.activities.ChatActivity;
 import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.User;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
+
+import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +34,8 @@ public class Utilities extends TaskDetailActivity {
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+
+    ChatActivity chatActivity = new ChatActivity();
 
     public static void setImage(Context context, String url, ImageView iv) {
         Glide.with(context).load(url).into(iv);
@@ -87,7 +93,9 @@ public class Utilities extends TaskDetailActivity {
             public void onClick(View v) {
                 request.setAccepted("True");
                 dialog.dismiss();
-                //move from here to the chat screen
+                Intent intent = new Intent(TaskDetailActivity, ChatActivity.class);
+                intent.putExtra("request",Parcels.wrap(request));
+                context.startActivity(intent);
             }
         });
 

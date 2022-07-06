@@ -31,6 +31,8 @@ public class User extends ParseUser {
 
     public String getNumberOfRating(){return getString(KEY_NUMBER_OF_RATING);}
 
+    public String getTotalRating(){return getString(KEY_TOTAL_RATING);}
+
 
 }
 

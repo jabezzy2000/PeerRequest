@@ -8,18 +8,14 @@
         android:title="@string/home"
         app:showAsAction="always" />
     <item
-        android:icon="@drawable/ic_person"
-        android:id="@+id/action_Profile"
-        android:title="Profile"
-        app:showAsAction="always" />
-    <item
         android:icon="@android:drawable/ic_search_category_default"
         android:id="@+id/action_Search"
         android:title="Search"
         app:showAsAction="always" />
     <item
-        android:icon="@drawable/ic_car"
-        android:id="@+id/action_In_Progress"
-        android:title="In Progress"
+        android:icon="@drawable/ic_person"
+        android:id="@+id/action_Profile"
+        android:title="Profile"
         app:showAsAction="always" />
+
 </menu>

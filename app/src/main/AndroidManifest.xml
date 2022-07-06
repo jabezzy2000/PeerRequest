@@ -62,6 +62,10 @@
             android:exported="true">
         </activity>
         <activity
+            android:name=".activities.ChatActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".activities.SplashScreen"
             android:exported="true">
             <intent-filter>

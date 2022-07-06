@@ -20,4 +20,6 @@
     <string name="why_you_please_enter_a_short_reason_why_you_would_want_to_complete_this_task">Why You? Please Enter A Short Reason Why You Would Want To Complete This Task</string>
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
+    <string name="message_hint">message</string>
+    <string name="send">send</string>
 </resources>

@@ -9,12 +9,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -79,6 +82,22 @@ public class HomeActivity extends AppCompatActivity {
     private FusedLocationProviderClient locationClient;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.messenger) {
+            Intent intent = new Intent(HomeActivity.this, ChatActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startLocationUpdates();
@@ -102,9 +121,6 @@ public class HomeActivity extends AppCompatActivity {
 
                     case R.id.action_Profile:
                         navigationFragment = new ProfileTasksFragment();
-                        break;
-                    case R.id.action_In_Progress:
-                        navigationFragment = new InProgressFragment();
                         break;
                     case R.id.action_Search:
                         navigationFragment = new SearchFragment(HomeActivity.this);
