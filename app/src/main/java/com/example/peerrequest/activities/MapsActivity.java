@@ -35,6 +35,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.peerrequest.databinding.ActivityMapsBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MapsActivity extends AppCompatActivity {
@@ -49,11 +55,7 @@ public class MapsActivity extends AppCompatActivity {
     public double longitude;
     public static LatLng currentLocation;
     private String TAG = "MapsActivity";
-    public FusedLocationProviderClient locationClient;
-
-    public void getLocation(String title) {
-        createMarker(currentLocation,title);
-    }
+    public List<com.example.peerrequest.models.Location> locations;
 
 
     @Override
@@ -62,7 +64,16 @@ public class MapsActivity extends AppCompatActivity {
         MapsInitializer.initialize(getApplicationContext());
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        startLocationUpdates();
+        locations = new ArrayList<>();
+        ParseQuery<com.example.peerrequest.models.Location> locationParseQuery = new ParseQuery(com.example.peerrequest.models.Location.class);
+        locationParseQuery.findInBackground(new FindCallback<com.example.peerrequest.models.Location>() {
+            @Override
+            public void done(List<com.example.peerrequest.models.Location> objects, ParseException e) {
+                locations.addAll(objects);
+                startLocationUpdates();
+            }
+        });
+
 
     }
 
@@ -75,7 +86,7 @@ public class MapsActivity extends AppCompatActivity {
     }
 
     // Trigger new location updates at interval
-    protected void startLocationUpdates() {
+    public void startLocationUpdates() {
         // Create the location request to start receiving updates
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -123,32 +134,7 @@ public class MapsActivity extends AppCompatActivity {
         setMapToLocation();
     }
 
-    public void getLastLocation() {
-        // Get last known recent location using new Google Play Services SDK (v11+)
-        FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermission();
-        }
-        locationClient.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // GPS location can be null if GPS is switched off
-                        if (location != null) {
-                            onLocationChanged(location);
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Error trying to get last GPS location: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                });
-    }
-
-    public void requestPermission() {
+    public void requestPermission() { // requesting permission
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 REQUEST_LOCATION_PERMISSION);
@@ -166,16 +152,15 @@ public class MapsActivity extends AppCompatActivity {
                 currentLocation = new LatLng(latitude, longitude);
                 Log.i(TAG, "onMapReady: current location" + currentLocation);
                 mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Position"));
+                BitmapDescriptor defaultMarker =
+                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+                for (int i = 0; i < locations.size(); i++) {
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(locations.get(i).getKeyLatitude()), Double.parseDouble(locations.get(i).getKeyLongitude()))).title(locations.get(i).getKeyTitle()).icon(defaultMarker));
+                }
+
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17));
             }
         });
-    }
-
-
-    public void createMarker(LatLng location, String taskTitle) {
-//        LatLng location = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(location).title(taskTitle));
-
     }
 
 

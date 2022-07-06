@@ -23,6 +23,7 @@ import com.example.peerrequest.activities.MapsActivity;
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.adapters.TaskAdapter;
+import com.example.peerrequest.models.Location;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -51,11 +52,8 @@ public class TimelineFragment extends Fragment {
     RecyclerView recyclerView;
     public ImageButton mapButton;
     protected List<Task> allTasks;
-    Double latitude;
-    Double longitude;
     String TAG = "TimelineFragment";
     String ERROR = "Task Unsuccessful";
-    MapsActivity mapsActivity;
     LatLng latLng;
 
 
@@ -66,7 +64,6 @@ public class TimelineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mapsActivity = new MapsActivity();
         return inflater.inflate(R.layout.fragment_timeline, container, false);
     }
 
@@ -147,7 +144,12 @@ public class TimelineFragment extends Fragment {
                     }
                 });
                 dialog.dismiss();
-                mapsActivity.getLocation(task.getTaskTitle());
+                HomeActivity homeActivity = (HomeActivity) getActivity();
+                Location location = new Location();
+                location.setKeyLongitude(homeActivity.getLongitude()+"");
+                location.setKeyLatitude(homeActivity.getLatitude()+"");
+                location.setKeyTitle(title);
+                location.saveInBackground();
             }
         });
 
