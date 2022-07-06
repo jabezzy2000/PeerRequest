@@ -29,11 +29,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PeerRequest"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.ChatActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCoCwSx-6xJxd4ei5v6npdpP4iE26HWe6o" />
-
 
         <activity
             android:name=".activities.MapsActivity"
@@ -48,6 +50,7 @@
         <activity
             android:name=".activities.HomeActivity"
             android:exported="true" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.codepath.fileprovider"
@@ -57,10 +60,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider" />
         </provider>
+
         <activity
             android:name=".activities.LoginActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".activities.SplashScreen"
             android:exported="true">

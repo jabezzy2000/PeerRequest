@@ -115,11 +115,11 @@ public class InProgressFragment extends Fragment {
                 Toast.makeText(context, "Rating is " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
                 double rating = ratingBar.getRating(); // this will be added to the total rating
                 double currrentRating = Double.parseDouble(user.getUserRating());
-                int currentNumberOfRating = Integer.parseInt(user.getNumberOfRating());
-                String newNumberOfRating = String.valueOf(currentNumberOfRating + 1);
-                user.setNumberOfRating(newNumberOfRating);
-                user.setKeyRating(String.valueOf(currrentRating + rating));
-                dialog.dismiss();
+//                int currentNumberOfRating = Integer.parseInt(user.getNumberOfRating());
+//                String newNumberOfRating = String.valueOf(currentNumberOfRating + 1);
+//                user.setNumberOfRating(newNumberOfRating);
+//                user.setKeyRating(String.valueOf(currrentRating + rating));
+//                dialog.dismiss();
             }
         });
         dialog.show();

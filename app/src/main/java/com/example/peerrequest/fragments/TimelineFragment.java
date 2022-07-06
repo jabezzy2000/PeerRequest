@@ -23,9 +23,11 @@ import com.example.peerrequest.activities.MapsActivity;
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.adapters.TaskAdapter;
+import com.example.peerrequest.models.Location;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -50,11 +52,9 @@ public class TimelineFragment extends Fragment {
     RecyclerView recyclerView;
     public ImageButton mapButton;
     protected List<Task> allTasks;
-    Double latitude;
-    Double longitude;
     String TAG = "TimelineFragment";
     String ERROR = "Task Unsuccessful";
-    private FusedLocationProviderClient locationClient;
+    LatLng latLng;
 
 
     public TimelineFragment() {
@@ -91,6 +91,7 @@ public class TimelineFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.rvHomeTimeline);
         allTasks = new ArrayList<>();
+        latLng = MapsActivity.currentLocation;
         taskAdapter = new TaskAdapter(getContext(), allTasks);
         recyclerView.setAdapter(taskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -143,6 +144,12 @@ public class TimelineFragment extends Fragment {
                     }
                 });
                 dialog.dismiss();
+                HomeActivity homeActivity = (HomeActivity) getActivity();
+                Location location = new Location();
+                location.setKeyLongitude(homeActivity.getLongitude()+"");
+                location.setKeyLatitude(homeActivity.getLatitude()+"");
+                location.setKeyTitle(title);
+                location.saveInBackground();
             }
         });
 
@@ -156,5 +163,7 @@ public class TimelineFragment extends Fragment {
         dialog = dialogBuilder.create();
         dialog.show();
     }
+
+
 
 }

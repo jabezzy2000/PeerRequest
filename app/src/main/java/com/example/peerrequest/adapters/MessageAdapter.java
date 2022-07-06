@@ -42,10 +42,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         LayoutInflater inflater = LayoutInflater.from(context);
 
         if (viewType == MESSAGE_INCOMING) {
-            View contactView = inflater.inflate(R.layout.item_message_incoming, parent, false);
+            View contactView = inflater.inflate(R.layout.message_incoming, parent, false);
             return new IncomingMessageViewHolder(contactView);
         } else if (viewType == MESSAGE_OUTGOING) {
-            View contactView = inflater.inflate(R.layout.item_message_outgoing, parent, false);
+            View contactView = inflater.inflate(R.layout.message_outgoing, parent, false);
             return new OutgoingMessageViewHolder(contactView);
         } else {
             throw new IllegalArgumentException("Unknown view type");

@@ -32,6 +32,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -50,6 +51,9 @@ public class HomeActivity extends AppCompatActivity {
     private final long FASTEST_INTERVAL = 5000; /* 5 sec */
     public double longitude;
     public double latitude;
+    public Location location;
+    public LatLng latLng;
+    private String TAG = "HomeActivity";
 //    public TimelineFragment timelineFragment= new TimelineFragment(HomeActivity.this);
     public TimelineFragment timelineFragment = new TimelineFragment();
 
@@ -71,11 +75,13 @@ public class HomeActivity extends AppCompatActivity {
         this.latitude = latitude;
     }
 
+
     private FusedLocationProviderClient locationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startLocationUpdates();
         fragmentManager = getSupportFragmentManager();
         setContentView(R.layout.activity_main);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -114,61 +120,13 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    protected void startLocationUpdates() {
-
-        // Create the location request to start receiving updates
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-
-        // Create LocationSettingsRequest object using location request
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        builder.addLocationRequest(mLocationRequest);
-        LocationSettingsRequest locationSettingsRequest = builder.build();
-
-        // Check whether location settings are satisfied
-        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
-
-        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
-        settingsClient.checkLocationSettings(locationSettingsRequest);
-
-        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_LOCATION_PERMISSION);
-        }
-        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(@NonNull LocationResult locationResult) {
-                        onLocationChanged(locationResult.getLastLocation());
-                    }
-                },
-                Looper.myLooper());
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_LOCATION_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
-                startLocationUpdates();
-            } else {
-                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
-            }
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
     private void onLocationChanged(Location location) {
        setLatitude(location.getLatitude());
        setLongitude(location.getLongitude());
         Bundle bundle = new Bundle();
         bundle.putDouble("latitude", latitude);
         bundle.putDouble("longitude",longitude);
-// set Fragmentclass Arguments
+
         TimelineFragment timelineFragment = new TimelineFragment();
         timelineFragment.setArguments(bundle);
     }
@@ -200,6 +158,61 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    public void startLocationUpdates() {
+        // Create the location request to start receiving updates
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+        // Create LocationSettingsRequest object using location request
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        LocationSettingsRequest locationSettingsRequest = builder.build();
+
+        // Check whether location settings are satisfied
+        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
+        settingsClient.checkLocationSettings(locationSettingsRequest);
+
+        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermission();
+        }
+        getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(@NonNull LocationResult locationResult) {
+                        onLocationChanged(locationResult.getLastLocation());
+                        location = locationResult.getLastLocation();
+                        longitude = location.getLongitude();
+                        latitude = location.getLatitude();
+                        latLng = new LatLng(latitude,longitude);
+                        Log.i(TAG, "onLocationResult: " + latLng);
+                    }
+                },
+                Looper.myLooper());
+    }
+
+    public void requestPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                REQUEST_LOCATION_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+                startLocationUpdates();
+            } else {
+                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
+            }
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+
 }
 
 

@@ -2,6 +2,7 @@ package com.example.peerrequest.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,10 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
+import com.example.peerrequest.activities.ChatActivity;
 import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.fragments.InProgressFragment;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.Task;
+import com.example.peerrequest.models.User;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
@@ -36,6 +39,7 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Ta
     private final List<Requests> requests;
     Context context;
     TaskDetailActivity taskDetailActivity;
+    String TAG = "TaskDetailAdapter";
 
 
     public TaskDetailAdapter(TaskDetailActivity context, List<Requests> requests, TaskDetailActivity taskDetailActivity) {
@@ -94,11 +98,10 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Ta
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
                 Requests request = requests.get(position);
-                Utilities.createNewSubmitDialog(request, context, taskDetailActivity);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("particularRequest", Parcels.wrap(request));
-                InProgressFragment inProgressFragment = new InProgressFragment();
-                inProgressFragment.setArguments(bundle);
+                Log.i(TAG, "currentrequest=" + request.getKeyCoverLetter());
+                User user = (User) User.getCurrentUser();
+                Log.i(TAG, "currentuser: " + user.getUsername());
+                Utilities.createNewSubmitDialog(request, context, taskDetailActivity, user);
                 //navigate from this fragment to the chat fragment, passing in the task to get reference to the user and the task being completed
             }
 

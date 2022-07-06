@@ -12,6 +12,9 @@ public class Task extends ParseObject {
     public static final Boolean KEY_COMPLETED = null;
     public static final Boolean KEY_TASK_LISTER = null;
     public static final Boolean KEY_TASK_DOER = null;
+    public static final String KEY_USER_RATING = "UserRating";
+    public static final String KEY_NUMBER_OF_RATING = "numberOfRating";
+    public static final String KEY_TOTAL_RATING = "totalRatings";
 
     public String getDescription() {
         return getString(KEY_REQUEST_DESCRIPTION);
@@ -40,6 +43,23 @@ public class Task extends ParseObject {
     public void setUser(User user) {
         put(KEY_USER, user);
     }
+
+    public String getUserRating() {
+        return getString(KEY_USER_RATING);
+    }
+
+    public void setKeyRating(String rating) {
+        put(KEY_USER_RATING, rating);
+    }
+
+    public void setNumberOfRating(int rating){put(KEY_NUMBER_OF_RATING, rating);}
+
+    public int getNumberOfRating(){return getInt(KEY_NUMBER_OF_RATING);}
+
+    public int getKeyTotalRating(){return getInt(KEY_TOTAL_RATING);}
+
+    public void setKeyTotalRating(int rating){put(KEY_TOTAL_RATING, rating);}
+
 
 
 }

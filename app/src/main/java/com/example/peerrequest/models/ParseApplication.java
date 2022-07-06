@@ -21,6 +21,7 @@ public class ParseApplication extends Application {
         ParseUser.registerSubclass(Task.class);
         ParseUser.registerSubclass(Requests.class);
         ParseUser.registerSubclass(Message.class);
+        ParseUser.registerSubclass(Location.class);
         //monitoring parse network
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
