@@ -18,6 +18,9 @@ public class Requests extends ParseObject {
     public static final String KEY_TASK = "taskPointer";
     public static final String KEY_COVER_LETTER = "coverLetter";
     public static final String KEY_ACCEPTED = "accepted";
+    public static final String KEY_USER_RATING = "UserRating";
+    public static final String KEY_NUMBER_OF_RATING = "numberOfRating";
+    public static final String KEY_TOTAL_RATING = "totalRatings";
 
     public User getUser() {
         return ((User) getParseUser(KEY_USER));
@@ -51,6 +54,23 @@ public class Requests extends ParseObject {
     public void setKeyUser(User user) {
         put(KEY_USER, user);
     }
+
+    public String getUserRating() {
+        return getString(KEY_USER_RATING);
+    }
+
+    public void setKeyRating(String rating) {
+        put(KEY_USER_RATING, rating);
+    }
+
+    public void setNumberOfRating(int rating){put(KEY_NUMBER_OF_RATING, rating);}
+
+    public int getNumberOfRating(){return getInt(KEY_NUMBER_OF_RATING);}
+
+    public int getKeyTotalRating(){return getInt(KEY_TOTAL_RATING);}
+
+    public void setKeyTotalRating(int rating){put(KEY_TOTAL_RATING, rating);}
+
 
 
 }

@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -41,18 +43,23 @@ public class MapsActivity extends AppCompatActivity {
     private ActivityMapsBinding binding;
     private LocationRequest mLocationRequest;
     private final int REQUEST_LOCATION_PERMISSION = 1;
-    private final long UPDATE_INTERVAL = 10 * 2000;  /* 10 secs */
-    private final long FASTEST_INTERVAL = 5000; /* 5 sec */
+    private final long UPDATE_INTERVAL = 1000000 * 2000;
+    private final long FASTEST_INTERVAL = 50000000;
     public double latitude;
     public double longitude;
+    public static LatLng currentLocation;
     private String TAG = "MapsActivity";
     public FusedLocationProviderClient locationClient;
+
+    public void getLocation(String title) {
+        createMarker(currentLocation,title);
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        MapsInitializer.initialize(getApplicationContext());
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         startLocationUpdates();
@@ -122,7 +129,6 @@ public class MapsActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermission();
         }
-
         locationClient.getLastLocation()
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
@@ -157,7 +163,7 @@ public class MapsActivity extends AppCompatActivity {
             public void onMapReady(@NonNull GoogleMap googleMap) {
                 mMap = googleMap;
                 //creating marker at current position
-                LatLng currentLocation = new LatLng(latitude, longitude);
+                currentLocation = new LatLng(latitude, longitude);
                 Log.i(TAG, "onMapReady: current location" + currentLocation);
                 mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Position"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17));
@@ -165,20 +171,11 @@ public class MapsActivity extends AppCompatActivity {
         });
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
 
-    public double getLongitude() {
-        return longitude;
-    }
+    public void createMarker(LatLng location, String taskTitle) {
+//        LatLng location = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(location).title(taskTitle));
 
-    public void createMarker(Double longitude, double latitude, String taskTitle) {
-        LatLng location = new LatLng(latitude, longitude);
-        BitmapDescriptor defaultMarker =
-                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
-        mMap.addMarker(new MarkerOptions().position(location).title(taskTitle).icon(defaultMarker));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 17));
     }
 
 

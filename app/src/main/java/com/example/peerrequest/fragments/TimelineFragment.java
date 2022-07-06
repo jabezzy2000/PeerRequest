@@ -26,6 +26,7 @@ import com.example.peerrequest.adapters.TaskAdapter;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -54,7 +55,8 @@ public class TimelineFragment extends Fragment {
     Double longitude;
     String TAG = "TimelineFragment";
     String ERROR = "Task Unsuccessful";
-    private FusedLocationProviderClient locationClient;
+    MapsActivity mapsActivity;
+    LatLng latLng;
 
 
     public TimelineFragment() {
@@ -64,6 +66,7 @@ public class TimelineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mapsActivity = new MapsActivity();
         return inflater.inflate(R.layout.fragment_timeline, container, false);
     }
 
@@ -91,6 +94,7 @@ public class TimelineFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.rvHomeTimeline);
         allTasks = new ArrayList<>();
+        latLng = MapsActivity.currentLocation;
         taskAdapter = new TaskAdapter(getContext(), allTasks);
         recyclerView.setAdapter(taskAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -143,6 +147,7 @@ public class TimelineFragment extends Fragment {
                     }
                 });
                 dialog.dismiss();
+                mapsActivity.getLocation(task.getTaskTitle());
             }
         });
 
@@ -156,5 +161,7 @@ public class TimelineFragment extends Fragment {
         dialog = dialogBuilder.create();
         dialog.show();
     }
+
+
 
 }

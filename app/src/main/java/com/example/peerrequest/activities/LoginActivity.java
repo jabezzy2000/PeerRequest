@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     public Button loginBtn;
     public Button loginWithFacebook;
     public Button signUpBtn;
+    public Button checkChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         signUpBtn = findViewById(R.id.btnSignUp);
         loginBtn = findViewById(R.id.btnLogIn);
         loginWithFacebook = findViewById(R.id.logInFB);
+        checkChat = findViewById(R.id.checkChat);
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +75,16 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser(username, password);
             }
         });
+
+        checkChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this,ChatActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
 
 
     private void loginUser(String username, String password) {
