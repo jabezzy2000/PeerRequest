@@ -79,21 +79,6 @@ public class ChatActivity extends AppCompatActivity {
         setupMessagePosting();
     }
 
-
-    // Create an anonymous user using ParseAnonymousUtils and set sUserId
-//    void login() {
-//        ParseAnonymousUtils.logIn(new LogInCallback() {
-//            @Override
-//            public void done(ParseUser user, ParseException e) {
-//                if (e != null) {
-//                    Log.e(TAG, "Anonymous login failed: ", e);
-//                } else {
-//                    startWithCurrentUser();
-//                }
-//            }
-//        });
-//    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -200,14 +185,16 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 double rating = ratingBar.getRating(); // this will be added to the total rating
                 double currrentRating = Double.parseDouble(requests.getUser().getUserRating());
-                int currentNumberOfRatings = requests.getUser().getNumberOfRating();
-                int currentTotalRatings = requests.getUser().getKeyTotalRating();
-                requests.getUser().setKeyTotalRating((int) (currentTotalRatings + rating));
-                requests.getUser().setNumberOfRating(currentNumberOfRatings+1);
-                int currentTotalRating = requests.getUser().getKeyTotalRating();
-                int currentNumberOfRating = requests.getUser().getNumberOfRating();
-                int userRating = currentTotalRating/currentNumberOfRating;
-                requests.setKeyRating(String.valueOf(userRating));
+
+//                String currentNumberOfRatings = requests.getUser().getNumberOfRating();
+//                int currentTotalRatings = Integer.parseInt(requests.getUser().getTotalRating());
+//                requests.getUser().setKeyTotalRating((int) (currentTotalRatings + rating));
+//                requests.getUser().setNumberOfRating(currentNumberOfRatings+1);
+//                int currentTotalRating = requests.getUser().getKeyTotalRating();
+//                int currentNumberOfRating = requests.getUser().getNumberOfRating();
+//                int userRating = currentTotalRating/currentNumberOfRating;
+//                requests.setKeyRating(String.valueOf(userRating));
+
                 requests.increment("numberOfRating");
                 dialog.dismiss();
                 try {

@@ -1,6 +1,7 @@
 package com.example.peerrequest.adapters;
 
 import android.content.Context;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.peerrequest.R;
 import com.example.peerrequest.models.Message;
+
+import com.example.peerrequest.models.User;
+
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
