@@ -185,6 +185,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 double rating = ratingBar.getRating(); // this will be added to the total rating
                 double currrentRating = Double.parseDouble(requests.getUser().getUserRating());
+
 //                String currentNumberOfRatings = requests.getUser().getNumberOfRating();
 //                int currentTotalRatings = Integer.parseInt(requests.getUser().getTotalRating());
 //                requests.getUser().setKeyTotalRating((int) (currentTotalRatings + rating));
@@ -193,6 +194,7 @@ public class ChatActivity extends AppCompatActivity {
 //                int currentNumberOfRating = requests.getUser().getNumberOfRating();
 //                int userRating = currentTotalRating/currentNumberOfRating;
 //                requests.setKeyRating(String.valueOf(userRating));
+
                 requests.increment("numberOfRating");
                 dialog.dismiss();
                 try {

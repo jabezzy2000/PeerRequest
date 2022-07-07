@@ -11,8 +11,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+
         android:hint="@string/message_hint"
         android:imeOptions="actionSend"
         android:inputType="textShortMessage"
@@ -40,6 +42,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvChat"
+
         android:layout_width="392dp"
         android:layout_height="586dp"
         android:layout_marginStart="8dp"
@@ -48,11 +51,13 @@
         app:layout_constraintBottom_toTopOf="@+id/etMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/completedBtn"
+
         android:layout_width="80dp"
         android:layout_height="30dp"
         android:layout_marginStart="322dp"
@@ -66,14 +71,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_marginEnd="36dp"
         android:text="Hit completed to end task -->"
         android:textColor="@color/teal_200"
         android:textStyle="italic"
         app:layout_constraintEnd_toStartOf="@+id/completedBtn"
         tools:layout_editor_absoluteY="14dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
