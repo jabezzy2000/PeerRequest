@@ -1,9 +1,12 @@
 package com.example.peerrequest;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -21,6 +26,8 @@ import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.User;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
@@ -34,8 +41,8 @@ public class Utilities extends TaskDetailActivity {
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
-
-    ChatActivity chatActivity = new ChatActivity();
+    static LocationManager locationManager;
+    public static final int REQUEST_LOCATION = 1;
 
     public static void setImage(Context context, String url, ImageView iv) {
         Glide.with(context).load(url).into(iv);
@@ -71,7 +78,7 @@ public class Utilities extends TaskDetailActivity {
         }
     }
 
-    public static void createNewSubmitDialog(Requests request, Context context, Activity TaskDetailActivity) {
+    public static void createNewSubmitDialog(Requests request, Context context, Activity TaskDetailActivity, User user) {
         AlertDialog.Builder dialogBuilder;
         AlertDialog dialog;
 
@@ -93,8 +100,10 @@ public class Utilities extends TaskDetailActivity {
             public void onClick(View v) {
                 request.setAccepted("True");
                 dialog.dismiss();
-                Intent intent = new Intent(TaskDetailActivity, ChatActivity.class);
-                intent.putExtra("request",Parcels.wrap(request));
+                //move from here to the chat screen
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra("request", Parcels.wrap(request));
+                intent.putExtra("user", Parcels.wrap(user));
                 context.startActivity(intent);
             }
         });
@@ -119,8 +128,5 @@ public class Utilities extends TaskDetailActivity {
         ok.show();
 
     }
-
-
-
 
 }

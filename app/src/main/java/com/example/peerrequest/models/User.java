@@ -10,8 +10,8 @@ import com.parse.ParseUser;
 public class User extends ParseUser {
     public static final String KEY_PROFILE_PICTURE = "ProfilePicture";
     public static final String KEY_USER_RATING = "UserRating";
-    public static final String KEY_NUMBER_OF_RATING = "numberOfRatings";
-    public static final String KEY_TOTAL_RATING = "totalRating";
+    public static final String KEY_NUMBER_OF_RATING = "numberOfRating";
+    public static final String KEY_TOTAL_RATING = "totalRatings";
 
     public ParseFile getProfilePicture() {
         return getParseFile(KEY_PROFILE_PICTURE);
@@ -27,9 +27,13 @@ public class User extends ParseUser {
         put(KEY_USER_RATING, rating);
     }
 
-    public void setNumberOfRating(String rating){put(KEY_NUMBER_OF_RATING, rating);}
+    public void setNumberOfRating(int rating){put(KEY_NUMBER_OF_RATING, rating);}
 
-    public String getNumberOfRating(){return getString(KEY_NUMBER_OF_RATING);}
+    public int getNumberOfRating(){return getInt(KEY_NUMBER_OF_RATING);}
+
+    public int getKeyTotalRating(){return getInt(KEY_TOTAL_RATING);}
+
+    public void setKeyTotalRating(int rating){put(KEY_TOTAL_RATING, rating);}
 
     public String getTotalRating(){return getString(KEY_TOTAL_RATING);}
 
