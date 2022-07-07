@@ -35,6 +35,8 @@ public class User extends ParseUser {
 
     public void setKeyTotalRating(int rating){put(KEY_TOTAL_RATING, rating);}
 
+    public String getTotalRating(){return getString(KEY_TOTAL_RATING);}
+
 
 }
 

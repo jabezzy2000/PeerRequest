@@ -15,7 +15,7 @@
         <entry key="app/src/main/res/layout/activity_chat_new.xml" value="0.5223958333333333" />
         <entry key="app/src/main/res/layout/activity_item_task.xml" value="0.3300613496932515" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3885416666666667" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.9318048206937096" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.7316582914572864" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_pop_up.xml" value="0.2861111111111111" />
         <entry key="app/src/main/res/layout/activity_profile_item_task.xml" value="0.5753424657534246" />
@@ -44,7 +44,9 @@
         <entry key="app/src/main/res/layout/task_detail_item_task.xml" value="0.4009259259259259" />
         <entry key="app/src/main/res/layout/taskdetailitemtask.xml" value="0.4009259259259259" />
         <entry key="app/src/main/res/layout/test.xml" value="0.5569136442961518" />
+        <entry key="app/src/main/res/menu/menu.xml" value="0.56875" />
         <entry key="app/src/main/res/menu/menu_bottom_navigation.xml" value="0.8244791666666667" />
+        <entry key="app/src/main/res/menu/messages.xml" value="0.3875" />
         <entry key="app/src/main/res/xml/fileprovider.xml" value="0.2171875" />
       </map>
     </option>

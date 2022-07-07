@@ -157,7 +157,6 @@ public class MapsActivity extends AppCompatActivity {
                 for (int i = 0; i < locations.size(); i++) {
                     mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(locations.get(i).getKeyLatitude()), Double.parseDouble(locations.get(i).getKeyLongitude()))).title(locations.get(i).getKeyTitle()).icon(defaultMarker));
                 }
-
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17));
             }
         });
