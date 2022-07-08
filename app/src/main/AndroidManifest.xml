@@ -50,6 +50,9 @@
         <activity
             android:name=".activities.HomeActivity"
             android:exported="true" />
+        <activity
+            android:name=".activities.ChatLayoutActivity"
+            android:exported="false"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -64,10 +67,6 @@
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true"></activity>
-        <activity
-            android:name=".activities.ChatActivity"
-            android:exported="true">
-        </activity>
         <activity
             android:name=".activities.SplashScreen"
             android:exported="true">

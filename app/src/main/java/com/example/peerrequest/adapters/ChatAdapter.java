@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
 import com.example.peerrequest.models.Message;
 
 import com.example.peerrequest.models.User;
@@ -25,9 +26,11 @@ import java.security.MessageDigest;
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
+
     private List<Message> mMessages;
     private Context mContext;
     private String mUserId;
+    private User otherUser;
 
     public ChatAdapter(Context context, String userId, List<Message> messages) {
         mMessages = messages;
@@ -50,6 +53,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         Message message = mMessages.get(position);
         final boolean isMe = message.getUserId() != null && message.getUserId().equals(mUserId);
 
+
         if (isMe) {
             holder.imageMe.setVisibility(View.VISIBLE);
             holder.imageOther.setVisibility(View.GONE);
@@ -61,8 +65,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
 
         final ImageView profileView = isMe ? holder.imageMe : holder.imageOther;
-        Glide.with(mContext).load(getProfileUrl(message.getUserId())).into(profileView);
-        holder.body.setText(message.getBody());
+        if(isMe){
+            User meUser = (User) User.getCurrentUser();
+            Utilities.roundedImage(mContext,meUser.getProfilePicture().getUrl(),profileView,70);
+            holder.body.setText(message.getBody());
+        }
+        else{
+//            otherUser = message.getUserId(message.getParseUser())// how to get other User?
+            Utilities.roundedImage(mContext,getProfileUrl(message.getUserId()),profileView,70);
+            holder.body.setText(message.getBody());
+        }
+
     }
 
     // Create a gravatar image based on the hash value obtained from userId
