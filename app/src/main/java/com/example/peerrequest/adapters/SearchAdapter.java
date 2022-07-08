@@ -2,6 +2,7 @@ package com.example.peerrequest.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
 import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.models.Task;
+import com.example.peerrequest.models.User;
+import com.parse.ParseException;
 
 import org.parceler.Parcels;
 
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
+    private static final String LOG = "SearchAdapter";
     private final List<Task> tasks;
 
     public SearchAdapter(Context context, List<Task> tasks) {
@@ -63,10 +68,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         }
 
         public void bind(Task task) {
-            username.setText(task.getUser().getUsername());
+            User user = task.getUser();
+            Utilities.roundedImage(itemView.getContext(), user.getProfilePicture().getUrl(), profilePicture, 70);
+            username.setText(user.getUsername());
             taskTitle.setText(task.getTaskTitle());
             taskDescription.setText(task.getDescription());
-            time.setText(task.getCreatedAt().toString());
+            time.setText(Utilities.getSimpleTime(task.getCreatedAt()));
         }
 
         @Override

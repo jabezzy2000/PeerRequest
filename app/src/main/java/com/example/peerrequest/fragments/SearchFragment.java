@@ -30,7 +30,7 @@ import java.util.List;
 
 public class SearchFragment extends Fragment {
     protected SearchAdapter searchAdapter;
-    private final int limit = 10;
+    private final int limit = 30;
     public String querySearch;
     public EditText search;
     public Button searchButton;
@@ -55,16 +55,18 @@ public class SearchFragment extends Fragment {
 
     private void queryTasks(String querySearch) {
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
-        query.whereEqualTo(Task.KEY_REQUESTS_TITLE, querySearch);
+        query.whereContains(Task.KEY_REQUESTS_TITLE, querySearch);
+        query.include(Task.KEY_USER);
         query.setLimit(limit);
         query.findInBackground(new FindCallback<Task>() {
             @Override
             public void done(List<Task> tasks, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, ERROR, e);
+                    Log.e(TAG, ERROR + e.getMessage(), e);
                 } else {
                     allTasks.addAll(tasks);
                     searchAdapter.notifyDataSetChanged();
+
                 }
             }
         });
