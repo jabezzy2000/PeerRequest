@@ -1,0 +1,103 @@
+package com.example.peerrequest.activities;
+
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.util.Log;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.peerrequest.R;
+import com.example.peerrequest.adapters.ChatLayoutAdapter;
+import com.example.peerrequest.models.Message;
+import com.example.peerrequest.models.User;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class ChatLayoutActivity extends AppCompatActivity {
+    private static final int MAX_CHAT_MESSAGES_TO_SHOW = 20;
+    ChatLayoutAdapter chatLayoutAdapter;
+    List<Message> messages;
+    RecyclerView recyclerView;
+    String userID;
+    String TAG;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat_layout);
+
+        recyclerView = findViewById(R.id.chatLayoutRecyclerView);
+        Log.i("done", "onCreate: okay ");
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        messages = new ArrayList<>();
+        chatLayoutAdapter = new ChatLayoutAdapter(this,userID,messages);
+        recyclerView.setAdapter(chatLayoutAdapter);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        queryMessages();
+
+    }
+
+    private void queryMessages() {
+        ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
+        query.whereEqualTo(Message.SENDER_ID_KEY,  User.getCurrentUser());
+
+
+        ParseQuery<Message> query2 = ParseQuery.getQuery(Message.class);
+        query2.whereEqualTo(Message.RECEIVER_ID_KEY, User.getCurrentUser());
+
+        List<ParseQuery<Message>> list = new ArrayList<ParseQuery<Message>>();
+        list.add(query);
+        list.add(query2);
+
+        ParseQuery<Message> query3 = ParseQuery.or(list);
+        query3.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
+        query3.addDescendingOrder(Message.KEY_CREATED_AT);
+        query3.findInBackground(new FindCallback<Message>() {
+            @Override
+            public void done(List<Message> objects, ParseException e) {
+                if (e==null) {
+                    Log.i("done", "done: " + objects);
+                    Set<String> container = new HashSet<>();
+                    for (Message m: objects) {
+                        String senderandreceiver = "";
+                        try{
+                            String sender = ((User) (m.getSenderIdKey().fetchIfNeeded())).getObjectId();
+                            String receiver = ((User) (m.getReceiverIdKey().fetchIfNeeded())).getObjectId();
+                            if (sender.equals(ParseUser.getCurrentUser().getObjectId())) {
+                                senderandreceiver += sender + " " + receiver;
+
+                            } else {
+                                senderandreceiver += receiver + " " + sender;
+                            }
+                            if (container.contains(senderandreceiver)) {
+                                continue;
+                            }  else {
+                                messages.add(m);
+                                container.add(senderandreceiver);
+                            }
+
+
+                        } catch(ParseException err) {
+
+                        }
+                    }
+                    chatLayoutAdapter.notifyDataSetChanged();
+                } else {
+                    Log.e("done", "done: ",  e);
+                }
+            }
+        });
+
+    }
+}

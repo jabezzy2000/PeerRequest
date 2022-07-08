@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.models.User;
 
 public class SplashScreen extends Activity {
     Handler handler;
@@ -17,9 +18,14 @@ public class SplashScreen extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                if(User.getCurrentUser()!= null){
+                    Intent intent = new Intent(SplashScreen.this, HomeActivity.class);
+                    startActivity(intent);
+                }
+                else{
                 Intent intent=new Intent(SplashScreen.this,LoginActivity.class);
                 startActivity(intent);
-                finish();
+                finish();}
             }
         },3000);
     }

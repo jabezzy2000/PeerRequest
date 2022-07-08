@@ -20,6 +20,7 @@ import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
 import com.example.peerrequest.adapters.ChatAdapter;
 import com.example.peerrequest.models.Message;
+import com.example.peerrequest.models.Ratings;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.User;
 import com.parse.FindCallback;
@@ -174,7 +175,7 @@ public class ChatActivity extends AppCompatActivity {
         AlertDialog dialog;
         Toast.makeText(context, "request created by " + requests.getUser().getUsername(), Toast.LENGTH_SHORT).show();
         dialogBuilder = new AlertDialog.Builder(context);
-        User user = requests.getUser();
+        User user = requests.getUser(); //this is the user we are rating
         View popup = View.inflate(context, R.layout.rating_dialog, null);
         RatingBar ratingBar = popup.findViewById(R.id.rating);
         Button setRating = popup.findViewById(R.id.setRating);
@@ -184,28 +185,23 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 double rating = ratingBar.getRating(); // this will be added to the total rating
-                double currrentRating = Double.parseDouble(requests.getUser().getUserRating());
-
-//                String currentNumberOfRatings = requests.getUser().getNumberOfRating();
-//                int currentTotalRatings = Integer.parseInt(requests.getUser().getTotalRating());
-//                requests.getUser().setKeyTotalRating((int) (currentTotalRatings + rating));
-//                requests.getUser().setNumberOfRating(currentNumberOfRatings+1);
-//                int currentTotalRating = requests.getUser().getKeyTotalRating();
-//                int currentNumberOfRating = requests.getUser().getNumberOfRating();
-//                int userRating = currentTotalRating/currentNumberOfRating;
-//                requests.setKeyRating(String.valueOf(userRating));
-
-                requests.increment("numberOfRating");
+                double currrentRating = Double.parseDouble(user.getUserRating());
+                int currentNumberOfRatings = requests.getNumberOfRating();
+                int currentTotalRatings = requests.getKeyTotalRating();
+                int newCurrentTotalRatings = (int) (currentTotalRatings + rating);
+                requests.setKeyTotalRating((int) (currentTotalRatings + rating));
+                int newNumberOfRating = currentNumberOfRatings + 1;
+                requests.setNumberOfRating(newNumberOfRating);
+                int userRating = newCurrentTotalRatings/newNumberOfRating;
+                requests.setKeyRating(String.valueOf(userRating));
+                requests.setCompletedLister("true");
                 dialog.dismiss();
-                try {
-                    requests.save(); //Cannot save a ParseUser that is not authenticated.
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                requests.saveInBackground();
             }
         });
         dialog.show();
 
 
     }
+
 }
