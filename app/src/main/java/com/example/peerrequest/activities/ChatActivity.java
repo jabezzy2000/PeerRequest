@@ -27,6 +27,7 @@ import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -40,15 +41,14 @@ import java.util.concurrent.TimeUnit;
 public class ChatActivity extends AppCompatActivity {
 
     private static final String TAG = "ChatActivity";
-    static final String USER_ID_KEY = "userId";
-    static final String BODY_KEY = "body";
     static final int MAX_CHAT_MESSAGES_TO_SHOW = 50;
+    public User otherUser;
     static final long POLL_INTERVAL = TimeUnit.SECONDS.toMillis(3);
     Handler myHandler = new android.os.Handler();
     Runnable mRefreshMessagesRunnable = new Runnable() {
         @Override
         public void run() {
-            refreshMessages();
+            refreshMessages(); // where the query first happens
             myHandler.postDelayed(this, POLL_INTERVAL);
         }
     };
@@ -67,18 +67,11 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        otherUser = getIntent().getParcelableExtra("otherUser");
+        setupMessagePosting(otherUser);
 
-        if (ParseUser.getCurrentUser() != null) {
-            startWithCurrentUser();
-        } else {
-            Toast.makeText(this, "User has to be logged in", Toast.LENGTH_SHORT).show();
-        }
     }
 
-    // Get the userId from the cached currentUser object
-    void startWithCurrentUser() {
-        setupMessagePosting();
-    }
 
     @Override
     protected void onResume() {
@@ -96,7 +89,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     // Set up button event handler which posts the entered message to Parse
-    void setupMessagePosting() {
+    void setupMessagePosting(User otherUser) {
         requests = Parcels.unwrap(getIntent().getParcelableExtra("request"));
         user = Parcels.unwrap(getIntent().getParcelableExtra("user"));
         etMessage = (EditText) findViewById(R.id.etMessage);
@@ -105,8 +98,7 @@ public class ChatActivity extends AppCompatActivity {
         completed = findViewById(R.id.completedBtn);
         mMessages = new ArrayList<>();
         mFirstLoad = true;
-        final String userId = ParseUser.getCurrentUser().getObjectId();
-        mAdapter = new ChatAdapter(ChatActivity.this, userId, mMessages);
+        mAdapter = new ChatAdapter(ChatActivity.this, mMessages);
         rvChat.setAdapter(mAdapter);
 
         // associate the LayoutManager with the RecylcerView
@@ -119,9 +111,9 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String data = etMessage.getText().toString();
-                // Using new `Message` Parse-backed model now
                 Message message = new Message();
-                message.setUserId(ParseUser.getCurrentUser().getObjectId());
+                message.setSenderIdKey((User) User.getCurrentUser());
+                message.setReceiverIdKey(otherUser);
                 message.setBody(data);
                 message.saveInBackground(new SaveCallback() {
                     @Override
@@ -142,29 +134,36 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
-    void refreshMessages() {
-        // Construct query to execute
-        ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
-        // Configure limit and sort order
-        query.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
 
-        // get the latest 50 messages, order will show up newest to oldest of this group
-        query.orderByDescending("createdAt");
-        // Execute query to fetch all messages from Parse asynchronously
-        // This is equivalent to a SELECT query with SQL
-        query.findInBackground(new FindCallback<Message>() {
-            public void done(List<Message> messages, ParseException e) {
-                if (e == null) {
+    void refreshMessages() {
+//         Construct query to execute
+        ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
+        query.whereEqualTo(Message.SENDER_ID_KEY, User.getCurrentUser());
+        query.whereEqualTo(Message.RECEIVER_ID_KEY, otherUser);
+
+
+        ParseQuery<Message> query2 = ParseQuery.getQuery(Message.class);
+        query2.whereEqualTo(Message.RECEIVER_ID_KEY, (User) ParseUser.getCurrentUser());
+        query2.whereEqualTo(Message.SENDER_ID_KEY, otherUser);
+
+        List<ParseQuery<Message>> list = new ArrayList<ParseQuery<Message>>();
+        list.add(query);
+        list.add(query2);
+
+        ParseQuery<Message> query3 = ParseQuery.or(list);
+        query3.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
+        query3.include(Message.SENDER_ID_KEY);
+        query3.include(Message.RECEIVER_ID_KEY);
+
+        query3.addDescendingOrder(Message.KEY_CREATED_AT);
+        query3.findInBackground(new FindCallback<Message>() {
+            @Override
+            public void done(List<Message> objects, ParseException e) {
+                if (e == null) ;
+                {
                     mMessages.clear();
-                    mMessages.addAll(messages);
+                    mMessages.addAll(objects);
                     mAdapter.notifyDataSetChanged(); // update adapter
-                    // Scroll to the bottom of the list on initial load
-                    if (mFirstLoad) {
-                        rvChat.scrollToPosition(0);
-                        mFirstLoad = false;
-                    }
-                } else {
-                    Log.e("message", "Error Loading Messages" + e);
                 }
             }
         });
@@ -192,7 +191,7 @@ public class ChatActivity extends AppCompatActivity {
                 requests.setKeyTotalRating((int) (currentTotalRatings + rating));
                 int newNumberOfRating = currentNumberOfRatings + 1;
                 requests.setNumberOfRating(newNumberOfRating);
-                int userRating = newCurrentTotalRatings/newNumberOfRating;
+                int userRating = newCurrentTotalRatings / newNumberOfRating;
                 requests.setKeyRating(String.valueOf(userRating));
                 requests.setCompletedLister("true");
                 dialog.dismiss();
