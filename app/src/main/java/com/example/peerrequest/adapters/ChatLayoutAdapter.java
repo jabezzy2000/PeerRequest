@@ -1,6 +1,7 @@
 package com.example.peerrequest.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
+import com.example.peerrequest.activities.ChatActivity;
+import com.example.peerrequest.activities.ChatLayoutActivity;
 import com.example.peerrequest.models.Message;
 import com.example.peerrequest.models.User;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.util.List;
 
@@ -55,7 +59,7 @@ public class ChatLayoutAdapter extends RecyclerView.Adapter<ChatLayoutAdapter.Vi
         return mMessages.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView profileImageOfOther;
         TextView usernameOfOther;
         TextView lastMessageInChat;
@@ -66,6 +70,7 @@ public class ChatLayoutAdapter extends RecyclerView.Adapter<ChatLayoutAdapter.Vi
              profileImageOfOther = itemView.findViewById(R.id.ivProfilePictureLayout);
              usernameOfOther = itemView.findViewById(R.id.tvNameLayout);
              lastMessageInChat = itemView.findViewById(R.id.tvLastMessageLayout);
+             itemView.setOnClickListener(this);
 
         }
 
@@ -73,7 +78,7 @@ public class ChatLayoutAdapter extends RecyclerView.Adapter<ChatLayoutAdapter.Vi
 
             User otherUser = new User();
             String isMe = User.getCurrentUser().getObjectId();
-            if(message.getReceiverIdKey()==User.getCurrentUser()){
+            if(message.getReceiverIdKey().getUsername().equals(User.getCurrentUser().getUsername())){
                 try{
                     otherUser = (User) message.getSenderIdKey().fetchIfNeeded();
                 } catch (ParseException e) {
@@ -90,6 +95,23 @@ public class ChatLayoutAdapter extends RecyclerView.Adapter<ChatLayoutAdapter.Vi
             usernameOfOther.setText(otherUser.getUsername());
             lastMessageInChat.setText(message.getBody());
             Utilities.roundedImage(mContext,otherUser.getProfilePicture().getUrl(),profileImageOfOther,70);
+        }
+
+        @Override
+        public void onClick(View v) { // moving from layout to chat upon click
+            //including the other user to stratify messages according to both users
+            Intent intent = new Intent(mContext, ChatActivity.class);
+            User otherUser;
+            String userId = ParseUser.getCurrentUser().getObjectId().toString();
+            String messageSenderId = mMessages.get(getAdapterPosition()).getSenderIdKey().getObjectId();
+            if (userId.equals(messageSenderId))
+            {
+                otherUser = mMessages.get(getAdapterPosition()).getReceiverIdKey();
+            } else {
+                otherUser = mMessages.get(getAdapterPosition()).getSenderIdKey();
+            }
+            intent.putExtra("otherUser", otherUser);
+            mContext.startActivity(intent);
         }
     }
 }
