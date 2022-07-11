@@ -40,8 +40,6 @@ public class SignUpActivity extends AppCompatActivity {
     ImageButton uploadProfilePictureBtn;
     ImageView signUpProfilePicture;
     private String TAG = "SignUpActivity";
-    public ParseFile file;
-    public final String APP_TAG = "MyCustomApp";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public String photoFileName = "photo.jpg";
     File photoFile;
@@ -63,7 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
-        
+
         uploadProfilePictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,16 +101,13 @@ public class SignUpActivity extends AppCompatActivity {
         user.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
-                if(e== null){
-//                    goMainActivity();
+                if (e == null) {
                     saveUserProfilePictureInBackground(photo, user);
-                }
-                else{
-                    Toast.makeText(SignUpActivity.this, ""+ e.getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SignUpActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
-//        user.setProfilePicture(photo);
 
     }
 
@@ -129,10 +124,9 @@ public class SignUpActivity extends AppCompatActivity {
     private File getPhotoFileUri(String photoFileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
         // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(TAG, "failed to create directory");
         }
         // Return the file target for the photo based on filename
