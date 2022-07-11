@@ -10,38 +10,30 @@
     tools:context=".fragments.TimelineFragment">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvHomeTimeline"
-        android:layout_width="409dp"
-        android:layout_height="556dp"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="0dp" />
-
     <ImageButton
         android:id="@+id/ibMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/swipeContainer"
         android:layout_alignTop="@+id/textView2"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="210dp"
         android:layout_marginTop="-2dp"
         android:layout_marginEnd="25dp"
+        android:layout_marginBottom="5dp"
         android:layout_toEndOf="@+id/textView2"
         android:src="@drawable/ic_map" />
 
     <ImageButton
         android:id="@+id/fabAddTask"
         android:layout_width="wrap_content"
-        android:layout_height="29dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/swipeContainer"
+        android:layout_alignTop="@+id/ibMap"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="18dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="82dp"
+        android:layout_marginBottom="10dp"
         android:src="@drawable/ic_add" />
 
     <TextView
@@ -53,9 +45,45 @@
         android:layout_marginStart="17dp"
         android:layout_marginTop="33dp"
         android:text="Timeline"
-        android:textColorHighlight="@color/black"
         android:textColor="@color/purple_500"
+        android:textColorHighlight="@color/black"
         android:textSize="30sp"
         android:textStyle="italic" />
+
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        android:layout_width="83dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="163dp"
+        android:layout_marginTop="238dp"
+        android:visibility="visible" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="-6dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="-7dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHomeTimeline"
+            android:layout_width="409dp"
+            android:layout_height="556dp"
+            android:layout_below="@+id/textView2"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="0dp" >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>
