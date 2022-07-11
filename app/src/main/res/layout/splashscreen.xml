@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/ivSplashImage"
         android:layout_width="411dp"
         android:layout_height="0dp"
         android:scaleType="fitXY"
