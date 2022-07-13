@@ -3,10 +3,14 @@ package com.example.peerrequest.activities;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -14,10 +18,16 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.BounceInterpolator;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
+import com.example.peerrequest.models.Task;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -42,8 +52,11 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MapsActivity extends AppCompatActivity {
@@ -58,6 +71,7 @@ public class MapsActivity extends AppCompatActivity {
     public double longitude;
     public static LatLng currentLocation;
     private String TAG = "MapsActivity";
+    public Task task;
     public List<com.example.peerrequest.models.Location> locations;
 
 
@@ -161,19 +175,21 @@ public class MapsActivity extends AppCompatActivity {
                 for (int i = 0; i < locations.size(); i++) {
                     Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(locations.get(i).getKeyLatitude()), Double.parseDouble(locations.get(i).getKeyLongitude()))).title(locations.get(i).getKeyTitle()).icon(defaultMarker));
                     dropPinEffect(marker);
-                    marker.setTag(new LatLng(Double.parseDouble(locations.get(i).getKeyLatitude()), Double.parseDouble(locations.get(i).getKeyLongitude())));
+                    Log.i(TAG, "onMapReady: " + locations.get(i));
+                    marker.setTag(locations.get(i));
                 }
 
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(@NonNull Marker marker) {
-                        String markerName = marker.getTitle();
-                        Toast.makeText(MapsActivity.this, "Clicked location is " + markerName, Toast.LENGTH_SHORT).show();
+                        com.example.peerrequest.models.Location location = (com.example.peerrequest.models.Location) marker.getTag();
+                        mapsTaskDialog((com.example.peerrequest.models.Location) marker.getTag());
+                        //Utilities.mapsTaskDialog((com.example.peerrequest.models.Location) marker.getTag(), mapFragment.getContext(), MapsActivity.this);
                         return false;
                     }
                 });
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 17));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 4));
 
 
             }
@@ -191,7 +207,7 @@ public class MapsActivity extends AppCompatActivity {
         final android.view.animation.Interpolator interpolator =
                 new BounceInterpolator();
 
-        // Animate marker with a bounce updating its position every 15ms
+        // Animate marker with a bounce updating its position every 5ms
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -205,11 +221,73 @@ public class MapsActivity extends AppCompatActivity {
 
                 if (t > 0.0) {
                     // Post this event again 15ms from now.
-                    handler.postDelayed(this, 15);
+                    handler.postDelayed(this, 5);
                 } else { // done elapsing, show window
                     marker.showInfoWindow();
                 }
             }
         });
     }
+
+
+    public void mapsTaskDialog(com.example.peerrequest.models.Location location) {
+        AlertDialog.Builder dialogBuilder;
+        AlertDialog dialog;
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View popup = getLayoutInflater().inflate(R.layout.dialog_map_tasks, null);
+        ImageView dialogImage = popup.findViewById(R.id.dialogMapProfilePicture);
+        TextView name = popup.findViewById(R.id.dialogMapName);
+        TextView title = popup.findViewById(R.id.dialogMapTaskTitle);
+        TextView description = popup.findViewById(R.id.dialogMapTaskDescription);
+        Button cancel = popup.findViewById(R.id.mapDialogCancelBtn);
+        Button goToTaskDetail = popup.findViewById(R.id.mapDialogGoToTaskBtn);
+        if (location.getProfilePicture() != null) {
+            Utilities.roundedImage(this, location.getProfilePicture().getUrl(), dialogImage, 70);
+        }
+        name.setText(location.getKeyTaskLister());
+        title.setText(location.getKeyTitle());
+        description.setText(location.getKeyDescription());
+        dialogBuilder.setView(popup);
+        dialog = dialogBuilder.create();
+        //creating a new task to pass into taskDetailActivity method
+        goToTaskDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                queryParticularTask(location);
+
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
+
+    }
+
+    private void queryParticularTask(com.example.peerrequest.models.Location location) {
+        ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
+        query.whereEqualTo(Task.KEY_REQUESTS_TITLE, location.getKeyTitle());
+        query.include(Task.KEY_USER);
+
+        query.findInBackground(new FindCallback<Task>() {
+            @Override
+            public void done(List<Task> objects, ParseException e) {
+                if (e == null) {
+                    task = objects.get(0);
+                    Intent intent = new Intent(MapsActivity.this, TaskDetailActivity.class);
+                    intent.putExtra(Task.class.getSimpleName(), Parcels.wrap(task));
+                    startActivity(intent);
+
+                }
+            }
+        });
+    }
+
+
 }
