@@ -43,6 +43,7 @@ public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
     static final int MAX_CHAT_MESSAGES_TO_SHOW = 50;
     public User otherUser;
+    public User otherTexter;
     static final long POLL_INTERVAL = TimeUnit.SECONDS.toMillis(3);
     Handler myHandler = new android.os.Handler();
     Runnable mRefreshMessagesRunnable = new Runnable() {
@@ -67,8 +68,14 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        otherTexter = (User) Parcels.unwrap(getIntent().getParcelableExtra("requester"));
+//        otherTexter = getIntent().getParcelableExtra("requester");
         otherUser = getIntent().getParcelableExtra("otherUser");
-        setupMessagePosting(otherUser);
+        if (otherTexter == null) {
+            setupMessagePosting(otherUser);
+        } else {
+            setupMessagePosting(otherTexter);
+        }
 
     }
 

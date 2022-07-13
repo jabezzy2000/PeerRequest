@@ -11,12 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
 import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.models.Task;
 
 import org.parceler.Parcels;
 
 import java.util.List;
+
+import okhttp3.internal.Util;
 
 public class ProfileTasksAdapter extends RecyclerView.Adapter<ProfileTasksAdapter.ProfileViewHolder> {
     private final List<Task> tasks;
@@ -53,12 +56,14 @@ public class ProfileTasksAdapter extends RecyclerView.Adapter<ProfileTasksAdapte
         TextView taskTitle;
         TextView taskDescription;
         TextView time;
+        TextView numberOfRequests;
 
         public ProfileViewHolder(@NonNull View itemView) {
             super(itemView);
             taskTitle = itemView.findViewById(R.id.tvProfileTaskTitle);
             taskDescription = itemView.findViewById(R.id.tvProfileTaskDescription);
             time = itemView.findViewById(R.id.tvProfileTime);
+            numberOfRequests = itemView.findViewById(R.id.tvRequestsNumber);
             itemView.setOnClickListener(this);
 
         }
@@ -66,7 +71,8 @@ public class ProfileTasksAdapter extends RecyclerView.Adapter<ProfileTasksAdapte
         public void bind(Task task) {
             taskTitle.setText(task.getTaskTitle());
             taskDescription.setText(task.getDescription());
-            time.setText(task.getCreatedAt().toString());
+            time.setText(Utilities.getSimpleTime(task.getCreatedAt()));
+           // numberOfRequests.setText();
 
         }
 

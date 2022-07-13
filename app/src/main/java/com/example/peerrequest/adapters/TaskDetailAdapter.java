@@ -89,7 +89,7 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Ta
             username.setText(requests.getUser().getUsername());
             userRating.setText(requests.getUser().getUserRating());
             itemTaskCoverLetter.setText(requests.getKeyCoverLetter());
-            itemTaskTimeRequested.setText(requests.getCreatedAt().toString());
+            itemTaskTimeRequested.setText(Utilities.getSimpleTime(requests.getCreatedAt()));
 
         }
 

@@ -4,35 +4,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="400dp">
+
 
     <ImageView
         android:id="@+id/submitRequestProfilePicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="389dp"
+        android:layout_height="195dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintHorizontal_bias="0.272"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.215"
+        app:layout_constraintVertical_bias="0.012"
         app:srcCompat="@drawable/ic_launcher_background"
         tools:srcCompat="@tools:sample/avatars" />
-
-
 
     <TextView
         android:id="@+id/acceptRequestName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="356dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="29dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.339"
+        app:layout_constraintBottom_toTopOf="@+id/acceptRequestCoverLetter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submitRequestProfilePicture" />
+        app:layout_constraintTop_toBottomOf="@+id/submitRequestProfilePicture"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/acceptRequestRating"
@@ -43,20 +41,21 @@
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/acceptRequestCoverLetter"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.252"
         app:layout_constraintStart_toEndOf="@+id/acceptRequestName"
         app:layout_constraintTop_toTopOf="@+id/acceptRequestName"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/acceptRequestCoverLetter"
-        android:layout_width="wrap_content"
-        android:layout_height="26dp"
-        android:layout_marginTop="104dp"
+        android:layout_width="384dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="64dp"
         android:text="TextView"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/submitRequestProfilePicture"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/acceptRequestName"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/submitRequestProfilePicture" />
 
     <Button

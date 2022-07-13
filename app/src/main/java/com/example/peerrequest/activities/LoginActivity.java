@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -88,9 +89,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (e != null) {
-                    return;
+                    Utilities.showAlert("Login Invalid", "Incorrect Username/Password",LoginActivity.this);
                 }
-                goMainActivity();
+                else{
+                    goMainActivity();
+                }
+
             }
         });
     }
