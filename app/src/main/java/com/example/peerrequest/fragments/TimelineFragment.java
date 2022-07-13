@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +19,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
+import com.example.peerrequest.Utilities;
 import com.example.peerrequest.activities.MapsActivity;
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.HomeActivity;
@@ -42,7 +45,7 @@ import java.util.List;
 public class TimelineFragment extends Fragment {
     protected TaskAdapter taskAdapter;
     ImageView profileImage;
-    private int limit = 10;
+    private int limit = 30;
     public AlertDialog.Builder dialogBuilder;
     public AlertDialog dialog;
     public EditText popupTaskTitle;
@@ -55,6 +58,8 @@ public class TimelineFragment extends Fragment {
     String TAG = "TimelineFragment";
     String ERROR = "Task Unsuccessful";
     LatLng latLng;
+    ProgressBar progressBar;
+    private SwipeRefreshLayout swipeContainer;
 
 
     public TimelineFragment() {
@@ -64,11 +69,28 @@ public class TimelineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_timeline, container, false);
+        View view = inflater.inflate(R.layout.fragment_timeline, container, false);
+        progressBar = view.findViewById(R.id.pbLoading);
+        progressBar.setVisibility(View.GONE);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                allTasks.clear(); // clear list of tasks
+                queryTasks(); // query new tasks
+                swipeContainer.setRefreshing(false); // stop refreshing after tasks have been queried
+            }
+        });
+
+        // Configuring the colors
+        swipeContainer.setColorSchemeResources( android.R.color.holo_purple, android.R.color.holo_red_light);
+        return view;
     }
+
 
     //specifying data I want to query
     private void queryTasks() {
+        progressBar.setVisibility(View.VISIBLE);
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
         query.include(Task.KEY_USER);
         query.setLimit(limit);
@@ -84,6 +106,7 @@ public class TimelineFragment extends Fragment {
                 }
             }
         });
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -102,6 +125,7 @@ public class TimelineFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 createNewContactDialog();
+
             }
         });
         mapButton.setOnClickListener(new View.OnClickListener() {
@@ -146,8 +170,8 @@ public class TimelineFragment extends Fragment {
                 dialog.dismiss();
                 HomeActivity homeActivity = (HomeActivity) getActivity();
                 Location location = new Location();
-                location.setKeyLongitude(homeActivity.getLongitude()+"");
-                location.setKeyLatitude(homeActivity.getLatitude()+"");
+                location.setKeyLongitude(homeActivity.getLongitude() + "");
+                location.setKeyLatitude(homeActivity.getLatitude() + "");
                 location.setKeyTitle(title);
                 location.saveInBackground();
             }
@@ -163,7 +187,6 @@ public class TimelineFragment extends Fragment {
         dialog = dialogBuilder.create();
         dialog.show();
     }
-
 
 
 }
