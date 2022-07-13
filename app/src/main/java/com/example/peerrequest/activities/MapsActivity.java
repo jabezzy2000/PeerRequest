@@ -184,7 +184,6 @@ public class MapsActivity extends AppCompatActivity {
                     public boolean onMarkerClick(@NonNull Marker marker) {
                         com.example.peerrequest.models.Location location = (com.example.peerrequest.models.Location) marker.getTag();
                         mapsTaskDialog((com.example.peerrequest.models.Location) marker.getTag());
-                        //Utilities.mapsTaskDialog((com.example.peerrequest.models.Location) marker.getTag(), mapFragment.getContext(), MapsActivity.this);
                         return false;
                     }
                 });
