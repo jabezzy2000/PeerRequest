@@ -173,6 +173,8 @@ public class MapsActivity extends AppCompatActivity {
                 BitmapDescriptor defaultMarker =
                         BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
                 for (int i = 0; i < locations.size(); i++) {
+                    latitude = Double.parseDouble(locations.get(i).getKeyLatitude());
+                    longitude = Double.parseDouble(locations.get(i).getKeyLongitude());
                     Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(locations.get(i).getKeyLatitude()), Double.parseDouble(locations.get(i).getKeyLongitude()))).title(locations.get(i).getKeyTitle()).icon(defaultMarker));
                     dropPinEffect(marker);
                     Log.i(TAG, "onMapReady: " + locations.get(i));
@@ -234,7 +236,7 @@ public class MapsActivity extends AppCompatActivity {
         AlertDialog dialog;
 
         dialogBuilder = new AlertDialog.Builder(this);
-        final View popup = getLayoutInflater().inflate(R.layout.dialog_map_tasks, null);
+        final View popup = getLayoutInflater().inflate(R.layout.dialog_map_tasks,null,false);
         ImageView dialogImage = popup.findViewById(R.id.dialogMapProfilePicture);
         TextView name = popup.findViewById(R.id.dialogMapName);
         TextView title = popup.findViewById(R.id.dialogMapTaskTitle);

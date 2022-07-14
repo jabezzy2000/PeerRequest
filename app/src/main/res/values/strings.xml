@@ -24,4 +24,7 @@
     <string name="send">send</string>
     <string name="profile_other">profile_other</string>
     <string name="profile_me">profile_me</string>
+    <string name="facebook_app_id">759848765212203</string>
+    <string name="fb_login_protocol_scheme">fb759848765212203</string>
+    <string name="facebook_client_token">bf069a1d8123655c65c05b3184817c2b</string>
 </resources>
