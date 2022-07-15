@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
 import com.example.peerrequest.models.Task;
+import com.example.peerrequest.models.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -48,6 +49,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.peerrequest.databinding.ActivityMapsBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -57,6 +59,8 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import okhttp3.internal.Util;
 
 
 public class MapsActivity extends AppCompatActivity {
@@ -73,6 +77,12 @@ public class MapsActivity extends AppCompatActivity {
     private String TAG = "MapsActivity";
     public Task task;
     public List<com.example.peerrequest.models.Location> locations;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private TextView bottomSheetTaskTitle;
+    private TextView bottomSheetUsername;
+    private ImageView bottomSheetProfilePicture;
+    boolean  doubleClick = false;
+
 
 
     @Override
@@ -82,6 +92,15 @@ public class MapsActivity extends AppCompatActivity {
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         locations = new ArrayList<>();
+        View bottomSheet = findViewById(R.id.bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetTaskTitle = findViewById(R.id.bottom_sheet_task_title);
+        bottomSheetUsername = findViewById(R.id.bottom_sheet_name);
+        bottomSheetProfilePicture = findViewById(R.id.bottom_sheet_profile_picture);
+        bottomSheetTaskTitle.setText("No Task Selected");
+        User currentUser = (User) User.getCurrentUser();
+        Utilities.roundedImage(getApplicationContext(),currentUser.getProfilePicture().getUrl(),bottomSheetProfilePicture,80);
+        bottomSheetUsername.setText(User.getCurrentUser().getUsername());
         ParseQuery<com.example.peerrequest.models.Location> locationParseQuery = new ParseQuery(com.example.peerrequest.models.Location.class);
         locationParseQuery.findInBackground(new FindCallback<com.example.peerrequest.models.Location>() {
             @Override
@@ -179,6 +198,7 @@ public class MapsActivity extends AppCompatActivity {
                     dropPinEffect(marker);
                     Log.i(TAG, "onMapReady: " + locations.get(i));
                     marker.setTag(locations.get(i));
+                    marker.setDraggable(true);
                 }
 
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -186,9 +206,15 @@ public class MapsActivity extends AppCompatActivity {
                     public boolean onMarkerClick(@NonNull Marker marker) {
                         com.example.peerrequest.models.Location location = (com.example.peerrequest.models.Location) marker.getTag();
                         mapsTaskDialog((com.example.peerrequest.models.Location) marker.getTag());
+                        bottomSheetTaskTitle.setText(location.getKeyTitle());
+                        bottomSheetUsername.setText(location.getKeyTaskLister());
                         return false;
                     }
                 });
+
+
+
+
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 4));
 
