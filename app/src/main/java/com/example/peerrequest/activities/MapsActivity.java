@@ -200,7 +200,7 @@ public class MapsActivity extends AppCompatActivity {
                 for (int i = 0; i < locations.size(); i++) {
                     latitude = Double.parseDouble(locations.get(i).getKeyLatitude());
                     longitude = Double.parseDouble(locations.get(i).getKeyLongitude());
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(locations.get(i).getKeyLatitude()), Double.parseDouble(locations.get(i).getKeyLongitude()))).title(locations.get(i).getKeyTitle()).icon(defaultMarker));
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(locations.get(i).getKeyTitle()).icon(defaultMarker));
                     dropPinEffect(marker);
                     Log.i(TAG, "onMapReady: " + locations.get(i));
                     marker.setTag(locations.get(i));
