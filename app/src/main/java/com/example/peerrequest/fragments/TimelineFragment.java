@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,40 +25,30 @@ import com.example.peerrequest.activities.MapsActivity;
 import com.example.peerrequest.R;
 import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.adapters.TaskAdapter;
-import com.example.peerrequest.models.Location;
 import com.example.peerrequest.models.Task;
-import com.example.peerrequest.models.User;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
-import java.lang.ref.WeakReference;
-import java.sql.Time;
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TimelineFragment extends Fragment {
     protected TaskAdapter taskAdapter;
-    ImageView profileImage;
+    private ImageView profileImage;
     private int limit = 30;
-    public AlertDialog.Builder dialogBuilder;
-    public AlertDialog dialog;
-    public EditText popupTaskTitle;
-    public EditText popupTaskDescription;
-    public Button popupSave, popupCancel;
-    ImageButton addTasks;
-    RecyclerView recyclerView;
+    private ImageButton addTasks;
+    private RecyclerView recyclerView;
     public ImageButton mapButton;
     protected List<Task> allTasks;
-    String TAG = "TimelineFragment";
-    String ERROR = "Task Unsuccessful";
-    LatLng latLng;
-    ProgressBar progressBar;
     private SwipeRefreshLayout swipeContainer;
+    public LatLng latLng;
+    public ProgressBar progressBar;
+    public HomeActivity homeActivity;
 
 
     public TimelineFragment() {
@@ -71,19 +60,20 @@ public class TimelineFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
         progressBar = view.findViewById(R.id.pbLoading);
-        progressBar.setVisibility(View.GONE);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        homeActivity = (HomeActivity) getActivity();
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                allTasks.clear(); // clear list of tasks
+                progressBar.setVisibility(View.VISIBLE);
                 queryTasks(); // query new tasks
                 swipeContainer.setRefreshing(false); // stop refreshing after tasks have been queried
+                progressBar.setVisibility(View.GONE);
             }
         });
 
         // Configuring the colors
-        swipeContainer.setColorSchemeResources( android.R.color.holo_purple, android.R.color.holo_red_light);
+        swipeContainer.setColorSchemeResources(android.R.color.holo_purple, android.R.color.holo_red_light);
         return view;
     }
 
@@ -92,21 +82,30 @@ public class TimelineFragment extends Fragment {
     private void queryTasks() {
         progressBar.setVisibility(View.VISIBLE);
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
+        //proactively querying the User class related to task
         query.include(Task.KEY_USER);
+        //proactively querying the userRatings using the pointer in the User class
+        query.include(Task.KEY_USER + "." + "userRatings");
         query.setLimit(limit);
         query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Task>() {
             @Override
             public void done(List<Task> tasks, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, ERROR + e.getMessage(), e);
+                    Utilities.showAlert("Error", "" + e.getMessage(), getContext());
                 } else {
-                    allTasks.addAll(tasks);
-                    taskAdapter.notifyDataSetChanged();
+                    if (allTasks == tasks) {
+                        return;
+                    } else {
+                        allTasks.clear();
+                        progressBar.setVisibility(View.INVISIBLE);
+                        allTasks.addAll(tasks);
+                        taskAdapter.notifyDataSetChanged();
+                    }
+
                 }
             }
         });
-        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -124,8 +123,7 @@ public class TimelineFragment extends Fragment {
         addTasks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewContactDialog();
-
+                Utilities.createAddTaskDialog(getContext(), requireActivity(), homeActivity);
             }
         });
         mapButton.setOnClickListener(new View.OnClickListener() {
@@ -139,54 +137,7 @@ public class TimelineFragment extends Fragment {
 
     private void changeToMapActivity() {
         Intent intent = new Intent(getActivity(), MapsActivity.class);
+        intent.putExtra("allTasks", Parcels.wrap(allTasks));
         startActivity(intent);
     }
-
-    public void createNewContactDialog() {
-        dialogBuilder = new AlertDialog.Builder(getContext());
-        final View popup = getLayoutInflater().inflate(R.layout.popup, null);
-        popupTaskTitle = popup.findViewById(R.id.taskTitle);
-        popupTaskDescription = popup.findViewById(R.id.taskDescription);
-        popupSave = popup.findViewById(R.id.btnOk);
-        popupCancel = popup.findViewById(R.id.btnCancel);
-        popupSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Task task = new Task();
-                String title = popupTaskTitle.getText().toString();
-                String description = popupTaskDescription.getText().toString();
-
-                task.setUser((User) ParseUser.getCurrentUser());
-                task.setTaskTitle(title);
-                task.setDescription(description);
-                task.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e != null) {
-                            Log.e(TAG, e.getMessage());
-                        }
-                    }
-                });
-                dialog.dismiss();
-                HomeActivity homeActivity = (HomeActivity) getActivity();
-                Location location = new Location();
-                location.setKeyLongitude(homeActivity.getLongitude() + "");
-                location.setKeyLatitude(homeActivity.getLatitude() + "");
-                location.setKeyTitle(title);
-                location.saveInBackground();
-            }
-        });
-
-        popupCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialogBuilder.setView(popup);
-        dialog = dialogBuilder.create();
-        dialog.show();
-    }
-
-
 }
