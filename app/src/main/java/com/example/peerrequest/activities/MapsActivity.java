@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
 import com.example.peerrequest.models.Task;
+import com.example.peerrequest.models.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -48,6 +49,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.peerrequest.databinding.ActivityMapsBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -57,6 +59,8 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import okhttp3.internal.Util;
 
 
 public class MapsActivity extends AppCompatActivity {
@@ -73,6 +77,13 @@ public class MapsActivity extends AppCompatActivity {
     private String TAG = "MapsActivity";
     public Task task;
     public List<com.example.peerrequest.models.Location> locations;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private TextView bottomSheetTaskTitle;
+    private TextView bottomSheetUsername;
+    private ImageView bottomSheetProfilePicture;
+    private TextView bottomSheetTaskDescription;
+    private TextView bottomSheetTime;
+    private Button bottomSheetGoToTask;
 
 
     @Override
@@ -82,6 +93,19 @@ public class MapsActivity extends AppCompatActivity {
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         locations = new ArrayList<>();
+        View bottomSheet = findViewById(R.id.bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetTaskTitle = findViewById(R.id.bottom_sheet_task_title);
+        bottomSheetUsername = findViewById(R.id.bottom_sheet_name);
+        bottomSheetProfilePicture = findViewById(R.id.bottom_sheet_profile_picture);
+        bottomSheetTaskDescription = findViewById(R.id.bottomSheetDescription);
+        bottomSheetTime = findViewById(R.id.bottomSheetTime);
+        bottomSheetGoToTask = findViewById(R.id.bottomSheetGoToTask);
+        bottomSheetTaskTitle.setText("No Task Selected");
+        bottomSheetTaskDescription.setText("No Task Selected");
+        User currentUser = (User) User.getCurrentUser();
+        Utilities.roundedImage(getApplicationContext(), currentUser.getProfilePicture().getUrl(), bottomSheetProfilePicture, 80);
+        bottomSheetUsername.setText(User.getCurrentUser().getUsername());
         ParseQuery<com.example.peerrequest.models.Location> locationParseQuery = new ParseQuery(com.example.peerrequest.models.Location.class);
         locationParseQuery.findInBackground(new FindCallback<com.example.peerrequest.models.Location>() {
             @Override
@@ -146,6 +170,7 @@ public class MapsActivity extends AppCompatActivity {
         }
     }
 
+    // sets map location in the situation the users location has changed
     private void onLocationChanged(Location location) {
         setLatitude(location.getLatitude());
         setLongitude(location.getLongitude());
@@ -169,26 +194,46 @@ public class MapsActivity extends AppCompatActivity {
                 //creating marker at current position
                 currentLocation = new LatLng(latitude, longitude);
                 Log.i(TAG, "onMapReady: current location" + currentLocation);
-                mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Position"));
+                Marker currentLocationMarker = mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Position"));
                 BitmapDescriptor defaultMarker =
                         BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
                 for (int i = 0; i < locations.size(); i++) {
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(locations.get(i).getKeyLatitude()), Double.parseDouble(locations.get(i).getKeyLongitude()))).title(locations.get(i).getKeyTitle()).icon(defaultMarker));
+                    latitude = Double.parseDouble(locations.get(i).getKeyLatitude());
+                    longitude = Double.parseDouble(locations.get(i).getKeyLongitude());
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(locations.get(i).getKeyTitle()).icon(defaultMarker));
                     dropPinEffect(marker);
                     Log.i(TAG, "onMapReady: " + locations.get(i));
                     marker.setTag(locations.get(i));
+                    marker.setDraggable(true);
                 }
 
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(@NonNull Marker marker) {
-                        com.example.peerrequest.models.Location location = (com.example.peerrequest.models.Location) marker.getTag();
-                        mapsTaskDialog((com.example.peerrequest.models.Location) marker.getTag());
+                        //Adding if statement to handle the situation the user clicks on his location marker
+                        if (!marker.getPosition().equals(currentLocationMarker.getPosition())) {
+                            com.example.peerrequest.models.Location location = (com.example.peerrequest.models.Location) marker.getTag();
+                            bottomSheetTaskTitle.setText(location.getKeyTitle());
+                            bottomSheetUsername.setText(location.getKeyTaskLister());
+                            bottomSheetTaskDescription.setText(location.getKeyDescription());
+                            Utilities.getSimpleTime(location.getUpdatedAt());
+                            bottomSheetGoToTask.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    queryParticularTask(location);
+                                }
+                            });
+                            if (location.getProfilePicture() != null) {
+                                Utilities.roundedImage(getApplicationContext(), location.getProfilePicture().getUrl(), bottomSheetProfilePicture, 80);
+                            }
+
+                        }
                         return false;
                     }
                 });
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 4));
+                //moves camera to location with a zoom of 5
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 5));
 
 
             }
@@ -228,47 +273,7 @@ public class MapsActivity extends AppCompatActivity {
         });
     }
 
-
-    public void mapsTaskDialog(com.example.peerrequest.models.Location location) {
-        AlertDialog.Builder dialogBuilder;
-        AlertDialog dialog;
-
-        dialogBuilder = new AlertDialog.Builder(this);
-        final View popup = getLayoutInflater().inflate(R.layout.dialog_map_tasks, null);
-        ImageView dialogImage = popup.findViewById(R.id.dialogMapProfilePicture);
-        TextView name = popup.findViewById(R.id.dialogMapName);
-        TextView title = popup.findViewById(R.id.dialogMapTaskTitle);
-        TextView description = popup.findViewById(R.id.dialogMapTaskDescription);
-        Button cancel = popup.findViewById(R.id.mapDialogCancelBtn);
-        Button goToTaskDetail = popup.findViewById(R.id.mapDialogGoToTaskBtn);
-        if (location.getProfilePicture() != null) {
-            Utilities.roundedImage(this, location.getProfilePicture().getUrl(), dialogImage, 70);
-        }
-        name.setText(location.getKeyTaskLister());
-        title.setText(location.getKeyTitle());
-        description.setText(location.getKeyDescription());
-        dialogBuilder.setView(popup);
-        dialog = dialogBuilder.create();
-        //creating a new task to pass into taskDetailActivity method
-        goToTaskDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                queryParticularTask(location);
-
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-
-
-    }
-
+    //queries information about task
     private void queryParticularTask(com.example.peerrequest.models.Location location) {
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
         query.whereEqualTo(Task.KEY_REQUESTS_TITLE, location.getKeyTitle());
@@ -279,13 +284,19 @@ public class MapsActivity extends AppCompatActivity {
             public void done(List<Task> objects, ParseException e) {
                 if (e == null) {
                     task = objects.get(0);
-                    Intent intent = new Intent(MapsActivity.this, TaskDetailActivity.class);
-                    intent.putExtra(Task.class.getSimpleName(), Parcels.wrap(task));
-                    startActivity(intent);
+                    goToTaskDetail(task);
+
 
                 }
             }
         });
+    }
+
+    // sends object to task detail page
+    private void goToTaskDetail(Task task) {
+        Intent intent = new Intent(MapsActivity.this, TaskDetailActivity.class);
+        intent.putExtra(Task.class.getSimpleName(), Parcels.wrap(task));
+        startActivity(intent);
     }
 
 
