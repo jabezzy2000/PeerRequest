@@ -19,9 +19,6 @@ import com.example.peerrequest.models.User;
 import java.util.List;
 
 public class HistoryRequestAdapter extends RecyclerView.Adapter<HistoryRequestAdapter.HistoryViewHolder> {
-    //Idea: Instead of using different containers, I query only requests, and if the request was made by the user, put in different list
-    //else, i get the tasks from those requests and populate the view based on that
-    // when the user clicks a button, I clear the list and repopulate depending on what was clicked
     private final List<Requests> requestsList;
     Context context;
 
@@ -54,13 +51,13 @@ public class HistoryRequestAdapter extends RecyclerView.Adapter<HistoryRequestAd
         private TextView historyUsername;
         private TextView historyTaskTitle;
         private TextView historyRequestDescription;
+
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             historyProfilePicture = itemView.findViewById(R.id.historyRequestProfileImage);
             historyRequestDescription = itemView.findViewById(R.id.historyRequestDescription);
             historyUsername = itemView.findViewById(R.id.historyRequestProfileName);
             historyTaskTitle = itemView.findViewById(R.id.historyRequestTitle);
-
         }
 
         public void bind(Requests request) {
@@ -69,7 +66,7 @@ public class HistoryRequestAdapter extends RecyclerView.Adapter<HistoryRequestAd
             historyTaskTitle.setText(task.getTaskTitle());
             historyUsername.setText(user.getUsername());
             historyRequestDescription.setText(request.getKeyCoverLetter());
-            Utilities.roundedImage(context,user.getProfilePicture().getUrl(),historyProfilePicture,80);
+            Utilities.roundedImage(context, user.getProfilePicture().getUrl(), historyProfilePicture, 80);
         }
     }
 }

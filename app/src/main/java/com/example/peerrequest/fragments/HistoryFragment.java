@@ -12,11 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
 import com.example.peerrequest.adapters.HistoryRequestAdapter;
 import com.example.peerrequest.adapters.HistoryTaskAdapter;
+import com.example.peerrequest.databinding.FragmentHistoryBinding;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
@@ -29,15 +33,17 @@ import java.util.List;
 
 
 public class HistoryFragment extends Fragment {
+    private FragmentHistoryBinding binding;
     private static final int MAX_LIMIT = 40 ;
     protected HistoryRequestAdapter historyRequestAdapter;
     protected HistoryTaskAdapter historyTaskAdapter;
-    private final int limit = 30;
     private Button requestButton;
     private Button taskButton;
+    private ProgressBar progressBar;
     private RecyclerView recyclerView;
     protected List<Requests> allRequests;
     protected List<Task> allTasks;
+    private TextView clickToContinueText;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -47,8 +53,9 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_history, container, false);
+        // Binding layout to view
+        binding = FragmentHistoryBinding.inflate(inflater,container,false);
+        View view = binding.getRoot();
         return view;
 
     }
@@ -60,32 +67,33 @@ public class HistoryFragment extends Fragment {
         allTasks = new ArrayList<>();
         historyRequestAdapter = new HistoryRequestAdapter(getContext(),allRequests);
         historyTaskAdapter = new HistoryTaskAdapter(allTasks,getContext());
-        requestButton= view.findViewById(R.id.requestsHistory);
-        taskButton = view.findViewById(R.id.tasksHistory);
-        recyclerView = view.findViewById(R.id.historyRecyclerView);
-//        recyclerView.setAdapter(historyRequestAdapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        clickToContinueText = binding.tvDisposableText;
+        requestButton = binding.requestsHistory;
+        taskButton = binding.tasksHistory;
+        progressBar = binding.historyProgressBar;
+        recyclerView = binding.historyRecyclerView;
         requestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "request button clicked", Toast.LENGTH_SHORT).show();
+                clickToContinueText.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 recyclerView.setAdapter(historyRequestAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 queryRequests();
-
             }
         });
 
         taskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "task button clicked", Toast.LENGTH_SHORT).show();
+                clickToContinueText.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 recyclerView.setAdapter(historyTaskAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 queryTasks();
             }
         });
-//        queryRequests();
+
     }
 
     private void queryRequests(){
@@ -100,9 +108,12 @@ public class HistoryFragment extends Fragment {
                 if (e==null){
                     allRequests.clear();
                     allRequests.addAll(objects);
+                    progressBar.setVisibility(View.INVISIBLE);
                     historyRequestAdapter.notifyDataSetChanged();
                 }
-
+                else{
+                    Utilities.showAlert("Error", ""+e.getMessage(),getContext());
+                }
             }
         });
     }
@@ -118,10 +129,19 @@ public class HistoryFragment extends Fragment {
                 if (e==null){
                     allTasks.clear();
                     allTasks.addAll(objects);
+                    progressBar.setVisibility(View.INVISIBLE);
                     historyTaskAdapter.notifyDataSetChanged();
                 }
-
+                else{
+                    Utilities.showAlert("Error", ""+e.getMessage(),getContext());
+                }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() { //setting bind to null for when the view is destroyed
+        super.onDestroyView();
+        binding=null;
     }
 }

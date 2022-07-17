@@ -38,7 +38,7 @@
         <TextView
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
-            android:layout_height="16dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@string/_3_days_ago"
             android:textStyle="italic"
@@ -67,8 +67,18 @@
             android:id="@+id/tvItemTaskRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Rating:"
             app:layout_constraintStart_toStartOf="@+id/tvUserName"
             app:layout_constraintTop_toTopOf="parent" />
 
