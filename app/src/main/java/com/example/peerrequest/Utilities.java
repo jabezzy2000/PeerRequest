@@ -51,8 +51,6 @@ public class Utilities extends TaskDetailActivity {
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
-    static LocationManager locationManager;
-    public static final int REQUEST_LOCATION = 1;
 
     public static void setImage(Context context, String url, ImageView iv) {
         Glide.with(context).load(url).into(iv);
@@ -103,7 +101,7 @@ public class Utilities extends TaskDetailActivity {
         Button popupCancel = popup.findViewById(R.id.cancelRequestBtn);
         submitRequestName.setText(request.getUser().getUsername());
         acceptRequestRating.setText(rating);
-        Utilities.roundedImage(context,requester.getProfilePicture().getUrl(),submitRequestProfileImage,70);
+        Utilities.roundedImage(context, requester.getProfilePicture().getUrl(), submitRequestProfileImage, 70);
         acceptRequestCoverLetter.setText(request.getKeyCoverLetter());
         dialogBuilder.setView(popup);
         dialog = dialogBuilder.create();
@@ -114,7 +112,7 @@ public class Utilities extends TaskDetailActivity {
                 request.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        if(e==null){
+                        if (e == null) {
                             dialog.dismiss();
                             //move from here to the chat screen
                             Intent intent = new Intent(context, ChatActivity.class);
@@ -122,8 +120,7 @@ public class Utilities extends TaskDetailActivity {
                             intent.putExtra("user", Parcels.wrap(user));
                             intent.putExtra("requester", Parcels.wrap(requester));
                             context.startActivity(intent);
-                        }
-                        else{
+                        } else {
                             Utilities.showAlert("Error", "" + e.getMessage(), context);
                         }
                     }
@@ -187,26 +184,6 @@ public class Utilities extends TaskDetailActivity {
         });
     }
 
-    private static void queryParticularTask(Location location,Context context, Activity MapsActivity) {
-        ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
-        query.whereEqualTo(Task.KEY_REQUESTS_TITLE, location.getKeyTitle());
-        query.include(Task.KEY_USER);
-
-        query.findInBackground(new FindCallback<Task>() {
-            @Override
-            public void done(List<Task> objects, ParseException e) {
-                if (e==null){
-                    Task task = objects.get(0);
-                    Intent intent = new Intent(context, com.example.peerrequest.activities.MapsActivity.class);
-                    intent.putExtra(Task.class.getSimpleName(), Parcels.wrap(task));
-                    context.startActivity(intent);
-
-                }
-            }
-        });
-    }
-
-
 
     public static void createAddTaskDialog(Context context, Activity MainActivity, HomeActivity homeActivity) {
         AlertDialog.Builder dialogBuilder;
@@ -237,7 +214,6 @@ public class Utilities extends TaskDetailActivity {
                             Utilities.showAlert("Error", "" + e.getMessage(), context);
                         } else {
                             dialog.dismiss();
-//                           HomeActivity homeActivity = (HomeActivity) MainActivity();
                             User user = (User) User.getCurrentUser();
                             Location location = new Location();
                             location.setKeyTaskLister(user.getUsername());
@@ -247,6 +223,7 @@ public class Utilities extends TaskDetailActivity {
                             location.setKeyLatitude(homeActivity.getLatitude() + "");
                             location.setKeyTitle(title);
                             location.setKeyDescription(description);
+                            location.setKeyPointerToTask(task);
                             location.saveInBackground();
                         }
                     }
@@ -260,6 +237,22 @@ public class Utilities extends TaskDetailActivity {
             }
         });
         dialog.show();
+    }
+
+    public static double getDistance(double latitude_1, double longitude_1, double latitude_2, double longitude_2) {
+
+        double dat = Math.toRadians(latitude_2 - latitude_1);
+        double don = Math.toRadians(longitude_2 - longitude_1);
+        double lat1 = Math.toRadians(latitude_1);
+        double lat2 = Math.toRadians(latitude_2);
+        double a = Math.pow(Math.sin(dat / 2), 2) +
+                Math.pow(Math.sin(don / 2), 2) *
+                        Math.cos(lat1) *
+                        Math.cos(lat2);
+        double rad = 6371;
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double distance = c * rad;
+        return distance;
     }
 
 }

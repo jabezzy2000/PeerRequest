@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
 import com.example.peerrequest.activities.TaskDetailActivity;
+import com.example.peerrequest.models.Ratings;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.parse.ParseException;
@@ -56,6 +57,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         TextView time;
         TextView taskTitle;
         TextView taskDescription;
+        TextView rating;
 
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,17 +65,21 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             username = itemView.findViewById(R.id.tvUserName);
             time = itemView.findViewById(R.id.tvTime);
             taskTitle = itemView.findViewById(R.id.tvTaskTitile);
+            rating = itemView.findViewById(R.id.tvItemTaskRating);
             taskDescription = itemView.findViewById(R.id.tvTaskDescription);
             itemView.setOnClickListener(this);
         }
 
         public void bind(Task task) {
             User user = task.getUser();
+            Ratings currentUserRatings = user.getKeyUserRatingsProperties();
             Utilities.roundedImage(itemView.getContext(), user.getProfilePicture().getUrl(), profilePicture, 70);
             username.setText(user.getUsername());
             taskTitle.setText(task.getTaskTitle());
             taskDescription.setText(task.getDescription());
             time.setText(Utilities.getSimpleTime(task.getCreatedAt()));
+            rating.setText(String.valueOf(currentUserRatings.getUserRating()));
+
         }
 
         @Override
