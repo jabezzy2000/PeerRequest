@@ -247,6 +247,7 @@ public class Utilities extends TaskDetailActivity {
                             location.setKeyLatitude(homeActivity.getLatitude() + "");
                             location.setKeyTitle(title);
                             location.setKeyDescription(description);
+                            location.setKeyPointerToTask(task);
                             location.saveInBackground();
                         }
                     }
