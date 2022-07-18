@@ -2,7 +2,6 @@ package com.example.peerrequest.adapters;
 
 import android.content.Context;
 
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
 import com.example.peerrequest.models.Message;
@@ -60,13 +57,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
 
         if (isMe) {
+            holder.bodyOther.setVisibility(View.GONE);
             holder.imageMe.setVisibility(View.VISIBLE);
             holder.imageOther.setVisibility(View.GONE);
-            holder.body.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
+            holder.bodyMe.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
         } else {
+            holder.bodyMe.setVisibility(View.GONE);
             holder.imageOther.setVisibility(View.VISIBLE);
             holder.imageMe.setVisibility(View.GONE);
-            holder.body.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+            holder.bodyOther.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         }
 
         //if the other User doesnt have a profile picture, His profile picture is replaced with a gravatar
@@ -74,14 +73,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         if (isMe) {
             User meUser = (User) User.getCurrentUser();
             Utilities.roundedImage(mContext, meUser.getProfilePicture().getUrl(), profileView, 70);
-            holder.body.setText(message.getBody());
+            holder.bodyMe.setText(message.getBody());
         } else {
             if (otherUser.getProfilePicture() != null) {
                 Utilities.roundedImage(mContext, otherUser.getProfilePicture().getUrl(), profileView, 70);
             } else {
                 Utilities.roundedImage(mContext, getProfileUrl(message.getUserId()), profileView, 70);
             }
-            holder.body.setText(message.getBody());
+            holder.bodyOther.setText(message.getBody());
         }
     }
 
@@ -96,7 +95,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "https://www.gravatar.com/avatar/" + hex + "?d=identicon";
+        return ((R.string.gravatarURL) + hex + R.string.gravatarIdenticon);
     }
 
     @Override
@@ -107,13 +106,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageOther;
         ImageView imageMe;
-        TextView body;
+        TextView bodyMe;
+        TextView bodyOther;
 
         public ViewHolder(View itemView) {
             super(itemView);
             imageOther = (ImageView) itemView.findViewById(R.id.ivProfileOther);
             imageMe = (ImageView) itemView.findViewById(R.id.ivProfileMe);
-            body = (TextView) itemView.findViewById(R.id.tvBody);
+            bodyMe = (TextView) itemView.findViewById(R.id.tvBodyMe);
+            bodyOther = (TextView) itemView.findViewById(R.id.tvBodyOtherUser);
         }
     }
 }

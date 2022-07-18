@@ -1,16 +1,21 @@
 package com.example.peerrequest.activities;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewbinding.ViewBinding;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
 import com.example.peerrequest.adapters.ChatLayoutAdapter;
+import com.example.peerrequest.databinding.ActivityChatLayoutBinding;
+import com.example.peerrequest.databinding.ActivityMapsBinding;
 import com.example.peerrequest.models.Message;
 import com.example.peerrequest.models.User;
 import com.parse.FindCallback;
@@ -25,25 +30,24 @@ import java.util.Set;
 
 public class ChatLayoutActivity extends AppCompatActivity {
     private static final int MAX_CHAT_MESSAGES_TO_SHOW = 20;
-    ChatLayoutAdapter chatLayoutAdapter;
-    List<Message> messages;
-    RecyclerView recyclerView;
-    String userID;
-    String TAG;
+    private ChatLayoutAdapter chatLayoutAdapter;
+    private List<Message> messages;
+    private String userID;
+    private TextView noChatYet;
+    private ActivityChatLayoutBinding binding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_layout);
-
-        recyclerView = findViewById(R.id.chatLayoutRecyclerView);
-        Log.i("done", "onCreate: okay ");
-
+        //using ViewBinding instead of repetitive findViewsByIds
+        binding = ActivityChatLayoutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         messages = new ArrayList<>();
         chatLayoutAdapter = new ChatLayoutAdapter(this,userID,messages);
-        recyclerView.setAdapter(chatLayoutAdapter);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        binding.chatLayoutRecyclerView.setAdapter(chatLayoutAdapter);
+        binding.chatLayoutRecyclerView.setLayoutManager(linearLayoutManager);
+        noChatYet = findViewById(R.id.tvNoMessages);
         queryMessages();
 
     }
@@ -67,34 +71,38 @@ public class ChatLayoutActivity extends AppCompatActivity {
             @Override
             public void done(List<Message> objects, ParseException e) {
                 if (e==null) {
-                    Log.i("done", "done: " + objects);
                     Set<String> container = new HashSet<>();
                     for (Message m: objects) {
-                        String senderandreceiver = "";
+                        String senderAndReceiver = "";
                         try{
                             String sender = ((User) (m.getSenderIdKey().fetchIfNeeded())).getObjectId();
                             String receiver = ((User) (m.getReceiverIdKey().fetchIfNeeded())).getObjectId();
                             if (sender.equals(ParseUser.getCurrentUser().getObjectId())) {
-                                senderandreceiver += sender + " " + receiver;
+                                senderAndReceiver += sender + " " + receiver;
 
                             } else {
-                                senderandreceiver += receiver + " " + sender;
+                                senderAndReceiver += receiver + " " + sender;
                             }
-                            if (container.contains(senderandreceiver)) {
+                            if (container.contains(senderAndReceiver)) {
                                 continue;
                             }  else {
                                 messages.add(m);
-                                container.add(senderandreceiver);
+                                container.add(senderAndReceiver);
                             }
 
 
                         } catch(ParseException err) {
+                            Utilities.showAlert("Error", "An Error Has Occured", getApplicationContext());
 
                         }
                     }
+                    if(messages.isEmpty()){
+                        noChatYet.setVisibility(View.VISIBLE);
+                    }
+                    binding.chatLayoutProgressBar.setVisibility(View.INVISIBLE);
                     chatLayoutAdapter.notifyDataSetChanged();
                 } else {
-                    Log.e("done", "done: ",  e);
+                    Utilities.showAlert("Error", "An Error Has Occured", getApplicationContext());;
                 }
             }
         });
