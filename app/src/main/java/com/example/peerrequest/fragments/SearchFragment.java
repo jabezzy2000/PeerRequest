@@ -14,9 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
 import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.adapters.SearchAdapter;
 import com.example.peerrequest.models.Location;
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import okhttp3.internal.Util;
+
 public class SearchFragment extends Fragment {
     protected SearchAdapter searchAdapter;
     private final int limit = 50;
@@ -44,8 +47,6 @@ public class SearchFragment extends Fragment {
     public ChipGroup chipGroup;
     protected List<Task> allTasks;
     private final WeakReference<HomeActivity> homeActivityWeakReference;
-    private final String TAG = "SearchFragment";
-    private final String ERROR = "task unsuccessful";
 
 
     public SearchFragment(HomeActivity homeActivity) {
@@ -79,8 +80,9 @@ public class SearchFragment extends Fragment {
             @Override
             public void done(List<Task> objects, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, ERROR + e.getMessage(), e);
+                    Utilities.showAlert("Error", ""+e.getMessage(),getContext());
                 } else {
+                    allTasks.clear();
                     allTasks.addAll(objects);
                     Collections.shuffle(allTasks);
                     searchAdapter.notifyDataSetChanged();
@@ -116,7 +118,6 @@ public class SearchFragment extends Fragment {
                 if (createdAtChip.isChecked()) {
                     createdAtChip.setChecked(true);
                     querySearch = search.getText().toString();
-                    Toast.makeText(getContext(), querySearch, Toast.LENGTH_SHORT).show();
                     if (querySearch.equals("")) {
                         queryTasksWithoutTextForDate();
                     } else {
@@ -172,20 +173,21 @@ public class SearchFragment extends Fragment {
             @Override
             public void done(List<Location> locationsWithTasks, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, ERROR + e.getMessage(), e);
+                    Utilities.showAlert("Error", ""+e.getMessage(), getContext());
                 } else {
+                    allTasks.clear();
                     double currentDistance = 0.0;
                     for(int i=0; i<locationsWithTasks.size(); i++){
                         Location location = locationsWithTasks.get(i);
                         double latitude = Double.parseDouble(location.getKeyLatitude());
                         double longitude = Double.parseDouble(location.getKeyLongitude());
-                        if(getDistance(userLatitude,userLongitude,latitude,longitude) > currentDistance){
+                        if(Utilities.getDistance(userLatitude,userLongitude,latitude,longitude) > currentDistance){
                             allTasks.add(location.getTask());
-                            currentDistance = getDistance(userLatitude,userLongitude,latitude,longitude);
+                            currentDistance = Utilities.getDistance(userLatitude,userLongitude,latitude,longitude);
                         }
                         else{
                             allTasks.add(0,location.getTask());
-                            currentDistance = getDistance(userLatitude,userLongitude,latitude,longitude);
+                            currentDistance = Utilities.getDistance(userLatitude,userLongitude,latitude,longitude);
                         }
                     }
                     searchAdapter.notifyDataSetChanged();
@@ -218,20 +220,21 @@ public class SearchFragment extends Fragment {
             @Override
             public void done(List<Location> locationsWithTasks, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, ERROR + e.getMessage(), e);
+                    Utilities.showAlert("Error", ""+e.getMessage(), getContext());
                 } else {
+                    allTasks.clear();
                     double currentDistance = 0.0;
                     for(int i=0; i<locationsWithTasks.size(); i++){
                         Location location = locationsWithTasks.get(i);
                         double latitude = Double.parseDouble(location.getKeyLatitude());
                         double longitude = Double.parseDouble(location.getKeyLongitude());
-                        if(getDistance(userLatitude,userLongitude,latitude,longitude) > currentDistance){
+                        if(Utilities.getDistance(userLatitude,userLongitude,latitude,longitude) > currentDistance){
                             allTasks.add(location.getTask());
-                            currentDistance = getDistance(userLatitude,userLongitude,latitude,longitude);
+                            currentDistance = Utilities.getDistance(userLatitude,userLongitude,latitude,longitude);
                         }
                         else{
                             allTasks.add(0,location.getTask());
-                            currentDistance = getDistance(userLatitude,userLongitude,latitude,longitude);
+                            currentDistance = Utilities.getDistance(userLatitude,userLongitude,latitude,longitude);
                         }
                     }
                     searchAdapter.notifyDataSetChanged();
@@ -262,8 +265,9 @@ public class SearchFragment extends Fragment {
             @Override
             public void done(List<Task> objects, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, ERROR + e.getMessage(), e);
+                    Utilities.showAlert("Error", ""+e.getMessage(), getContext());
                 } else {
+                    allTasks.clear();
                     allTasks.addAll(objects);
                     searchAdapter.notifyDataSetChanged();
 
@@ -282,30 +286,15 @@ public class SearchFragment extends Fragment {
             @Override
             public void done(List<Task> tasks, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, ERROR + e.getMessage(), e);
+                    Utilities.showAlert("Error", ""+e.getMessage(), getContext());
                 } else {
+                    allTasks.clear();
                     allTasks.addAll(tasks);
                     searchAdapter.notifyDataSetChanged();
 
                 }
             }
         });
-    }
-
-    public static double getDistance(double latitude_1, double longitude_1, double latitude_2, double longitude_2) {
-
-        double dat = Math.toRadians(latitude_2 - latitude_1);
-        double don = Math.toRadians(longitude_2 - longitude_1);
-        double lat1 = Math.toRadians(latitude_1);
-        double lat2 = Math.toRadians(latitude_2);
-        double a = Math.pow(Math.sin(dat / 2), 2) +
-                Math.pow(Math.sin(don / 2), 2) *
-                        Math.cos(lat1) *
-                        Math.cos(lat2);
-        double rad = 6371;
-        double c = 2 * Math.asin(Math.sqrt(a));
-        double distance = c * rad;
-        return distance;
     }
 }
 
