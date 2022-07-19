@@ -57,14 +57,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
 
         if (isMe) {
-            holder.bodyOther.setVisibility(View.GONE);
+            holder.bodyOther.setVisibility(View.INVISIBLE);
             holder.imageMe.setVisibility(View.VISIBLE);
-            holder.imageOther.setVisibility(View.GONE);
+            holder.imageOther.setVisibility(View.INVISIBLE);
+            holder.bodyMe.setVisibility(View.VISIBLE);
             holder.bodyMe.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
         } else {
-            holder.bodyMe.setVisibility(View.GONE);
+            holder.bodyMe.setVisibility(View.INVISIBLE);
             holder.imageOther.setVisibility(View.VISIBLE);
-            holder.imageMe.setVisibility(View.GONE);
+            holder.imageMe.setVisibility(View.INVISIBLE);
+            holder.bodyOther.setVisibility(View.VISIBLE);
             holder.bodyOther.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         }
 
@@ -78,24 +80,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             if (otherUser.getProfilePicture() != null) {
                 Utilities.roundedImage(mContext, otherUser.getProfilePicture().getUrl(), profileView, 70);
             } else {
-                Utilities.roundedImage(mContext, getProfileUrl(message.getUserId()), profileView, 70);
+                //get gravatar image if user doesn't have an image on parse
+                Utilities.roundedImage(mContext, Utilities.getProfileUrl(message.getUserId()), profileView, 70);
             }
             holder.bodyOther.setText(message.getBody());
         }
-    }
-
-    // Create a gravatar image based on the hash value obtained from userId
-    private static String getProfileUrl(final String userId) {
-        String hex = "";
-        try {
-            final MessageDigest digest = MessageDigest.getInstance("MD5");
-            final byte[] hash = digest.digest(userId.getBytes());
-            final BigInteger bigInt = new BigInteger(hash);
-            hex = bigInt.abs().toString(16);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ((R.string.gravatarURL) + hex + R.string.gravatarIdenticon);
     }
 
     @Override
