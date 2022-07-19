@@ -165,7 +165,6 @@ public class ChatActivity extends AppCompatActivity {
                 message.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-//                        refreshMessages();
                         mMessages.add(0,message);
                         mAdapter.notifyDataSetChanged();
                     }
