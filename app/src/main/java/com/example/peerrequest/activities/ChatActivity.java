@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,15 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
 import com.example.peerrequest.adapters.ChatAdapter;
+import com.example.peerrequest.adapters.MessageAdapter;
 import com.example.peerrequest.models.Message;
 import com.example.peerrequest.models.Ratings;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.User;
 import com.parse.FindCallback;
-import com.parse.LogInCallback;
-import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -39,51 +37,91 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ChatActivity extends AppCompatActivity {
-
-    private static final String TAG = "ChatActivity";
-    static final int MAX_CHAT_MESSAGES_TO_SHOW = 50;
+    private ProgressBar progressBar;
+    static final int MAX_CHAT_MESSAGES_TO_SHOW = 30;
     public User otherUser;
     public User otherTexter;
-    static final long POLL_INTERVAL = TimeUnit.SECONDS.toMillis(3);
-    Handler myHandler = new android.os.Handler();
-    Runnable mRefreshMessagesRunnable = new Runnable() {
+    static final long POLL_INTERVAL = TimeUnit.SECONDS.toMillis(5);
+    public Handler myHandler = new android.os.Handler();
+    public Runnable mRefreshMessagesRunnable = new Runnable() {
         @Override
         public void run() {
             refreshMessages(); // where the query first happens
             myHandler.postDelayed(this, POLL_INTERVAL);
         }
     };
-
-    EditText etMessage;
-    ImageButton ibSend;
-    RecyclerView rvChat;
-    List<Message> mMessages;
-    Boolean mFirstLoad;
-    RecyclerView.Adapter mAdapter;
-    Button completed;
-    Requests requests;
-    User user;
+    private EditText etMessage;
+    private ImageButton ibSend;
+    private RecyclerView rvChat;
+    private List<Message> mMessages;
+    private Boolean mFirstLoad;
+    private RecyclerView.Adapter mAdapter;
+    private Button completed;
+    private Requests requests;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        progressBar = findViewById(R.id.chatProgressBar);
         otherTexter = (User) Parcels.unwrap(getIntent().getParcelableExtra("requester"));
-//        otherTexter = getIntent().getParcelableExtra("requester");
         otherUser = getIntent().getParcelableExtra("otherUser");
         if (otherTexter == null) {
             setupMessagePosting(otherUser);
         } else {
             setupMessagePosting(otherTexter);
         }
-
+        queryMessages();
     }
 
+    private void queryMessages() {
+        //         Construct query to execute
+        ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
+        query.whereEqualTo(Message.SENDER_ID_KEY, User.getCurrentUser());
+        query.whereEqualTo(Message.RECEIVER_ID_KEY, otherUser);
+
+
+        ParseQuery<Message> query2 = ParseQuery.getQuery(Message.class);
+        query2.whereEqualTo(Message.RECEIVER_ID_KEY, (User) ParseUser.getCurrentUser());
+        query2.whereEqualTo(Message.SENDER_ID_KEY, otherUser);
+
+        List<ParseQuery<Message>> list = new ArrayList<ParseQuery<Message>>();
+        list.add(query);
+        list.add(query2);
+
+        ParseQuery<Message> query3 = ParseQuery.or(list);
+        query3.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
+        query3.include(Message.SENDER_ID_KEY);
+        query3.include(Message.RECEIVER_ID_KEY);
+
+        query3.addDescendingOrder(Message.KEY_CREATED_AT);
+        query3.findInBackground(new FindCallback<Message>() {
+            @Override
+            public void done(List<Message> objects, ParseException e) {
+                if (e == null)
+                {
+                    if(objects.size()==mMessages.size()){
+                        return;
+                    }
+                    else{
+                        progressBar.setVisibility(View.INVISIBLE);
+                        mMessages.clear();
+                        mMessages.addAll(objects);
+                        mAdapter.notifyDataSetChanged(); // update adapter
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+                else{
+                    Utilities.showAlert("Error", ""+e.getMessage(),getApplicationContext());
+                }
+            }
+        });
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         // Only start checking for new messages when the app becomes active in foreground
         myHandler.postDelayed(mRefreshMessagesRunnable, POLL_INTERVAL);
     }
@@ -105,8 +143,10 @@ public class ChatActivity extends AppCompatActivity {
         completed = findViewById(R.id.completedBtn);
         mMessages = new ArrayList<>();
         mFirstLoad = true;
-        mAdapter = new ChatAdapter(ChatActivity.this, mMessages);
+        mAdapter = new ChatAdapter(ChatActivity.this,mMessages);
         rvChat.setAdapter(mAdapter);
+        progressBar = findViewById(R.id.chatProgressBar);
+
 
         // associate the LayoutManager with the RecylcerView
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatActivity.this);
@@ -125,9 +165,8 @@ public class ChatActivity extends AppCompatActivity {
                 message.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        Toast.makeText(ChatActivity.this, "Successfully created message on Parse",
-                                Toast.LENGTH_SHORT).show();
-                        refreshMessages();
+                        mMessages.add(0,message);
+                        mAdapter.notifyDataSetChanged();
                     }
                 });
                 etMessage.setText(null);
@@ -137,7 +176,7 @@ public class ChatActivity extends AppCompatActivity {
         completed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createRateUserDialog(ChatActivity.this);
+                createRateUserDialog(ChatActivity.this, otherUser);
             }
         });
     }
@@ -166,22 +205,31 @@ public class ChatActivity extends AppCompatActivity {
         query3.findInBackground(new FindCallback<Message>() {
             @Override
             public void done(List<Message> objects, ParseException e) {
-                if (e == null) ;
+                if (e == null)
                 {
-                    mMessages.clear();
-                    mMessages.addAll(objects);
-                    mAdapter.notifyDataSetChanged(); // update adapter
+                    if(objects.size()==mMessages.size()){
+                        return;
+                    }
+                    else{
+                        progressBar.setVisibility(View.INVISIBLE);
+                        mMessages.clear();
+                        mMessages.addAll(objects);
+                        mAdapter.notifyDataSetChanged(); // update adapter
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+                else{
+                    Utilities.showAlert("Error", ""+e.getMessage(),getApplicationContext());
                 }
             }
         });
     }
 
-    private void createRateUserDialog(Context context) {
+    private void createRateUserDialog(Context context, User otherUser) {
         AlertDialog.Builder dialogBuilder;
         AlertDialog dialog;
-        Toast.makeText(context, "request created by " + requests.getUser().getUsername(), Toast.LENGTH_SHORT).show();
         dialogBuilder = new AlertDialog.Builder(context);
-        User user = requests.getUser(); //this is the user we are rating
+        User user = otherUser; //this is the user we are rating
         View popup = View.inflate(context, R.layout.rating_dialog, null);
         RatingBar ratingBar = popup.findViewById(R.id.rating);
         Button setRating = popup.findViewById(R.id.setRating);
@@ -190,24 +238,47 @@ public class ChatActivity extends AppCompatActivity {
         setRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double rating = ratingBar.getRating(); // this will be added to the total rating
-                double currrentRating = Double.parseDouble(user.getUserRating());
-                int currentNumberOfRatings = requests.getNumberOfRating();
-                int currentTotalRatings = requests.getKeyTotalRating();
-                int newCurrentTotalRatings = (int) (currentTotalRatings + rating);
-                requests.setKeyTotalRating((int) (currentTotalRatings + rating));
-                int newNumberOfRating = currentNumberOfRatings + 1;
-                requests.setNumberOfRating(newNumberOfRating);
-                int userRating = newCurrentTotalRatings / newNumberOfRating;
-                requests.setKeyRating(String.valueOf(userRating));
-                requests.setCompletedLister("true");
-                dialog.dismiss();
-                requests.saveInBackground();
+                queryRatings(ratingBar,dialog);
             }
         });
         dialog.show();
 
 
+    }
+    private void queryRatings(RatingBar ratingBar, AlertDialog dialog) {
+        ParseQuery<Ratings> query = ParseQuery.getQuery(Ratings.class);
+        query.whereEqualTo("pointerToUser",otherUser);
+        query.findInBackground(new FindCallback<Ratings>() {
+            @Override
+            public void done(List<Ratings> objects, ParseException e) {
+                if(e==null){
+                    Ratings ratings = objects.get(0);
+                    double rating = ratingBar.getRating(); // this will be added to the total rating
+                    Ratings currentUserRatingSet = ratings;
+                    double currentNumberOfRatings = currentUserRatingSet.getNumberOfRating();
+                    double currentTotalRatings = currentUserRatingSet.getKeyTotalRating();
+                    int newCurrentTotalRatings = (int) (currentTotalRatings + rating);
+                    currentUserRatingSet.setKeyTotalRating((currentTotalRatings + rating));
+                    double newNumberOfRating = currentNumberOfRatings + 1;
+                    currentUserRatingSet.setNumberOfRating(newNumberOfRating);
+                    double userRating = newCurrentTotalRatings / newNumberOfRating;
+                    ratings.setKeyRating(userRating);
+                    ratings.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if(e==null){
+                                dialog.dismiss();
+                            }
+                            else{
+                                Utilities.showAlert("Error", ""+ e.getMessage(),getApplicationContext());
+                            }
+                        }
+                    });
+
+
+                }
+            }
+        });
     }
 
 }

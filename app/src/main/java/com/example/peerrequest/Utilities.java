@@ -41,6 +41,8 @@ import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -253,6 +255,20 @@ public class Utilities extends TaskDetailActivity {
         double c = 2 * Math.asin(Math.sqrt(a));
         double distance = c * rad;
         return distance;
+    }
+
+    // Create a gravatar image based on the hash value obtained from userId
+    public static String getProfileUrl(final String userId) {
+        String hex = "";
+        try {
+            final MessageDigest digest = MessageDigest.getInstance("MD5");
+            final byte[] hash = digest.digest(userId.getBytes());
+            final BigInteger bigInt = new BigInteger(hash);
+            hex = bigInt.abs().toString(16);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ((R.string.gravatarURL) + hex + R.string.gravatarIdenticon);
     }
 
 }
