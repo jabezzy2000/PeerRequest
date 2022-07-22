@@ -7,9 +7,8 @@
 
     <ImageView
         android:id="@+id/dialogMapProfilePicture"
-        android:layout_width="105dp"
-        android:layout_height="98dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="77dp"
+        android:layout_height="54dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
@@ -18,9 +17,14 @@
         android:id="@+id/dialogMapName"
         android:layout_width="68dp"
         android:layout_height="21dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:text="TextView"
-        tools:layout_editor_absoluteX="108dp"
-        tools:layout_editor_absoluteY="6dp" />
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.015"
+        app:layout_constraintStart_toEndOf="@+id/dialogMapProfilePicture"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/dialogMapTaskTitle"
@@ -32,29 +36,32 @@
 
     <TextView
         android:id="@+id/dialogMapTaskDescription"
-        android:layout_width="282dp"
-        android:layout_height="57dp"
+        android:layout_width="251dp"
+        android:layout_height="35dp"
         android:layout_marginTop="4dp"
         android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/dialogMapName"
         app:layout_constraintTop_toBottomOf="@+id/dialogMapTaskTitle" />
 
     <Button
         android:id="@+id/mapDialogCancelBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="117dp"
+        android:layout_height="42dp"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="16dp"
         android:text="Cancel"
+        android:textSize="10sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialogMapProfilePicture" />
+        app:layout_constraintTop_toBottomOf="@+id/dialogMapTaskDescription" />
 
     <Button
         android:id="@+id/mapDialogGoToTaskBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginStart="120dp"
+        android:layout_width="124dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="56dp"
         android:text="Go To Task"
+        android:textSize="10sp"
         app:layout_constraintStart_toEndOf="@+id/mapDialogCancelBtn"
         app:layout_constraintTop_toTopOf="@+id/mapDialogCancelBtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

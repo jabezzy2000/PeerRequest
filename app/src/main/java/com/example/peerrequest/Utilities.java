@@ -6,12 +6,20 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
+import android.widget.Adapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,40 +27,54 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.peerrequest.activities.ChatActivity;
 import com.example.peerrequest.activities.HomeActivity;
 import com.example.peerrequest.activities.MapsActivity;
+import com.example.peerrequest.activities.SignUpActivity;
 import com.example.peerrequest.activities.TaskDetailActivity;
+import com.example.peerrequest.adapters.HistoryRequestAdapter;
 import com.example.peerrequest.models.Location;
 import com.example.peerrequest.models.Message;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.material.snackbar.Snackbar;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SendCallback;
 
 import org.parceler.Parcels;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Spliterator;
 
 public class Utilities extends TaskDetailActivity {
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
+    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+    public static ParseFile photoFile = null;
+    private String photoFileName = "photo.jpg";
+    private String fileName = "photo.jpg";
 
     public static void setImage(Context context, String url, ImageView iv) {
         Glide.with(context).load(url).into(iv);
@@ -116,6 +138,17 @@ public class Utilities extends TaskDetailActivity {
                     public void done(ParseException e) {
                         if (e == null) {
                             dialog.dismiss();
+                            ParsePush push = new ParsePush();
+                            push.setChannel("" + request.getUser().getUsername() + request.getKeyCoverLetter());
+                            push.setMessage(user.getUsername() + "just accepted your request! Click to start chat");
+                            push.sendInBackground(new SendCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e != null) {
+                                        Utilities.showAlert("Error", "" + e.getMessage(), context);
+                                    }
+                                }
+                            });
                             //move from here to the chat screen
                             Intent intent = new Intent(context, ChatActivity.class);
                             intent.putExtra("request", Parcels.wrap(request));
@@ -271,4 +304,145 @@ public class Utilities extends TaskDetailActivity {
         return ((R.string.gravatarURL) + hex + R.string.gravatarIdenticon);
     }
 
+    public static void confirmActionDialog(Context context, int position, List<Requests> requestsList, Activity activity, HistoryRequestAdapter adapter, View view) {
+        AlertDialog.Builder dialogBuilder;
+        AlertDialog dialog;
+
+        dialogBuilder = new AlertDialog.Builder(context);
+        final View popup = activity.getLayoutInflater().inflate(R.layout.dialog_confirm_action, null);
+        dialogBuilder.setView(popup);
+        dialog = dialogBuilder.create();
+        Button cancelButton = popup.findViewById(R.id.dialog_cancel_action);
+        Button confirmButton = popup.findViewById(R.id.dialog_confirm_action);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestsList.get(position).deleteInBackground(new DeleteCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            requestsList.remove(position);
+                            Snackbar snackbar = Snackbar.make(view, "Request deleted", Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+                            adapter.notifyDataSetChanged();
+                            dialog.dismiss();
+                        } else {
+                            Utilities.showAlert("Error", "" + e.getMessage(), context);
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
+
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
+    }
+
+//    public static void editProfileDialog(Context context, User user, Activity activity) {
+//        AlertDialog.Builder dialogBuilder;
+//        AlertDialog dialog;
+//
+//        dialogBuilder = new AlertDialog.Builder(context);
+//        final View popup = activity.getLayoutInflater().inflate(R.layout.dialog_edit_profile, null);
+//        dialogBuilder.setView(popup);
+//        dialog = dialogBuilder.create();
+//        ImageView profilePicture = popup.findViewById(R.id.editP);
+//        EditText profileName = popup.findViewById(R.id.editProfileName);
+//        ImageButton uploadPicture = popup.findViewById(R.id.editUploadProfile);
+//        Button saveProfile = popup.findViewById(R.id.editSave);
+//
+//        uploadPicture.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(context, "camera launched", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        saveProfile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (photoFile == null || profilePicture.getDrawable() == null) {
+//                    user.setUsername(profileName.getText().toString());
+//                    user.saveInBackground(new SaveCallback() {
+//                        @Override
+//                        public void done(ParseException e) {
+//                            if (e == null) {
+//                                Snackbar snackbar = Snackbar.make(v, "Profile has been edited", Snackbar.LENGTH_SHORT);
+//                                snackbar.show();
+//                            } else {
+//                                Utilities.showAlert("error", "" + e.getMessage(), context);
+//                            }
+//                        }
+//                    });
+//                } else {
+//                    user.setUsername(profileName.getText().toString());
+//                    user.setProfilePicture(photoFile);
+//                    user.saveInBackground(new SaveCallback() {
+//                        @Override
+//                        public void done(ParseException e) {
+//                            if (e == null) {
+//                                Snackbar snackbar = Snackbar.make(v, "Profile has been edited", Snackbar.LENGTH_SHORT);
+//                                snackbar.show();
+//                                dialog.dismiss();
+//                            } else {
+//                                Utilities.showAlert("error", "" + e.getMessage(), context);
+//                            }
+//                        }
+//                    });
+//                }
+//            }
+//        });
+//        dialog.show();
+//    }
+
+//    private static void launchCamera(Context context) {
+//        // create Intent to take a picture and return control to the calling application
+//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        // Create a File reference for future access
+//        photoFile = getPhotoFileUri(photoFileName);
+//        // wrap File object into a content provider
+//        Uri fileProvider = FileProvider.getUriForFile(context, "com.codepath.fileprovider", photoFile);
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+//        if (intent.resolveActivity(getPackageManager()) != null) {
+//            // Start the image capture intent to take photo
+//            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+//        }
+//    }
+
+//    private static File getPhotoFileUri(String photoFileName) {
+//        // Get safe storage directory for photos
+//        // Use `getExternalFilesDir` on Context to access package-specific directories.
+//        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+//        // Create the storage directory if it does not exist
+//        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+//            Utilities.showAlert("Error", "Failed to create Directory", getApplicationContext());
+//        }
+//        // Return the file target for the photo based on filename
+//        return (new File(mediaStorageDir.getPath() + File.separator + fileName));
+//    }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+//            if (resultCode == RESULT_OK) {
+//                // by this point we have the camera photo on disk
+//                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+//                // RESIZE BITMAP
+//                // Load the taken image into a preview
+//                signUpProfilePicture.setImageBitmap(takenImage);
+//            } else { // Result was a failure
+//                Utilities.showAlert("Error", "Picture Wasn't Taken", getApplicationContext());
+//            }
+//        }
+//    }
 }
