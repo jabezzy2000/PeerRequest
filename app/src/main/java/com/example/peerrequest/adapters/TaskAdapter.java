@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
 import com.example.peerrequest.activities.TaskDetailActivity;
+import com.example.peerrequest.models.Ratings;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 
@@ -26,6 +27,7 @@ import java.util.List;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private final List<Task> tasks;
     private User user;
+
 
     public TaskAdapter(Context context, List<Task> tasks) {
         this.tasks = tasks;
@@ -56,6 +58,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         TextView tvTime;
         TextView tvTaskTitle;
         TextView tvTaskDescription;
+        TextView tvRating;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,6 +67,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             tvTime = itemView.findViewById(R.id.tvTime);
             tvTaskTitle = itemView.findViewById(R.id.tvTaskTitile);
             tvTaskDescription = itemView.findViewById(R.id.tvTaskDescription);
+            tvRating = itemView.findViewById(R.id.tvItemTaskRating);
             itemView.setOnClickListener(this);
         }
 
@@ -73,8 +77,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             tvTaskTitle.setText(task.getTaskTitle());
             tvTaskDescription.setText(task.getDescription());
             tvTime.setText(Utilities.getSimpleTime(task.getCreatedAt()));
-            if(user.getProfilePicture()!= null){
-                Utilities.roundedImage(itemView.getContext(), user.getProfilePicture().getUrl(),ivProfilePicture,80);
+            Ratings currentUserRatingSet = user.getKeyUserRatingsProperties();
+            //rounding rating to two decimal places
+            double roundOff = (double) Math.round(currentUserRatingSet.getUserRating() * 100) / 100;
+            tvRating.setText(roundOff + "");
+            if (user.getProfilePicture() != null) {
+                Utilities.roundedImage(itemView.getContext(), user.getProfilePicture().getUrl(), ivProfilePicture, 80);
             }
 
         }
@@ -92,6 +100,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
     }
 }
+
+
+
 
 
 
