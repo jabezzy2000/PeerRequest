@@ -89,16 +89,18 @@
         app:layout_constraintTop_toBottomOf="@+id/btnLogIn"
         app:layout_constraintVertical_bias="0.919" />
 
-    <Button
-        android:id="@+id/logInFB"
-        android:layout_width="match_parent"
+        <com.facebook.login.widget.LoginButton
+        android:id="@+id/fblogin_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Log In Via FaceBook"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLogIn" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
