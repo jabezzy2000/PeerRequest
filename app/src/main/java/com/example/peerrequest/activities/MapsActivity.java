@@ -101,10 +101,12 @@ public class MapsActivity extends AppCompatActivity {
         bottomSheetTaskDescription = findViewById(R.id.bottomSheetDescription);
         bottomSheetTime = findViewById(R.id.bottomSheetTime);
         bottomSheetGoToTask = findViewById(R.id.bottomSheetGoToTask);
-        bottomSheetTaskTitle.setText("No Task Selected");
-        bottomSheetTaskDescription.setText("No Task Selected");
+        bottomSheetTaskTitle.setText(R.string.no_task_selected);
+        bottomSheetTaskDescription.setText(R.string.no_task_selected);
         User currentUser = (User) User.getCurrentUser();
-        Utilities.roundedImage(getApplicationContext(), currentUser.getProfilePicture().getUrl(), bottomSheetProfilePicture, 80);
+        if(currentUser.getProfilePicture()!=null) { //null check for profile image
+            Utilities.roundedImage(getApplicationContext(), currentUser.getProfilePicture().getUrl(), bottomSheetProfilePicture, 80);
+        }
         bottomSheetUsername.setText(User.getCurrentUser().getUsername());
         ParseQuery<com.example.peerrequest.models.Location> locationParseQuery = new ParseQuery(com.example.peerrequest.models.Location.class);
         locationParseQuery.findInBackground(new FindCallback<com.example.peerrequest.models.Location>() {
@@ -161,10 +163,8 @@ public class MapsActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
                 startLocationUpdates();
             } else {
-                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -195,16 +195,18 @@ public class MapsActivity extends AppCompatActivity {
                 currentLocation = new LatLng(latitude, longitude);
                 Log.i(TAG, "onMapReady: current location" + currentLocation);
                 Marker currentLocationMarker = mMap.addMarker(new MarkerOptions().position(currentLocation).title("Marker at Current Position"));
-                BitmapDescriptor defaultMarker =
-                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
                 for (int i = 0; i < locations.size(); i++) {
-                    latitude = Double.parseDouble(locations.get(i).getKeyLatitude());
-                    longitude = Double.parseDouble(locations.get(i).getKeyLongitude());
-                    Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(locations.get(i).getKeyTitle()).icon(defaultMarker));
-                    dropPinEffect(marker);
-                    Log.i(TAG, "onMapReady: " + locations.get(i));
-                    marker.setTag(locations.get(i));
-                    marker.setDraggable(true);
+                    //Iterating through queried list and passing each list item through addMarkerToMap method to create various markers for each task
+                    //Used path because there is a built in class called Location by Google which has a name conflict with location class on Parse
+                    if (locations.get(i) != null) {
+                        latitude = Double.parseDouble(locations.get(i).getKeyLatitude());
+                        longitude = Double.parseDouble(locations.get(i).getKeyLongitude());
+                        com.example.peerrequest.models.Location locationObj = locations.get(i);
+                        String title = locations.get(i).getKeyTitle();
+                        addMarkerToMap(latitude, longitude, title, locationObj);
+                    } else {
+                        Utilities.showAlert("Error", "An Error Has Occurred", getApplicationContext());
+                    }
                 }
 
                 mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -234,43 +236,18 @@ public class MapsActivity extends AppCompatActivity {
 
                 //moves camera to location with a zoom of 5
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 5));
-
-
             }
         });
 
     }
 
-    private void dropPinEffect(final Marker marker) {
-        // Handler allows us to repeat a code block after a specified delay
-        final android.os.Handler handler = new android.os.Handler();
-        final long start = SystemClock.uptimeMillis();
-        final long duration = 1500;
+    private void addMarkerToMap(double latitude, double longitude, String title, com.example.peerrequest.models.Location locationObj) {
+        BitmapDescriptor defaultMarker =
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+        Marker marker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(title).icon(defaultMarker));
+        Utilities.dropPinEffect(marker);
+        marker.setTag(locationObj);
 
-        // Use the bounce interpolator
-        final android.view.animation.Interpolator interpolator =
-                new BounceInterpolator();
-
-        // Animate marker with a bounce updating its position every 5ms
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                long elapsed = SystemClock.uptimeMillis() - start;
-                // Calculate t for bounce based on elapsed time
-                float t = Math.max(
-                        1 - interpolator.getInterpolation((float) elapsed
-                                / duration), 0);
-                // Set the anchor
-                marker.setAnchor(0.5f, 1.0f + 14 * t);
-
-                if (t > 0.0) {
-                    // Post this event again 15ms from now.
-                    handler.postDelayed(this, 5);
-                } else { // done elapsing, show window
-                    marker.showInfoWindow();
-                }
-            }
-        });
     }
 
     //queries information about task
@@ -285,8 +262,9 @@ public class MapsActivity extends AppCompatActivity {
                 if (e == null) {
                     task = objects.get(0);
                     goToTaskDetail(task);
-
-
+                }
+                else{
+                    Utilities.showAlert("Error", ""+e.getMessage(),getApplicationContext());
                 }
             }
         });
@@ -298,6 +276,4 @@ public class MapsActivity extends AppCompatActivity {
         intent.putExtra(Task.class.getSimpleName(), Parcels.wrap(task));
         startActivity(intent);
     }
-
-
 }
