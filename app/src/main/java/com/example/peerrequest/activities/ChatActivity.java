@@ -3,7 +3,6 @@ package com.example.peerrequest.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
 import com.example.peerrequest.adapters.ChatAdapter;
-import com.example.peerrequest.adapters.MessageAdapter;
 import com.example.peerrequest.models.Message;
 import com.example.peerrequest.models.Ratings;
 import com.example.peerrequest.models.Requests;
@@ -38,9 +36,9 @@ import java.util.concurrent.TimeUnit;
 
 public class ChatActivity extends AppCompatActivity {
     private ProgressBar progressBar;
-    static final int MAX_CHAT_MESSAGES_TO_SHOW = 30;
-    public User otherUser;
-    public User otherTexter;
+    private static final int MAX_CHAT_MESSAGES_TO_SHOW = 30;
+    public User userFromChatLayout;
+    public User userFromTaskDetail;
     static final long POLL_INTERVAL = TimeUnit.SECONDS.toMillis(5);
     public Handler myHandler = new android.os.Handler();
     public Runnable mRefreshMessagesRunnable = new Runnable() {
@@ -65,26 +63,28 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         progressBar = findViewById(R.id.chatProgressBar);
-        otherTexter = (User) Parcels.unwrap(getIntent().getParcelableExtra("requester"));
-        otherUser = getIntent().getParcelableExtra("otherUser");
-        if (otherTexter == null) {
-            setupMessagePosting(otherUser);
+        //since there are two ways to move to the chat activity, I try to account for both "other users"
+        userFromTaskDetail = (User) Parcels.unwrap(getIntent().getParcelableExtra("requester"));
+        userFromChatLayout = getIntent().getParcelableExtra("otherUser");
+        if (userFromTaskDetail == null) {
+            setupMessagePosting(userFromChatLayout);
         } else {
-            setupMessagePosting(otherTexter);
+            setupMessagePosting(userFromTaskDetail);
         }
         queryMessages();
     }
+
 
     private void queryMessages() {
         //         Construct query to execute
         ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
         query.whereEqualTo(Message.SENDER_ID_KEY, User.getCurrentUser());
-        query.whereEqualTo(Message.RECEIVER_ID_KEY, otherUser);
+        query.whereEqualTo(Message.RECEIVER_ID_KEY, userFromChatLayout);
 
 
         ParseQuery<Message> query2 = ParseQuery.getQuery(Message.class);
         query2.whereEqualTo(Message.RECEIVER_ID_KEY, (User) ParseUser.getCurrentUser());
-        query2.whereEqualTo(Message.SENDER_ID_KEY, otherUser);
+        query2.whereEqualTo(Message.SENDER_ID_KEY, userFromChatLayout);
 
         List<ParseQuery<Message>> list = new ArrayList<ParseQuery<Message>>();
         list.add(query);
@@ -99,21 +99,19 @@ public class ChatActivity extends AppCompatActivity {
         query3.findInBackground(new FindCallback<Message>() {
             @Override
             public void done(List<Message> objects, ParseException e) {
-                if (e == null)
-                {
-                    if(objects.size()==mMessages.size()){
+                if (e == null) {
+                    if (objects.size() == mMessages.size()) {
+                        progressBar.setVisibility(View.INVISIBLE);
                         return;
-                    }
-                    else{
+                    } else {
                         progressBar.setVisibility(View.INVISIBLE);
                         mMessages.clear();
                         mMessages.addAll(objects);
                         mAdapter.notifyDataSetChanged(); // update adapter
                         progressBar.setVisibility(View.GONE);
                     }
-                }
-                else{
-                    Utilities.showAlert("Error", ""+e.getMessage(),getApplicationContext());
+                } else {
+                    Utilities.showAlert("Error", "" + e.getMessage(), getApplicationContext());
                 }
             }
         });
@@ -143,7 +141,7 @@ public class ChatActivity extends AppCompatActivity {
         completed = findViewById(R.id.completedBtn);
         mMessages = new ArrayList<>();
         mFirstLoad = true;
-        mAdapter = new ChatAdapter(ChatActivity.this,mMessages);
+        mAdapter = new ChatAdapter(ChatActivity.this, mMessages);
         rvChat.setAdapter(mAdapter);
         progressBar = findViewById(R.id.chatProgressBar);
 
@@ -165,8 +163,13 @@ public class ChatActivity extends AppCompatActivity {
                 message.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        mMessages.add(0,message);
-                        mAdapter.notifyDataSetChanged();
+                        if (e == null) {
+                            mMessages.add(0, message);
+                            progressBar.setVisibility(View.INVISIBLE);
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            Utilities.showAlert("Error", "" + e.getMessage(), getApplicationContext());
+                        }
                     }
                 });
                 etMessage.setText(null);
@@ -185,12 +188,12 @@ public class ChatActivity extends AppCompatActivity {
 //         Construct query to execute
         ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
         query.whereEqualTo(Message.SENDER_ID_KEY, User.getCurrentUser());
-        query.whereEqualTo(Message.RECEIVER_ID_KEY, otherUser);
+        query.whereEqualTo(Message.RECEIVER_ID_KEY, userFromChatLayout);
 
 
         ParseQuery<Message> query2 = ParseQuery.getQuery(Message.class);
         query2.whereEqualTo(Message.RECEIVER_ID_KEY, (User) ParseUser.getCurrentUser());
-        query2.whereEqualTo(Message.SENDER_ID_KEY, otherUser);
+        query2.whereEqualTo(Message.SENDER_ID_KEY, userFromChatLayout);
 
         List<ParseQuery<Message>> list = new ArrayList<ParseQuery<Message>>();
         list.add(query);
@@ -205,21 +208,18 @@ public class ChatActivity extends AppCompatActivity {
         query3.findInBackground(new FindCallback<Message>() {
             @Override
             public void done(List<Message> objects, ParseException e) {
-                if (e == null)
-                {
-                    if(objects.size()==mMessages.size()){
+                if (e == null) {
+                    if (objects.size() == mMessages.size()) {
                         return;
-                    }
-                    else{
+                    } else {
                         progressBar.setVisibility(View.INVISIBLE);
                         mMessages.clear();
                         mMessages.addAll(objects);
                         mAdapter.notifyDataSetChanged(); // update adapter
                         progressBar.setVisibility(View.GONE);
                     }
-                }
-                else{
-                    Utilities.showAlert("Error", ""+e.getMessage(),getApplicationContext());
+                } else {
+                    Utilities.showAlert("Error", "" + e.getMessage(), getApplicationContext());
                 }
             }
         });
@@ -238,20 +238,21 @@ public class ChatActivity extends AppCompatActivity {
         setRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                queryRatings(ratingBar,dialog);
+                queryRatings(ratingBar, dialog);
             }
         });
         dialog.show();
 
 
     }
+
     private void queryRatings(RatingBar ratingBar, AlertDialog dialog) {
         ParseQuery<Ratings> query = ParseQuery.getQuery(Ratings.class);
-        query.whereEqualTo("pointerToUser",otherUser);
+        query.whereEqualTo("pointerToUser", userFromChatLayout);
         query.findInBackground(new FindCallback<Ratings>() {
             @Override
             public void done(List<Ratings> objects, ParseException e) {
-                if(e==null){
+                if (e == null) {
                     Ratings ratings = objects.get(0);
                     double rating = ratingBar.getRating(); // this will be added to the total rating
                     Ratings currentUserRatingSet = ratings;
@@ -266,11 +267,10 @@ public class ChatActivity extends AppCompatActivity {
                     ratings.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
-                            if(e==null){
+                            if (e == null) {
                                 dialog.dismiss();
-                            }
-                            else{
-                                Utilities.showAlert("Error", ""+ e.getMessage(),getApplicationContext());
+                            } else {
+                                Utilities.showAlert("Error", "" + e.getMessage(), getApplicationContext());
                             }
                         }
                     });
