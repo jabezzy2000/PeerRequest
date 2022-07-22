@@ -1,6 +1,7 @@
 package com.example.peerrequest.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -238,7 +240,7 @@ public class ChatActivity extends AppCompatActivity {
         setRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                queryRatings(ratingBar, dialog);
+                saveRatings(ratingBar, dialog);
             }
         });
         dialog.show();
@@ -246,13 +248,16 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private void queryRatings(RatingBar ratingBar, AlertDialog dialog) {
+    private void saveRatings(RatingBar ratingBar, AlertDialog dialog) {
+        //querying current rating
         ParseQuery<Ratings> query = ParseQuery.getQuery(Ratings.class);
         query.whereEqualTo("pointerToUser", userFromChatLayout);
         query.findInBackground(new FindCallback<Ratings>() {
             @Override
             public void done(List<Ratings> objects, ParseException e) {
                 if (e == null) {
+                    //if there is no error
+                    //We calculate the and add the recent rating to the user's rating
                     Ratings ratings = objects.get(0);
                     double rating = ratingBar.getRating(); // this will be added to the total rating
                     Ratings currentUserRatingSet = ratings;
@@ -268,17 +273,26 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {
-                                dialog.dismiss();
+                                //toast for user reassurance
+                                Toast.makeText(ChatActivity.this, "User has been rated", Toast.LENGTH_SHORT).show();
+                                goHomeActivity();
                             } else {
                                 Utilities.showAlert("Error", "" + e.getMessage(), getApplicationContext());
                             }
                         }
                     });
-
-
+                }
+                else{
+                    Utilities.showAlert("Error", ""+e.getMessage(),getApplicationContext());
                 }
             }
         });
     }
+
+    private void goHomeActivity() {
+        Intent intent = new Intent(this,HomeActivity.class);
+        startActivity(intent);
+    }
+
 
 }
