@@ -18,11 +18,16 @@ import android.widget.Toast;
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
 import com.example.peerrequest.adapters.TaskDetailAdapter;
+import com.example.peerrequest.databinding.ActivityChatLayoutBinding;
+import com.example.peerrequest.databinding.ActivityTaskDetailBinding;
+import com.example.peerrequest.models.Ratings;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
+import com.google.android.material.snackbar.Snackbar;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
@@ -32,18 +37,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDetailActivity extends AppCompatActivity {
-    TextView name;
-    User user;
-    TextView taskTitle;
-    TextView taskDescription;
-    ImageView profilePicture;
-    TextView rating;
-    ImageButton requestButton;
-    ImageButton edit;
-    Task task;
-    TextView requestsText;
-    RecyclerView recyclerView;
-    private final int limit = 10;
+    public TextView name;
+    public User user;
+    public TextView taskTitle;
+    public TextView taskDescription;
+    public ImageView profilePicture;
+    public TextView rating;
+    public ImageButton requestButton;
+    public ImageButton edit;
+    public Task task;
+    public TextView requestsText;
+    public RecyclerView recyclerView;
+    public TextView makeARequest;
+    private final int limit = 30;
     protected List<Requests> allRequests;
     protected TaskDetailAdapter taskDetailAdapter;
     public AlertDialog.Builder dialogBuilder;
@@ -51,6 +57,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     public EditText coverLetter;
     public EditText popupTaskTitle, popupTaskDescription;
     public Button popupSave, popupCancel;
+    ActivityTaskDetailBinding binding;
     public String TAG = "TaskDetailActivity";
     private final String ERROR = "Query Unsuccessful";
 
@@ -58,27 +65,31 @@ public class TaskDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_detail);
+        binding = ActivityTaskDetailBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         task = (Task) Parcels.unwrap(getIntent().getParcelableExtra(Task.class.getSimpleName()));
-        recyclerView = findViewById(R.id.rvTaskDetailTasks);
+        recyclerView = binding.rvTaskDetailTasks;
         allRequests = new ArrayList<>();
-        taskDetailAdapter = new TaskDetailAdapter(this, allRequests,this);
+        taskDetailAdapter = new TaskDetailAdapter(this, allRequests, this);
         recyclerView.setAdapter(taskDetailAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         user = task.getUser();
-        name = findViewById(R.id.tvTaskDetailName);
-        requestsText = findViewById(R.id.tvRequests);
-        taskTitle = findViewById(R.id.tvTaskDetailTitle);
-        taskDescription = findViewById(R.id.tvTaskDetailDescription);
-        profilePicture = findViewById(R.id.ivTaskDetailProfilePicture);
-        rating = findViewById(R.id.tvTaskDetailRating);
-        requestButton = findViewById(R.id.ibTaskDetailRequestBtn);
-        edit = findViewById(R.id.ibTaskDetailEditBtn);
+        name = binding.tvTaskDetailName;
+        requestsText = binding.tvRequests;
+        taskTitle = binding.tvTaskDetailTitle;
+        taskDescription = binding.tvTaskDetailDescription;
+        profilePicture = binding.ivTaskDetailProfilePicture;
+        rating = binding.tvTaskDetailRating;
+        requestButton = binding.ibTaskDetailRequestBtn;
+        makeARequest = binding.tvMakeARequest;
+        edit = binding.ibTaskDetailEditBtn;
         if (User.getCurrentUser().getUsername().equals(task.getUser().getUsername())) {
             recyclerView.setVisibility(View.VISIBLE);
+            makeARequest.setVisibility(View.GONE);
         } else {
             recyclerView.setVisibility(View.GONE);
+            makeARequest.setVisibility(View.VISIBLE);
         }
 
         if (User.getCurrentUser().getUsername().equals(task.getUser().getUsername())) {
@@ -113,19 +124,36 @@ public class TaskDetailActivity extends AppCompatActivity {
         task = (Task) Parcels.unwrap(getIntent().getParcelableExtra(Task.class.getSimpleName()));
         name.setText(task.getUser().getUsername());
         user = (User) task.getUser();
-        //checking if the user has a profile picture to avoid app crashing
-        if (user.getProfilePicture() != null) {
-            Utilities.setImage(this, user.getProfilePicture().getUrl(), profilePicture);
-        }
-        taskTitle.setText(task.getTaskTitle());
-        taskDescription.setText(task.getDescription());
-        rating.setText(user.getUserRating());
-        queryRequests();
+        setRatings(user, task);
+    }
+
+    private void setRatings(User user, Task task) {
+        ParseQuery<Ratings> query = ParseQuery.getQuery(Ratings.class);
+        query.whereEqualTo("pointerToUser", user);
+        query.findInBackground(new FindCallback<Ratings>() {
+            @Override
+            public void done(List<Ratings> objects, ParseException e) {
+                if (e == null) {
+                    Ratings ratings = objects.get(0);
+                    String value = String.valueOf(ratings.getUserRating());
+                    rating.setText(value);
+                    //checking if the user has a profile picture to avoid app crashing
+                    if (user.getProfilePicture() != null) {
+                        Utilities.setImage(getApplicationContext(), user.getProfilePicture().getUrl(), profilePicture);
+                    }
+                    taskTitle.setText(task.getTaskTitle());
+                    taskDescription.setText(task.getDescription());
+                    queryRequests();
+
+                }
+            }
+        });
     }
 
     private void queryRequests() { //querying requests according to what task is being shown
         ParseQuery<Requests> query = ParseQuery.getQuery(Requests.class);
         query.include(Requests.KEY_USER);
+        query.include(Requests.KEY_USER + "." + "userRatings");
         query.whereEqualTo(Requests.KEY_TASK, task);
         query.setLimit(limit);
         query.addDescendingOrder("createdAt");
@@ -133,11 +161,18 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void done(List<Requests> requests, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, ERROR + e.getMessage(), e);
+                    Utilities.showAlert("Error", ""+e.getMessage(),TaskDetailActivity.this);
                     return;
                 }
-                allRequests.addAll(requests);
-                taskDetailAdapter.notifyDataSetChanged();
+                else {
+                    if(requests.size()==0){
+                        binding.noRequestsYet.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        allRequests.addAll(requests);
+                        taskDetailAdapter.notifyDataSetChanged();
+                    }
+                }
             }
         });
     }
@@ -163,11 +198,18 @@ public class TaskDetailActivity extends AppCompatActivity {
                     @Override
                     public void done(ParseException e) {
                         if (e != null) {
-                            Log.e(TAG, e.getMessage());
+                            Utilities.showAlert("Error", e.getMessage(), getApplicationContext());
+                        } else {
+                            task.increaseRequestNumber(); //increasing the number of requests for this particular task
+                            task.saveInBackground();
+                            Snackbar snackbar = Snackbar.make(v, "Request Submitted", Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+                            //subscribing the user to a push notification channel
+                            //naming the channel {username} + {requestCoverLetter} in the event many users have the same coverletter/username
+                            ParsePush.subscribeInBackground("" + requests.getUser().getUsername() + requests.getKeyCoverLetter());
                         }
                     }
                 });
-                Toast.makeText(TaskDetailActivity.this, "Requested", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });

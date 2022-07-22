@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "757228767265",
+    "project_id": "peerrequests-ea532",
+    "storage_bucket": "peerrequests-ea532.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757228767265:android:a06a80108fb0beaa4bbb60",
+        "android_client_info": {
+          "package_name": "com.example.peerrequest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "757228767265-1n4a18qclncumt4g6hio3935d2prkng8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAL6LQEeuZBGHxlzAAMsEt5tzoLiEn_TfM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "757228767265-1n4a18qclncumt4g6hio3935d2prkng8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

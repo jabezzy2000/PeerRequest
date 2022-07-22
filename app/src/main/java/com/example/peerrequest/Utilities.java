@@ -138,17 +138,8 @@ public class Utilities extends TaskDetailActivity {
                     public void done(ParseException e) {
                         if (e == null) {
                             dialog.dismiss();
-                            ParsePush push = new ParsePush();
-                            push.setChannel("" + request.getUser().getUsername() + request.getKeyCoverLetter());
-                            push.setMessage(user.getUsername() + "just accepted your request! Click to start chat");
-                            push.sendInBackground(new SendCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e != null) {
-                                        Utilities.showAlert("Error", "" + e.getMessage(), context);
-                                    }
-                                }
-                            });
+                            //a notification is sent
+                            pushANotification(request,user,context);
                             //move from here to the chat screen
                             Intent intent = new Intent(context, ChatActivity.class);
                             intent.putExtra("request", Parcels.wrap(request));
@@ -172,6 +163,22 @@ public class Utilities extends TaskDetailActivity {
         });
         dialog.show();
 
+    }
+
+    private static void pushANotification(Requests request, User user, Context context) {
+        //after the request is accepted, A push notification is sent to the user
+        //subscribed on the particular channel related to this request
+        ParsePush push = new ParsePush();
+        push.setChannel("" + request.getUser().getUsername() + request.getKeyCoverLetter());
+        push.setMessage(user.getUsername() + "just accepted your request! Click to start chat");
+        push.sendInBackground(new SendCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Utilities.showAlert("Error", "" + e.getMessage(), context);
+                }
+            }
+        });
     }
 
     public static void showAlert(String title, String message, Context context) {
@@ -346,102 +353,4 @@ public class Utilities extends TaskDetailActivity {
         dialog.show();
 
     }
-    //    public static void editProfileDialog(Context context, User user, Activity activity) {
-//        AlertDialog.Builder dialogBuilder;
-//        AlertDialog dialog;
-//
-//        dialogBuilder = new AlertDialog.Builder(context);
-//        final View popup = activity.getLayoutInflater().inflate(R.layout.dialog_edit_profile, null);
-//        dialogBuilder.setView(popup);
-//        dialog = dialogBuilder.create();
-//        ImageView profilePicture = popup.findViewById(R.id.editP);
-//        EditText profileName = popup.findViewById(R.id.editProfileName);
-//        ImageButton uploadPicture = popup.findViewById(R.id.editUploadProfile);
-//        Button saveProfile = popup.findViewById(R.id.editSave);
-//
-//        uploadPicture.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(context, "camera launched", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        saveProfile.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (photoFile == null || profilePicture.getDrawable() == null) {
-//                    user.setUsername(profileName.getText().toString());
-//                    user.saveInBackground(new SaveCallback() {
-//                        @Override
-//                        public void done(ParseException e) {
-//                            if (e == null) {
-//                                Snackbar snackbar = Snackbar.make(v, "Profile has been edited", Snackbar.LENGTH_SHORT);
-//                                snackbar.show();
-//                            } else {
-//                                Utilities.showAlert("error", "" + e.getMessage(), context);
-//                            }
-//                        }
-//                    });
-//                } else {
-//                    user.setUsername(profileName.getText().toString());
-//                    user.setProfilePicture(photoFile);
-//                    user.saveInBackground(new SaveCallback() {
-//                        @Override
-//                        public void done(ParseException e) {
-//                            if (e == null) {
-//                                Snackbar snackbar = Snackbar.make(v, "Profile has been edited", Snackbar.LENGTH_SHORT);
-//                                snackbar.show();
-//                                dialog.dismiss();
-//                            } else {
-//                                Utilities.showAlert("error", "" + e.getMessage(), context);
-//                            }
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//        dialog.show();
-//    }
-
-//    private static void launchCamera(Context context) {
-//        // create Intent to take a picture and return control to the calling application
-//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        // Create a File reference for future access
-//        photoFile = getPhotoFileUri(photoFileName);
-//        // wrap File object into a content provider
-//        Uri fileProvider = FileProvider.getUriForFile(context, "com.codepath.fileprovider", photoFile);
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-//        if (intent.resolveActivity(getPackageManager()) != null) {
-//            // Start the image capture intent to take photo
-//            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-//        }
-//    }
-
-//    private static File getPhotoFileUri(String photoFileName) {
-//        // Get safe storage directory for photos
-//        // Use `getExternalFilesDir` on Context to access package-specific directories.
-//        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
-//        // Create the storage directory if it does not exist
-//        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
-//            Utilities.showAlert("Error", "Failed to create Directory", getApplicationContext());
-//        }
-//        // Return the file target for the photo based on filename
-//        return (new File(mediaStorageDir.getPath() + File.separator + fileName));
-//    }
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-//            if (resultCode == RESULT_OK) {
-//                // by this point we have the camera photo on disk
-//                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-//                // RESIZE BITMAP
-//                // Load the taken image into a preview
-//                signUpProfilePicture.setImageBitmap(takenImage);
-//            } else { // Result was a failure
-//                Utilities.showAlert("Error", "Picture Wasn't Taken", getApplicationContext());
-//            }
-//        }
-//    }
 }

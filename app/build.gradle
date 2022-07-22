@@ -3,6 +3,8 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
+apply plugin: 'com.google.gms.google-services'
+
 android {
     compileSdk 32
 
@@ -29,6 +31,10 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    viewBinding{
+        enabled= true
+    }
 }
 
 dependencies {
@@ -40,16 +46,15 @@ dependencies {
     implementation "com.github.parse-community.Parse-SDK-Android:parse:4.0.0"
     implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
     implementation 'com.github.parse-community:ParseLiveQuery-Android:1.1.0'
-    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.gms:play-services-location:20.0.0'
     implementation 'com.google.android.gms:play-services-location:20.0.0'
-    implementation 'com.facebook.android:facebook-android-sdk:14.0.0'
     implementation 'com.facebook.android:facebook-android-sdk:14.0.0'
     implementation "com.github.parse-community:ParseFacebookUtils-Android:1.14.0"
     implementation 'com.facebook.android:facebook-android-sdk:14.0.0'
     implementation 'com.github.parse-community:ParseTwitterUtils-Android:1.13.0'
     implementation 'com.astuetz:pagerslidingtabstrip:1.0.1'
-    implementation 'com.google.android.material:material:1.7.0-alpha02'
+    implementation 'com.google.android.material:material:1.7.0-alpha03'
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'org.parceler:parceler-api:1.1.13'
@@ -60,4 +65,12 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'org.parceler:parceler-api:1.1.13'
     annotationProcessor 'org.parceler:parceler:1.1.13'
+    implementation 'com.google.firebase:firebase-core:21.1.0'
+    implementation "com.github.parse-community.Parse-SDK-Android:fcm:1.21.0"
+    implementation 'com.google.firebase:firebase-core:21.1.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.6'
+    implementation "com.github.parse-community.Parse-SDK-Android:fcm:1.26.0"
+    implementation 'com.github.parse-community.Parse-SDK-Android:bolts-tasks:4.0.0'
+
+
 }
