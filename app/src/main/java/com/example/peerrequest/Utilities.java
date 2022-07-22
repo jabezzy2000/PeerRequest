@@ -138,17 +138,8 @@ public class Utilities extends TaskDetailActivity {
                     public void done(ParseException e) {
                         if (e == null) {
                             dialog.dismiss();
-                            ParsePush push = new ParsePush();
-                            push.setChannel("" + request.getUser().getUsername() + request.getKeyCoverLetter());
-                            push.setMessage(user.getUsername() + "just accepted your request! Click to start chat");
-                            push.sendInBackground(new SendCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e != null) {
-                                        Utilities.showAlert("Error", "" + e.getMessage(), context);
-                                    }
-                                }
-                            });
+                            //a notification is sent
+                            pushANotification(request,user,context);
                             //move from here to the chat screen
                             Intent intent = new Intent(context, ChatActivity.class);
                             intent.putExtra("request", Parcels.wrap(request));
@@ -172,6 +163,22 @@ public class Utilities extends TaskDetailActivity {
         });
         dialog.show();
 
+    }
+
+    private static void pushANotification(Requests request, User user, Context context) {
+        //after the request is accepted, A push notification is sent to the user
+        //subscribed on the particular channel related to this request
+        ParsePush push = new ParsePush();
+        push.setChannel("" + request.getUser().getUsername() + request.getKeyCoverLetter());
+        push.setMessage(user.getUsername() + "just accepted your request! Click to start chat");
+        push.sendInBackground(new SendCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Utilities.showAlert("Error", "" + e.getMessage(), context);
+                }
+            }
+        });
     }
 
     public static void showAlert(String title, String message, Context context) {
