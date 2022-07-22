@@ -101,8 +101,8 @@ public class MapsActivity extends AppCompatActivity {
         bottomSheetTaskDescription = findViewById(R.id.bottomSheetDescription);
         bottomSheetTime = findViewById(R.id.bottomSheetTime);
         bottomSheetGoToTask = findViewById(R.id.bottomSheetGoToTask);
-        bottomSheetTaskTitle.setText("No Task Selected");
-        bottomSheetTaskDescription.setText("No Task Selected");
+        bottomSheetTaskTitle.setText(R.string.no_task_selected);
+        bottomSheetTaskDescription.setText(R.string.no_task_selected);
         User currentUser = (User) User.getCurrentUser();
         if(currentUser.getProfilePicture()!=null) { //null check for profile image
             Utilities.roundedImage(getApplicationContext(), currentUser.getProfilePicture().getUrl(), bottomSheetProfilePicture, 80);
@@ -236,8 +236,6 @@ public class MapsActivity extends AppCompatActivity {
 
                 //moves camera to location with a zoom of 5
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 5));
-
-
             }
         });
 
