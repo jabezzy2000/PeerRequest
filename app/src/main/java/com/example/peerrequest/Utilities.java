@@ -71,10 +71,6 @@ public class Utilities extends TaskDetailActivity {
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
     private static final int DAY_MILLIS = 24 * HOUR_MILLIS;
-    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
-    public static ParseFile photoFile = null;
-    private String photoFileName = "photo.jpg";
-    private String fileName = "photo.jpg";
 
     public static void setImage(Context context, String url, ImageView iv) {
         Glide.with(context).load(url).into(iv);
