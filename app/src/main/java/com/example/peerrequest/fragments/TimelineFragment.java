@@ -34,13 +34,14 @@ import com.parse.ParseQuery;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class TimelineFragment extends Fragment {
     protected TaskAdapter taskAdapter;
     private ImageView profileImage;
-    private int limit = 30;
+    private final int limit = 30;
     private ImageButton addTasks;
     private RecyclerView recyclerView;
     public ImageButton mapButton;
@@ -100,6 +101,8 @@ public class TimelineFragment extends Fragment {
                         allTasks.clear();
                         progressBar.setVisibility(View.INVISIBLE);
                         allTasks.addAll(tasks);
+                        //randomizing tasks on homescreen to allow for variety
+                        Collections.shuffle(allTasks);
                         taskAdapter.notifyDataSetChanged();
                     }
 

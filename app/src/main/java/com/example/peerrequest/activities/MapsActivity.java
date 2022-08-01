@@ -19,6 +19,8 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -101,6 +103,8 @@ public class MapsActivity extends AppCompatActivity {
         bottomSheetTaskDescription = findViewById(R.id.bottomSheetDescription);
         bottomSheetTime = findViewById(R.id.bottomSheetTime);
         bottomSheetGoToTask = findViewById(R.id.bottomSheetGoToTask);
+        Animation in = AnimationUtils.loadAnimation(this,R.anim.slide_in_left);
+        Animation out = AnimationUtils.loadAnimation(this,R.anim.slide_out_right);
         bottomSheetTaskTitle.setText(R.string.no_task_selected);
         bottomSheetTaskDescription.setText(R.string.no_task_selected);
         User currentUser = (User) User.getCurrentUser();

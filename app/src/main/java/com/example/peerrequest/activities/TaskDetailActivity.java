@@ -86,9 +86,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         edit = binding.ibTaskDetailEditBtn;
         if (User.getCurrentUser().getUsername().equals(task.getUser().getUsername())) {
             recyclerView.setVisibility(View.VISIBLE);
-            makeARequest.setVisibility(View.GONE);
+            makeARequest.setVisibility(View.INVISIBLE);
         } else {
-            recyclerView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.INVISIBLE);
             makeARequest.setVisibility(View.VISIBLE);
         }
 
@@ -130,16 +130,17 @@ public class TaskDetailActivity extends AppCompatActivity {
     private void setRatings(User user, Task task) {
         ParseQuery<Ratings> query = ParseQuery.getQuery(Ratings.class);
         query.whereEqualTo("pointerToUser", user);
+        query.include(Ratings.KEY_USER_POINTER);
         query.findInBackground(new FindCallback<Ratings>() {
             @Override
             public void done(List<Ratings> objects, ParseException e) {
                 if (e == null) {
                     Ratings ratings = objects.get(0);
-                    String value = String.valueOf(ratings.getUserRating());
-                    rating.setText(value);
+                    double value = (double) Math.round(ratings.getUserRating() * 100) / 100;
+                    rating.setText(String.valueOf(value));
                     //checking if the user has a profile picture to avoid app crashing
                     if (user.getProfilePicture() != null) {
-                        Utilities.setImage(getApplicationContext(), user.getProfilePicture().getUrl(), profilePicture);
+                        Utilities.roundedImage(getApplicationContext(), user.getProfilePicture().getUrl(), profilePicture, 500);
                     }
                     taskTitle.setText(task.getTaskTitle());
                     taskDescription.setText(task.getDescription());
@@ -153,6 +154,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     private void queryRequests() { //querying requests according to what task is being shown
         ParseQuery<Requests> query = ParseQuery.getQuery(Requests.class);
         query.include(Requests.KEY_USER);
+        query.include(Requests.KEY_TASK);
         query.include(Requests.KEY_USER + "." + "userRatings");
         query.whereEqualTo(Requests.KEY_TASK, task);
         query.setLimit(limit);
@@ -161,13 +163,14 @@ public class TaskDetailActivity extends AppCompatActivity {
             @Override
             public void done(List<Requests> requests, ParseException e) {
                 if (e != null) {
-                    Utilities.showAlert("Error", ""+e.getMessage(),TaskDetailActivity.this);
+                    Utilities.showAlert("Error", "" + e.getMessage(), TaskDetailActivity.this);
                     return;
-                }
-                else {
-                    if(requests.size()==0){
+                } else {
+                    //If the User is viewing his task and there aren't any yet, show noRequestsYet text
+                    if (requests.size() == 0 && task.getUser().getUsername().equals(User.getCurrentUser().getUsername())) {
                         binding.noRequestsYet.setVisibility(View.VISIBLE);
                     }
+                    //Else if there are requests, show all requests that particular task has garnered
                     else {
                         allRequests.addAll(requests);
                         taskDetailAdapter.notifyDataSetChanged();
@@ -202,11 +205,11 @@ public class TaskDetailActivity extends AppCompatActivity {
                         } else {
                             task.increaseRequestNumber(); //increasing the number of requests for this particular task
                             task.saveInBackground();
-                            Snackbar snackbar = Snackbar.make(v, "Request Submitted", Snackbar.LENGTH_SHORT);
+                            Snackbar snackbar = Snackbar.make(binding.getRoot(), "Request Submitted", Snackbar.LENGTH_SHORT);
                             snackbar.show();
                             //subscribing the user to a push notification channel
                             //naming the channel {username} + {requestCoverLetter} in the event many users have the same coverletter/username
-                            ParsePush.subscribeInBackground("" + requests.getUser().getUsername() + requests.getKeyCoverLetter());
+                            ParsePush.subscribeInBackground("" + requests.getUser().getUsername());
                         }
                     }
                 });

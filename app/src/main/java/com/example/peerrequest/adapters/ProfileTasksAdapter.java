@@ -53,10 +53,10 @@ public class ProfileTasksAdapter extends RecyclerView.Adapter<ProfileTasksAdapte
     }
 
     public class ProfileViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView taskTitle;
-        TextView taskDescription;
-        TextView time;
-        TextView numberOfRequests;
+        private TextView taskTitle;
+        private TextView taskDescription;
+        private TextView time;
+        private TextView numberOfRequests;
 
         public ProfileViewHolder(@NonNull View itemView) {
             super(itemView);

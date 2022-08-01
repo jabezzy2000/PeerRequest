@@ -3,6 +3,7 @@ package com.example.peerrequest.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Rating;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,10 +25,13 @@ import com.example.peerrequest.Utilities;
 import com.example.peerrequest.activities.ChatActivity;
 import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.fragments.InProgressFragment;
+import com.example.peerrequest.models.Ratings;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
+import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 
@@ -40,6 +44,7 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Ta
     Context context;
     TaskDetailActivity taskDetailActivity;
     String TAG = "TaskDetailAdapter";
+    String rating;
 
 
     public TaskDetailAdapter(TaskDetailActivity context, List<Requests> requests, TaskDetailActivity taskDetailActivity) {
@@ -73,6 +78,7 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Ta
         TextView userRating;
         TextView itemTaskTimeRequested;
         TextView itemTaskCoverLetter;
+        TextView usersCoverLetterText;
 
 
         public TaskDetailViewHolder(@NonNull View itemView) {
@@ -81,15 +87,16 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Ta
             userRating = itemView.findViewById(R.id.itemTaskRating);
             itemTaskTimeRequested = itemView.findViewById(R.id.itemTaskTime);
             itemTaskCoverLetter = itemView.findViewById(R.id.itemTaskCoverLetter);
+            usersCoverLetterText = itemView.findViewById(R.id.tvUsersRequestLetter);
             itemView.setOnClickListener(this);
 
         }
 
         public void bind(Requests requests) {
             username.setText(requests.getUser().getUsername());
-            userRating.setText(requests.getUser().getUserRating());
             itemTaskCoverLetter.setText(requests.getKeyCoverLetter());
             itemTaskTimeRequested.setText(Utilities.getSimpleTime(requests.getCreatedAt()));
+            usersCoverLetterText.setText(String.format("%s's Cover Letter:", requests.getUser().getUsername()));
 
         }
 
@@ -98,16 +105,30 @@ public class TaskDetailAdapter extends RecyclerView.Adapter<TaskDetailAdapter.Ta
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
                 Requests request = requests.get(position);
-                Log.i(TAG, "currentrequest=" + request.getKeyCoverLetter());
+                Task task = request.getTask();
                 User user = (User) User.getCurrentUser();
-                Log.i(TAG, "currentuser: " + user.getUsername());
-                Utilities.createNewSubmitDialog(request, context, taskDetailActivity, user);
-                //navigate from this fragment to the chat fragment, passing in the task to get reference to the user and the task being completed
+                User requester = request.getUser();
+                ParseQuery<Ratings> query = ParseQuery.getQuery(Ratings.class);
+                query.whereEqualTo(Ratings.KEY_USER_POINTER, requester);
+                query.findInBackground(new FindCallback<Ratings>() {
+                    @Override
+                    public void done(List<Ratings> ratings, ParseException e) {
+                        if (e != null) {
+                            Utilities.showAlert("Error", ""+e.getMessage(),context);
+                            return;
+                        }
+                        else
+                        {
+                            Double roundedRating = Utilities.roundRating(ratings.get(0).getUserRating());
+                            rating = String.valueOf(roundedRating);
+                        }
+                    }
+                });
+                Utilities.createNewSubmitDialog(request, context, taskDetailActivity, user, rating, task);
+            }
             }
 
         }
     }
 
-
-}
 

@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="8dp"
+    app:cardMaxElevation="10dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/historyRequestProfileImage"
-        android:layout_width="97dp"
-        android:layout_height="69dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,51 +33,56 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:text="TextView"
-        android:textSize="16sp"
-        android:textStyle="bold|italic"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/historyRequestProfileImage"
         app:layout_constraintTop_toTopOf="@+id/historyRequestProfileImage" />
 
     <TextView
         android:id="@+id/historyRequestTitle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="23dp"
         android:layout_marginTop="3dp"
-        android:layout_marginBottom="28dp"
         android:text="TextView"
+        android:textAllCaps="true"
+        android:textColor="@color/teal_700"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/historyRequestProfileImage"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/historyRequestProfileName"
-        app:layout_constraintTop_toBottomOf="@+id/historyRequestProfileName"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/historyRequestProfileName" />
 
 
     <TextView
         android:id="@+id/historyRequestDescription"
-        android:layout_width="244dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="144dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/historyRequestProfileImage"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/historyRequestTitle"
         app:layout_constraintTop_toBottomOf="@+id/historyRequestTitle" />
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <TextView
+        android:id="@+id/historyNumberOfTasks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:background="@android:color/holo_green_dark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/historyRequestDescription"
-        app:layout_constraintTop_toTopOf="@+id/historyRequestDescription"
-        app:layout_constraintVertical_bias="0.026"
-        app:srcCompat="@drawable/ic_arrow" />
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/historyRequestProfileName"
+        tools:text="Pending" />
 
     <TextView
-        android:id="@+id/historyTaskNumberOfRequests"
+        android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pending"
-        app:layout_constraintStart_toStartOf="@+id/historyRequestProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/historyRequestProfileImage" />
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="Status:"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toStartOf="@+id/historyNumberOfTasks"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

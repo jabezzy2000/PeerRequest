@@ -5,12 +5,14 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ import com.example.peerrequest.databinding.FragmentHistoryBinding;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
+import com.google.android.material.snackbar.Snackbar;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -44,6 +47,7 @@ public class HistoryFragment extends Fragment {
     protected List<Requests> allRequests;
     protected List<Task> allTasks;
     private TextView clickToContinueText;
+    private View view;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -55,7 +59,7 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Binding layout to view
         binding = FragmentHistoryBinding.inflate(inflater,container,false);
-        View view = binding.getRoot();
+        view = binding.getRoot();
         return view;
 
     }
@@ -94,6 +98,8 @@ public class HistoryFragment extends Fragment {
             }
         });
 
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
+
     }
 
     private void queryRequests(){
@@ -122,6 +128,7 @@ public class HistoryFragment extends Fragment {
         ParseQuery<Task> query = ParseQuery.getQuery(Task.class);
         query.setLimit(MAX_LIMIT);
         query.whereEqualTo(Task.KEY_USER, User.getCurrentUser());
+        query.addDescendingOrder(Task.KEY_CREATED_AT);
         query.include(Task.KEY_USER);
         query.findInBackground(new FindCallback<Task>() {
             @Override
@@ -144,4 +151,21 @@ public class HistoryFragment extends Fragment {
         super.onDestroyView();
         binding=null;
     }
+
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(70,ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            Utilities.confirmActionDialog(getContext(),position,allRequests,getActivity(), historyRequestAdapter, viewHolder.itemView);
+            historyRequestAdapter.notifyDataSetChanged();
+
+
+
+        }
+    };
 }

@@ -1,18 +1,13 @@
 package com.example.peerrequest.fragments;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +15,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
-import com.example.peerrequest.activities.ChatActivity;
-import com.example.peerrequest.activities.HomeActivity;
+import com.example.peerrequest.activities.EditProfileActivity;
 import com.example.peerrequest.activities.LoginActivity;
 import com.example.peerrequest.adapters.ProfileTasksAdapter;
-import com.example.peerrequest.adapters.TaskDetailAdapter;
-import com.example.peerrequest.models.Message;
 import com.example.peerrequest.models.Ratings;
-import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.parse.FindCallback;
@@ -39,18 +29,18 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import org.parceler.Parcels;
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.internal.Util;
 
 public class ProfileTasksFragment extends Fragment {
     public ProfileTasksAdapter profileTasksAdapter;
     public TextView name;
     public TextView rating;
     public ImageView profileImage;
-    public ImageButton logOut;
+    public Button logOut;
+    public ImageButton editProfileBtn;
     public TextView requestsNumber;
     private final int limit = 10;
     protected List<Task> allTasks;
@@ -97,6 +87,7 @@ public class ProfileTasksFragment extends Fragment {
         user = (User) User.getCurrentUser();
         currentUserRating = user.getKeyUserRatingsProperties();
         name = view.findViewById(R.id.tvName);
+        editProfileBtn = view.findViewById(R.id.ibEditProfile);
         rating = view.findViewById(R.id.tvRating);
         profileImage = view.findViewById(R.id.ivProfileImage);
         logOut = view.findViewById(R.id.ibLogOut);
@@ -110,6 +101,13 @@ public class ProfileTasksFragment extends Fragment {
             }
         });
 
+        editProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToEditActivity();
+            }
+        });
+
         ParseQuery<Ratings> query = ParseQuery.getQuery(Ratings.class);
         query.whereEqualTo(Ratings.KEY_USER_POINTER, user);
         query.findInBackground(new FindCallback<Ratings>() {
@@ -118,7 +116,8 @@ public class ProfileTasksFragment extends Fragment {
                 if(e==null){
                     currentUserRating = objects.get(0);
                     name.setText(user.getUsername());
-                    rating.setText(String.valueOf(currentUserRating.getUserRating()));
+                    Double roundedRating = Utilities.roundRating(currentUserRating.getUserRating());
+                    rating.setText(String.valueOf(roundedRating));
                     if (user.getProfilePicture() != null) {
                         Utilities.roundedImage(getContext(), user.getProfilePicture().getUrl(), profileImage, 50);
                     }
@@ -129,6 +128,11 @@ public class ProfileTasksFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void goToEditActivity() {
+        Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+        startActivity(intent);
     }
 
     private void logout() { //defining method to logout

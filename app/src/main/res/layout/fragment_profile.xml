@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,28 +10,33 @@
 
     <ImageView
         android:id="@+id/ivProfileImage"
-        android:layout_width="85dp"
-        android:layout_height="82dp"
+        android:layout_width="121dp"
+        android:layout_height="101dp"
         android:layout_alignBottom="@+id/tvRating"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="254dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="14dp"
-        android:layout_marginBottom="-6dp"
-        android:layout_toEndOf="@+id/tvName"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
         app:srcCompat="@android:drawable/sym_def_app_icon"
         tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvName"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="37dp"
+        android:layout_marginTop="112dp"
         android:text="Name"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="@+id/ivProfileImage"
+        app:layout_constraintStart_toStartOf="@+id/ivProfileImage"
+        app:layout_constraintTop_toTopOf="@+id/ivProfileImage"
         tools:text="Name" />
 
     <TextView
@@ -40,42 +45,111 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="71dp"
+        android:layout_marginTop="8dp"
         android:text="Rating"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/tvName"
+        app:layout_constraintStart_toStartOf="@+id/tvName"
+        app:layout_constraintTop_toBottomOf="@+id/tvName"
         tools:text="Rating" />
 
-    <ImageButton
-        android:id="@+id/ibLogOut"
-        android:layout_width="31dp"
-        android:layout_height="22dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="114dp"
-        android:layout_marginEnd="38dp"
-        android:src="@drawable/ic_exit" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvProfileTasks"
-        android:layout_width="match_parent"
-        android:layout_height="567dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="160dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="4dp" />
-
     <TextView
+        android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="129dp"
-        android:textStyle="italic"
-        android:text="My Tasks" />
+        android:layout_marginTop="44dp"
+        android:text="Rating"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/tvRating"
+        app:layout_constraintStart_toStartOf="@+id/tvRating"
+        app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
-</RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="68dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Profile"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="328dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="296dp"
+        android:text="Settings"
+        android:textAlignment="viewStart"
+        app:icon="@drawable/ic_settings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="326dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="24dp"
+        android:text="Payments"
+        android:textAlignment="viewStart"
+        app:icon="@drawable/ic_money"
+        app:layout_constraintStart_toStartOf="@+id/button4"
+        app:layout_constraintTop_toBottomOf="@+id/button4" />
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="326dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="24dp"
+        android:text="Support"
+        android:drawableEnd="@drawable/ic_right"
+        android:textAlignment="viewStart"
+        app:icon="@drawable/ic_support"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/button4"
+        app:layout_constraintTop_toBottomOf="@+id/button5" />
+
+    <Button
+        android:id="@+id/ibLogOut"
+        android:layout_width="326dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="16dp"
+        android:text="Log Out"
+        android:textAlignment="viewStart"
+        app:icon="@drawable/ic_logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/button4"
+        app:layout_constraintTop_toBottomOf="@+id/button6" />
+
+    <ImageButton
+        android:id="@+id/ibEditProfile"
+        android:layout_width="32dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="136dp"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView7" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Edit Profile"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.022"
+        app:layout_constraintStart_toEndOf="@+id/ibEditProfile"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

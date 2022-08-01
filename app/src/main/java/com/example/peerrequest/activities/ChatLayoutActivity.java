@@ -52,9 +52,16 @@ public class ChatLayoutActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        queryMessages();
+    }
+
     private void queryMessages() {
         ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
         query.whereEqualTo(Message.SENDER_ID_KEY,  User.getCurrentUser());
+
 
 
         ParseQuery<Message> query2 = ParseQuery.getQuery(Message.class);
@@ -64,13 +71,16 @@ public class ChatLayoutActivity extends AppCompatActivity {
         list.add(query);
         list.add(query2);
 
-        ParseQuery<Message> query3 = ParseQuery.or(list);
+        ParseQuery<Message> query3 =  ParseQuery.or(list);
         query3.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
+        query3.include(Message.TASK_ID_POINTER);
+        query3.include(Message.TASK_ID_POINTER +"." + "UserPointer");
         query3.addDescendingOrder(Message.KEY_CREATED_AT);
         query3.findInBackground(new FindCallback<Message>() {
             @Override
             public void done(List<Message> objects, ParseException e) {
                 if (e==null) {
+                    messages.clear();
                     Set<String> container = new HashSet<>();
                     for (Message m: objects) {
                         String senderAndReceiver = "";
@@ -78,10 +88,11 @@ public class ChatLayoutActivity extends AppCompatActivity {
                             String sender = ((User) (m.getSenderIdKey().fetchIfNeeded())).getObjectId();
                             String receiver = ((User) (m.getReceiverIdKey().fetchIfNeeded())).getObjectId();
                             if (sender.equals(ParseUser.getCurrentUser().getObjectId())) {
-                                senderAndReceiver += sender + " " + receiver;
+                                //including/appending task title to string to differentiate chats that have different topics/tasks
+                                senderAndReceiver += sender + " " + receiver + m.getTaskIdPointer().getTaskTitle();
 
                             } else {
-                                senderAndReceiver += receiver + " " + sender;
+                                senderAndReceiver += receiver + " " + sender + m.getTaskIdPointer().getTaskTitle();
                             }
                             if (container.contains(senderAndReceiver)) {
                                 continue;

@@ -26,6 +26,7 @@ import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputEditText;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -41,10 +42,10 @@ public class SearchFragment extends Fragment {
     protected SearchAdapter searchAdapter;
     private final int limit = 50;
     public String querySearch;
-    public EditText search;
     public Button searchButton;
     public RecyclerView recyclerView;
     public ChipGroup chipGroup;
+    public TextInputEditText search;
     protected List<Task> allTasks;
     private final WeakReference<HomeActivity> homeActivityWeakReference;
 
@@ -100,7 +101,8 @@ public class SearchFragment extends Fragment {
         searchAdapter = new SearchAdapter(getContext(), allTasks);
         recyclerView.setAdapter(searchAdapter);//linking to search adapter
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        search = view.findViewById(R.id.etSearch);
+        search = view.findViewById(R.id.inputEditText);
+
         searchButton = view.findViewById(R.id.btnSearch);
         chipGroup = view.findViewById(R.id.chipGroup);
         Chip createdAtChip = chipGroup.findViewById(R.id.createdAtChip);

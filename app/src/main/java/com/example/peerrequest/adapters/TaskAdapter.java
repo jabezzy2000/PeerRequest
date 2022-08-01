@@ -82,7 +82,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             double roundOff = (double) Math.round(currentUserRatingSet.getUserRating() * 100) / 100;
             tvRating.setText(roundOff + "");
             if (user.getProfilePicture() != null) {
-                Utilities.roundedImage(itemView.getContext(), user.getProfilePicture().getUrl(), ivProfilePicture, 80);
+                Utilities.roundedImage(itemView.getContext(), user.getProfilePicture().getUrl(), ivProfilePicture, 90);
             }
 
         }

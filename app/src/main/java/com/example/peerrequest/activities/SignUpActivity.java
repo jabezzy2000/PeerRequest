@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.peerrequest.R;
+import com.example.peerrequest.Utilities;
+import com.example.peerrequest.models.Ratings;
 import com.example.peerrequest.models.User;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -32,18 +34,20 @@ import com.parse.SignUpCallback;
 import java.io.File;
 import java.io.IOException;
 
+import okhttp3.internal.Util;
+
 public class SignUpActivity extends AppCompatActivity {
 
-    EditText signUpUsername;
-    EditText signUpPassword;
-    Button btnSubmit;
-    ImageButton uploadProfilePictureBtn;
-    ImageView signUpProfilePicture;
-    private String TAG = "SignUpActivity";
+    public EditText signUpUsername;
+    public EditText signUpPassword;
+    public Button btnSubmit;
+    public ImageButton uploadProfilePictureBtn;
+    public ImageView signUpProfilePicture;
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
-    public String photoFileName = "photo.jpg";
-    File photoFile;
-    private String fileName = "photo.jpg";
+    public final String photoFileName = "photo.jpg";
+    public File photoFile;
+    private final String fileName = "photo.jpg";
+    private final String TAG = "SignUpActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +106,30 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
+                    //creating and linking a new Rating object upon signup
+                    createUserRating(user);
+                    //saving a user profile picture upon sign up
                     saveUserProfilePictureInBackground(photo, user);
                 } else {
-                    Toast.makeText(SignUpActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Utilities.showAlert("Error", e.getMessage(),getApplicationContext());
+                }
+            }
+        });
+
+    }
+
+    private void createUserRating(User user) {
+        Ratings userRatings = new Ratings();
+        userRatings.setNumberOfRating(0);
+        userRatings.setKeyRating(0.0);
+        userRatings.setKeyTotalRating(0.0);
+        userRatings.setKeyUserPointer(user);
+        userRatings.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e==null){
+                    user.setUserRatings(userRatings);
+                    user.saveInBackground();
                 }
             }
         });
@@ -127,7 +152,7 @@ public class SignUpActivity extends AppCompatActivity {
         File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
-            Log.d(TAG, "failed to create directory");
+            Utilities.showAlert("Error", "Failed to create Directory", getApplicationContext());
         }
         // Return the file target for the photo based on filename
         return (new File(mediaStorageDir.getPath() + File.separator + fileName));
@@ -144,7 +169,7 @@ public class SignUpActivity extends AppCompatActivity {
                 // Load the taken image into a preview
                 signUpProfilePicture.setImageBitmap(takenImage);
             } else { // Result was a failure
-                Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+                Utilities.showAlert("Error", "Picture Wasn't Taken", getApplicationContext());
             }
         }
     }

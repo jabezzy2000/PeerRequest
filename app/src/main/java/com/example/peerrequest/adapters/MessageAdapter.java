@@ -24,6 +24,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private List<Message> mMessages;
     private Context mContext;
     private String mUserId;
+    private User otherUser;
     private User user;
     private static final int MESSAGE_OUTGOING = 123;
     private static final int MESSAGE_INCOMING = 321;
@@ -40,7 +41,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
         if (viewType == MESSAGE_INCOMING) {
             View contactView = inflater.inflate(R.layout.message_incoming, parent, false);
             return new IncomingMessageViewHolder(contactView);
@@ -86,14 +86,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public IncomingMessageViewHolder(View itemView) {
             super(itemView);
             imageOther = (ImageView) itemView.findViewById(R.id.ivProfileOther);
-            body = (TextView) itemView.findViewById(R.id.tvBody);
+            body = (TextView) itemView.findViewById(R.id.tvBodyMe);
             name = (TextView) itemView.findViewById(R.id.tvName);
             user = (User) User.getCurrentUser();
         }
 
         @Override
         public void bindMessage(Message message) {
-            Utilities.roundedImage(mContext,user.getProfilePicture().getUrl(),imageOther,80 );
+            if(otherUser!=null) {
+                Utilities.roundedImage(mContext, otherUser.getProfilePicture().getUrl(), imageOther, 80);
+            }
             body.setText(message.getBody());
             name.setText(message.getUserId());
         }
@@ -106,11 +108,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public OutgoingMessageViewHolder(View itemView) {
             super(itemView);
             imageMe = (ImageView) itemView.findViewById(R.id.ivProfileMe);
-            body = itemView.findViewById(R.id.tvBody);
+            body = itemView.findViewById(R.id.tvBodyMe);
         }
 
         @Override
         public void bindMessage(Message message) {
+            Utilities.roundedImage(mContext,user.getProfilePicture().getUrl(),imageMe,80);
             body.setText(message.getBody());
         }
     }

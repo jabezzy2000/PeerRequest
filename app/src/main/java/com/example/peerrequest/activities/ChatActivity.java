@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +23,7 @@ import com.example.peerrequest.adapters.ChatAdapter;
 import com.example.peerrequest.models.Message;
 import com.example.peerrequest.models.Ratings;
 import com.example.peerrequest.models.Requests;
+import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -41,7 +42,7 @@ public class ChatActivity extends AppCompatActivity {
     private static final int MAX_CHAT_MESSAGES_TO_SHOW = 30;
     public User userFromChatLayout;
     public User userFromTaskDetail;
-    static final long POLL_INTERVAL = TimeUnit.SECONDS.toMillis(5);
+    static final long POLL_INTERVAL = TimeUnit.SECONDS.toMillis(50);
     public Handler myHandler = new android.os.Handler();
     public Runnable mRefreshMessagesRunnable = new Runnable() {
         @Override
@@ -51,6 +52,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     };
     private EditText etMessage;
+    private TextView tvHitButtonToComplete;
     private ImageButton ibSend;
     private RecyclerView rvChat;
     private List<Message> mMessages;
@@ -59,15 +61,23 @@ public class ChatActivity extends AppCompatActivity {
     private Button completed;
     private Requests requests;
     private User user;
+    private User taskLister;
+    private Task taskBeingCompleted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        //after accepting a message, you'd automatically be brought to the chat activity
+        //the task was passed over in the intent so it's easily retrieved
+        taskBeingCompleted = (Task) Parcels.unwrap(getIntent().getParcelableExtra("task"));
+        //In the instances where the user decides to move to the chat on his/her own volition,
+        //the task needs to be retrieved manually by querying previous messages and then getting the task from one
         progressBar = findViewById(R.id.chatProgressBar);
         //since there are two ways to move to the chat activity, I try to account for both "other users"
         userFromTaskDetail = (User) Parcels.unwrap(getIntent().getParcelableExtra("requester"));
         userFromChatLayout = getIntent().getParcelableExtra("otherUser");
+        tvHitButtonToComplete = findViewById(R.id.textView3);
         if (userFromTaskDetail == null) {
             setupMessagePosting(userFromChatLayout);
         } else {
@@ -76,6 +86,11 @@ public class ChatActivity extends AppCompatActivity {
         queryMessages();
     }
 
+    private Task getTaskFromPreviousMessage() {
+        Message previousMessage = mMessages.get(0);
+        taskBeingCompleted = previousMessage.getTaskIdPointer();
+        return taskBeingCompleted;
+    }
 
     private void queryMessages() {
         //         Construct query to execute
@@ -96,6 +111,7 @@ public class ChatActivity extends AppCompatActivity {
         query3.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
         query3.include(Message.SENDER_ID_KEY);
         query3.include(Message.RECEIVER_ID_KEY);
+        query3.include(Message.TASK_ID_POINTER);
 
         query3.addDescendingOrder(Message.KEY_CREATED_AT);
         query3.findInBackground(new FindCallback<Message>() {
@@ -106,11 +122,14 @@ public class ChatActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.INVISIBLE);
                         return;
                     } else {
-                        progressBar.setVisibility(View.INVISIBLE);
                         mMessages.clear();
-                        mMessages.addAll(objects);
+                        for(Message m : objects){
+                            if(m.getTaskIdPointer().getTaskTitle().equals(taskBeingCompleted.getTaskTitle())){
+                               mMessages.add(m);
+                            }
+                        }
+                        progressBar.setVisibility(View.INVISIBLE);
                         mAdapter.notifyDataSetChanged(); // update adapter
-                        progressBar.setVisibility(View.GONE);
                     }
                 } else {
                     Utilities.showAlert("Error", "" + e.getMessage(), getApplicationContext());
@@ -146,6 +165,16 @@ public class ChatActivity extends AppCompatActivity {
         mAdapter = new ChatAdapter(ChatActivity.this, mMessages);
         rvChat.setAdapter(mAdapter);
         progressBar = findViewById(R.id.chatProgressBar);
+        try {
+             taskLister = (User) taskBeingCompleted.getUser().fetchIfNeeded();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if(!taskLister.getUsername().equals(User.getCurrentUser().getUsername())){
+            tvHitButtonToComplete.setVisibility(View.INVISIBLE);
+            completed.setVisibility(View.INVISIBLE);
+
+        }
 
 
         // associate the LayoutManager with the RecylcerView
@@ -162,12 +191,18 @@ public class ChatActivity extends AppCompatActivity {
                 message.setSenderIdKey((User) User.getCurrentUser());
                 message.setReceiverIdKey(otherUser);
                 message.setBody(data);
+                if (taskBeingCompleted != null) {
+                    message.setTaskIdPointer(taskBeingCompleted);
+                } else {
+                    Task currentTaskBeingCompleted = getTaskFromPreviousMessage();
+                    message.setTaskIdPointer(currentTaskBeingCompleted);
+                }
                 message.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
-                            mMessages.add(0, message);
                             progressBar.setVisibility(View.INVISIBLE);
+                            mMessages.add(0, message);
                             mAdapter.notifyDataSetChanged();
                         } else {
                             Utilities.showAlert("Error", "" + e.getMessage(), getApplicationContext());
@@ -181,7 +216,7 @@ public class ChatActivity extends AppCompatActivity {
         completed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createRateUserDialog(ChatActivity.this, otherUser);
+                createRateUserDialog(ChatActivity.this, otherUser, taskBeingCompleted);
             }
         });
     }
@@ -205,6 +240,7 @@ public class ChatActivity extends AppCompatActivity {
         query3.setLimit(MAX_CHAT_MESSAGES_TO_SHOW);
         query3.include(Message.SENDER_ID_KEY);
         query3.include(Message.RECEIVER_ID_KEY);
+        query3.include(Message.TASK_ID_POINTER);
 
         query3.addDescendingOrder(Message.KEY_CREATED_AT);
         query3.findInBackground(new FindCallback<Message>() {
@@ -212,13 +248,18 @@ public class ChatActivity extends AppCompatActivity {
             public void done(List<Message> objects, ParseException e) {
                 if (e == null) {
                     if (objects.size() == mMessages.size()) {
+                        progressBar.setVisibility(View.INVISIBLE);
                         return;
                     } else {
-                        progressBar.setVisibility(View.INVISIBLE);
                         mMessages.clear();
-                        mMessages.addAll(objects);
+                        for(Message m : objects){
+                            if(m.getTaskIdPointer().getTaskTitle().equals(taskBeingCompleted.getTaskTitle())){
+                                mMessages.add(m);
+                            }
+                        }
+                        progressBar.setVisibility(View.INVISIBLE);
+//                        mMessages.addAll(objects);
                         mAdapter.notifyDataSetChanged(); // update adapter
-                        progressBar.setVisibility(View.GONE);
                     }
                 } else {
                     Utilities.showAlert("Error", "" + e.getMessage(), getApplicationContext());
@@ -227,7 +268,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void createRateUserDialog(Context context, User otherUser) {
+    private void createRateUserDialog(Context context, User otherUser, Task taskBeingCompleted) {
         AlertDialog.Builder dialogBuilder;
         AlertDialog dialog;
         dialogBuilder = new AlertDialog.Builder(context);
@@ -240,15 +281,13 @@ public class ChatActivity extends AppCompatActivity {
         setRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveRatings(ratingBar, dialog);
+                saveRatings(ratingBar, dialog, taskBeingCompleted);
             }
         });
         dialog.show();
-
-
     }
 
-    private void saveRatings(RatingBar ratingBar, AlertDialog dialog) {
+    private void saveRatings(RatingBar ratingBar, AlertDialog dialog, Task taskBeingCompleted) {
         //querying current rating
         ParseQuery<Ratings> query = ParseQuery.getQuery(Ratings.class);
         query.whereEqualTo("pointerToUser", userFromChatLayout);
@@ -273,24 +312,54 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void done(ParseException e) {
                             if (e == null) {
-                                //toast for user reassurance
-                                Toast.makeText(ChatActivity.this, "User has been rated", Toast.LENGTH_SHORT).show();
-                                goHomeActivity();
+                                //mark task as complete and then save changes to back4app
+                                taskBeingCompleted.markTaskAsComplete();
+                                taskBeingCompleted.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if(e==null){
+                                            //if task saves successfully, show a toast that shows it's been saved successfully
+                                            dialog.dismiss();
+                                            User notificationReceiver;
+                                            if (userFromTaskDetail==null){
+                                                notificationReceiver = userFromChatLayout;
+                                            }
+                                            else{
+                                                notificationReceiver = userFromTaskDetail;
+                                            }
+                                            Utilities.sendANotification(notificationReceiver,getApplicationContext(),taskBeingCompleted);
+                                            Utilities.makeToast(getApplicationContext(), "Task Ended Successfully");
+                                            Handler handler = new Handler();
+                                            handler.postDelayed(new Runnable() {
+                                            //delay moving to home activity for snackbar to show
+                                                @Override
+                                                public void run() {
+                                                    goHomeActivity();
+                                                }
+
+                                            }, 2000000); // 20000ms delay
+                                        }
+                                        else{
+                                            Utilities.showAlert("Error", "An Error Has Occured",getApplicationContext());
+                                        }
+                                    }
+                                });
                             } else {
                                 Utilities.showAlert("Error", "" + e.getMessage(), getApplicationContext());
                             }
                         }
                     });
-                }
-                else{
-                    Utilities.showAlert("Error", ""+e.getMessage(),getApplicationContext());
+
+                    goHomeActivity();
+                } else {
+                    Utilities.showAlert("Error", "" + e.getMessage(), getApplicationContext());
                 }
             }
         });
     }
 
     private void goHomeActivity() {
-        Intent intent = new Intent(this,HomeActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
     }
 

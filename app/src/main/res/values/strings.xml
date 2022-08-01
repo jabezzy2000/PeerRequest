@@ -26,5 +26,14 @@
     <string name="profile_me">profile_me</string>
     <string name="facebook_app_id">759848765212203</string>
     <string name="fb_login_protocol_scheme">fb759848765212203</string>
-    <string name="facebook_client_token">bf069a1d8123655c65c05b3184817c2b</string>
+    <string name="facebook_client_token">643dbf893c9101a50dc641df9c3a3de3</string>
+    <string name="gravatarURL">https://www.gravatar.com/avatar/</string>
+    <string name="gravatarIdenticon">\?d=identicon</string>
+    <string name="accepted_string">Accepted</string>
+    <string name="Pending">Pending</string>
+    <string name="no_task_selected">No Task Selected</string>
+    <string name="google_geo_api_key">AIzaSyCoCwSx-6xJxd4ei5v6npdpP4iE26HWe6o</string>
+    <string name = "google_cloud_messaging_key">757228767265</string>
+    <string name = "parse_push_client_key">uSjAlaUCwE5Xea1NrATQKL720IX1cBVwjeSYpYbg</string>
+    <string name="parse_application_id">hUmtd9kBemW1I8liVWh4nTrHMGrEIhsINSODohCh</string>
 </resources>

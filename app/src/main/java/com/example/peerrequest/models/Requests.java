@@ -17,22 +17,23 @@ public class Requests extends ParseObject {
     public static final String KEY_USER = "userPointer";
     public static final String KEY_TASK = "taskPointer";
     public static final String KEY_COVER_LETTER = "coverLetter";
-    public static final String KEY_ACCEPTED = "accepted";
+    public static final String KEY_ACCEPTED = "acceptedStatus";
     public static final String KEY_USER_RATING = "UserRating";
     public static final String KEY_NUMBER_OF_RATING = "numberOfRating";
     public static final String KEY_TOTAL_RATING = "totalRatings";
+    public static final String KEY_COMPLETED_LISTER = "completedLister";
+    public static final String KEY_COMPLETED_TASKER = "completedTasker";
 
     public User getUser() {
         return ((User) getParseUser(KEY_USER));
     }
 
-    public Boolean getAccepted() {
-        Boolean.parseBoolean(KEY_ACCEPTED);
-        return false;
+    public String getAccepted() {
+        return getString(KEY_ACCEPTED);
     }
 
     public void setAccepted(String string) {
-        put(KEY_ACCEPTED,Boolean.parseBoolean("True"));
+        put(KEY_ACCEPTED, "true");
     }
 
     public Task getTask() {
@@ -70,6 +71,16 @@ public class Requests extends ParseObject {
     public int getKeyTotalRating(){return getInt(KEY_TOTAL_RATING);}
 
     public void setKeyTotalRating(int rating){put(KEY_TOTAL_RATING, rating);}
+
+    public String  getCompletedLister() {return getString(KEY_COMPLETED_LISTER);}
+
+    public void  setCompletedLister(String string) {put(KEY_COMPLETED_LISTER,"true");}
+
+    public String  getCompletedTasker() {return getString(KEY_COMPLETED_TASKER);}
+
+    public void  setKeyCompletedTasker(String string) {put(KEY_COMPLETED_TASKER,"true");}
+
+
 
 
 

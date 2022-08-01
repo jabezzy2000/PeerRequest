@@ -1,6 +1,10 @@
 package com.example.peerrequest.adapters;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peerrequest.R;
@@ -15,8 +20,10 @@ import com.example.peerrequest.Utilities;
 import com.example.peerrequest.models.Requests;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+import java.util.Objects;
 
 public class HistoryRequestAdapter extends RecyclerView.Adapter<HistoryRequestAdapter.HistoryViewHolder> {
     private final List<Requests> requestsList;
@@ -46,11 +53,12 @@ public class HistoryRequestAdapter extends RecyclerView.Adapter<HistoryRequestAd
         return requestsList.size();
     }
 
-    public class HistoryViewHolder extends RecyclerView.ViewHolder {
+    public class HistoryViewHolder extends RecyclerView.ViewHolder  {
         private ImageView historyProfilePicture;
         private TextView historyUsername;
         private TextView historyTaskTitle;
         private TextView historyRequestDescription;
+        private TextView historyRequestStatus;
 
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -58,6 +66,9 @@ public class HistoryRequestAdapter extends RecyclerView.Adapter<HistoryRequestAd
             historyRequestDescription = itemView.findViewById(R.id.historyRequestDescription);
             historyUsername = itemView.findViewById(R.id.historyRequestProfileName);
             historyTaskTitle = itemView.findViewById(R.id.historyRequestTitle);
+            historyRequestStatus = itemView.findViewById(R.id.historyNumberOfTasks);
+
+
         }
 
         public void bind(Requests request) {
@@ -66,7 +77,17 @@ public class HistoryRequestAdapter extends RecyclerView.Adapter<HistoryRequestAd
             historyTaskTitle.setText(task.getTaskTitle());
             historyUsername.setText(user.getUsername());
             historyRequestDescription.setText(request.getKeyCoverLetter());
+            if(Objects.equals(request.getAccepted(), "true")){
+                historyRequestStatus.setText(R.string.accepted_string);
+                historyRequestStatus.setTextColor(Color.GREEN);
+            }
+            else{
+                historyRequestStatus.setText(R.string.Pending);
+            }
+
             Utilities.roundedImage(context, user.getProfilePicture().getUrl(), historyProfilePicture, 80);
         }
+
     }
+
 }

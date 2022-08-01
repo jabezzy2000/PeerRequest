@@ -13,21 +13,21 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 
 import com.example.peerrequest.R;
-import com.example.peerrequest.fragments.InProgressFragment;
+import com.example.peerrequest.Utilities;
+import com.example.peerrequest.fragments.HistoryFragment;
 import com.example.peerrequest.fragments.ProfileTasksFragment;
 import com.example.peerrequest.fragments.SearchFragment;
 import com.example.peerrequest.fragments.TimelineFragment;
-import com.example.peerrequest.models.Task;
+import com.example.peerrequest.models.Ratings;
+import com.example.peerrequest.models.User;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -40,14 +40,14 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
-import java.util.concurrent.TimeUnit;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
+import com.facebook.login.LoginManager;
 
 public class HomeActivity extends AppCompatActivity {
     public FragmentManager fragmentManager;
     Fragment navigationFragment;
     BottomNavigationView bottomNavigationView;
-    private MapsActivity mapsActivity;
     private LocationRequest mLocationRequest; //might be wrong import
     private final int REQUEST_LOCATION_PERMISSION = 1;
     private final long UPDATE_INTERVAL = 10 * 2000;  /* 10 secs */
@@ -57,9 +57,7 @@ public class HomeActivity extends AppCompatActivity {
     public Location location;
     public LatLng latLng;
     private String TAG = "HomeActivity";
-//    public TimelineFragment timelineFragment= new TimelineFragment(HomeActivity.this);
     public TimelineFragment timelineFragment = new TimelineFragment();
-
 
 
     public double getLongitude() {
@@ -91,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.messenger) {
-            Intent intent = new Intent(HomeActivity.this, ChatActivity.class);
+            Intent intent = new Intent(HomeActivity.this, ChatLayoutActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
@@ -101,6 +99,20 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startLocationUpdates();
+//        User currentUser = (User) User.getCurrentUser();
+//        currentUser.setKeyUserCurrentLocationLatitude(String.valueOf(location.getLatitude()));
+//        currentUser.setKeyUserCurrentLocationLongitude(String.valueOf(location.getLongitude()));
+//        currentUser.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//                if(e==null){
+//                    Toast.makeText(HomeActivity.this, "save successfull", Toast.LENGTH_SHORT).show();
+//                }
+//                else{
+//                    Utilities.showAlert("Error", ""+e.getMessage(),getApplicationContext());
+//                }
+//            }
+//        });
         fragmentManager = getSupportFragmentManager();
         setContentView(R.layout.activity_main);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -108,8 +120,8 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.action_Home); // sets default navigationFragment to hometimeline
 
 
-
     }
+
 
     private void setUpBottomNavigationView() {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -125,23 +137,26 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.action_Search:
                         navigationFragment = new SearchFragment(HomeActivity.this);
                         break;
+                    case R.id.action_History:
+                        navigationFragment = new HistoryFragment();
+                        break;
                     case R.id.action_Home:
                     default:
-                       navigationFragment =timelineFragment;
+                        navigationFragment = timelineFragment;
                         break;
                 }
-                fragmentManager.beginTransaction().replace(R.id.flContainer, navigationFragment).commit();
+                fragmentManager.beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).replace(R.id.flContainer, navigationFragment).commit();
                 return true;
             }
         });
     }
 
     private void onLocationChanged(Location location) {
-       setLatitude(location.getLatitude());
-       setLongitude(location.getLongitude());
+        setLatitude(location.getLatitude());
+        setLongitude(location.getLongitude());
         Bundle bundle = new Bundle();
         bundle.putDouble("latitude", latitude);
-        bundle.putDouble("longitude",longitude);
+        bundle.putDouble("longitude", longitude);
 
         TimelineFragment timelineFragment = new TimelineFragment();
         timelineFragment.setArguments(bundle);
@@ -202,8 +217,20 @@ public class HomeActivity extends AppCompatActivity {
                         location = locationResult.getLastLocation();
                         longitude = location.getLongitude();
                         latitude = location.getLatitude();
-                        latLng = new LatLng(latitude,longitude);
-                        Log.i(TAG, "onLocationResult: " + latLng);
+                        latLng = new LatLng(latitude, longitude);
+                        User currentUser = (User) User.getCurrentUser();
+                        currentUser.setKeyUserCurrentLocationLatitude(String.valueOf(location.getLatitude()));
+                        currentUser.setKeyUserCurrentLocationLongitude(String.valueOf(location.getLongitude()));
+                        currentUser.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    return;
+                                } else {
+                                    Utilities.showAlert("Error", "" + e.getMessage(), HomeActivity.this);
+                                }
+                            }
+                        });
                     }
                 },
                 Looper.myLooper());
@@ -219,10 +246,8 @@ public class HomeActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
                 startLocationUpdates();
             } else {
-                Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }

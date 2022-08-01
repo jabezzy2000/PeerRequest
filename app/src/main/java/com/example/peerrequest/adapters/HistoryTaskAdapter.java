@@ -1,6 +1,7 @@
 package com.example.peerrequest.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.peerrequest.R;
 import com.example.peerrequest.Utilities;
+import com.example.peerrequest.activities.TaskDetailActivity;
 import com.example.peerrequest.models.Task;
 import com.example.peerrequest.models.User;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -45,17 +49,20 @@ public class HistoryTaskAdapter extends RecyclerView.Adapter<HistoryTaskAdapter.
         return taskList.size();
     }
 
-    public class HistoryViewHolder extends RecyclerView.ViewHolder {
+    public class HistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView historyTaskProfilePicture;
         private TextView historyTaskUsername;
         private TextView historyTaskTitle;
         private TextView historyTaskDescription;
+        private TextView historyNumberOfRequests;
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             historyTaskProfilePicture = itemView.findViewById(R.id.historyTaskProfileImage);
             historyTaskDescription = itemView.findViewById(R.id.historyTaskDescription);
             historyTaskUsername = itemView.findViewById(R.id.historyTaskProfileName);
             historyTaskTitle = itemView.findViewById(R.id.historyTaskTitle);
+            historyNumberOfRequests = itemView.findViewById(R.id.historyNumberOfTasks);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Task task) {
@@ -63,7 +70,26 @@ public class HistoryTaskAdapter extends RecyclerView.Adapter<HistoryTaskAdapter.
             historyTaskTitle.setText(task.getTaskTitle());
             historyTaskUsername.setText(user.getUsername());
             historyTaskDescription.setText(task.getDescription());
+            if(task.getKeyNumberOfRequests().equals(1)){
+                historyNumberOfRequests.setText(""+ task.getKeyNumberOfRequests() + " request");
+            }
+            else{
+                historyNumberOfRequests.setText(""+ task.getKeyNumberOfRequests() + " requests");
+            }
             Utilities.roundedImage(context,user.getProfilePicture().getUrl(),historyTaskProfilePicture,80);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                Task task = taskList.get(position);
+                Intent intent = new Intent(v.getContext(), TaskDetailActivity.class);
+                intent.putExtra(Task.class.getSimpleName(), Parcels.wrap(task));
+                v.getContext().startActivity(intent);
+
+
+            }
         }
     }
 }

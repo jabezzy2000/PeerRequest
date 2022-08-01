@@ -66,7 +66,7 @@ dependencies {
     implementation 'org.parceler:parceler-api:1.1.13'
     annotationProcessor 'org.parceler:parceler:1.1.13'
     implementation 'com.google.firebase:firebase-core:21.1.0'
-    implementation "com.github.parse-community.Parse-SDK-Android:fcm:1.21.0"
+    implementation "com.github.parse-community.Parse-SDK-Android:fcm:1.26.0"
     implementation 'com.google.firebase:firebase-core:21.1.0'
     implementation 'com.google.firebase:firebase-messaging:23.0.6'
     implementation "com.github.parse-community.Parse-SDK-Android:fcm:1.26.0"

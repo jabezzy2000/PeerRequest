@@ -12,8 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="62dp"
-        android:layout_marginTop="227dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="59dp"
         android:numStars="5"
         android:saveEnabled="true" />
 
@@ -24,18 +25,18 @@
         android:layout_below="@+id/rating"
         android:layout_alignParentStart="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="54dp"
-        android:layout_marginTop="48dp"
-        android:text="Set Rating " />
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="14dp"
+        android:text="Submit Rating" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="66dp"
-        android:layout_marginTop="183dp"
+        android:layout_marginStart="57dp"
+        android:layout_marginTop="22dp"
+        android:text="Rate This User"
         android:textSize="20dp"
-        android:textStyle="italic"
-        android:text="Rate This User" />
+        android:textStyle="italic" />
 </RelativeLayout>

@@ -9,9 +9,9 @@
         android:id="@+id/tasksHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="16dp"
-        android:text="tasks"
+        android:text="MY Tasks"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,17 +21,16 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="88dp"
         android:layout_marginTop="16dp"
-        android:text="requests"
+        android:text="my requests"
         app:layout_constraintStart_toEndOf="@+id/tasksHistory"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/historyRecyclerView"
-        android:layout_width="373dp"
-        android:layout_height="634dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="391dp"
+        android:layout_height="635dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.578"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/requestsHistory" />
 

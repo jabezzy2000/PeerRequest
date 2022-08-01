@@ -20,6 +20,8 @@ import com.example.peerrequest.models.User;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
 public class ChatLayoutAdapter extends RecyclerView.Adapter<ChatLayoutAdapter.ViewHolder> {
@@ -63,6 +65,8 @@ public class ChatLayoutAdapter extends RecyclerView.Adapter<ChatLayoutAdapter.Vi
         ImageView profileImageOfOther;
         TextView usernameOfOther;
         TextView lastMessageInChat;
+        TextView chatTaskTitle;
+        TextView completedText;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -70,6 +74,8 @@ public class ChatLayoutAdapter extends RecyclerView.Adapter<ChatLayoutAdapter.Vi
              profileImageOfOther = itemView.findViewById(R.id.ivProfilePictureLayout);
              usernameOfOther = itemView.findViewById(R.id.tvNameLayout);
              lastMessageInChat = itemView.findViewById(R.id.tvLastMessageLayout);
+             chatTaskTitle = itemView.findViewById(R.id.chatLayoutTaskTitle);
+             completedText = itemView.findViewById(R.id.chatLayoutCompleted);
              itemView.setOnClickListener(this);
 
         }
@@ -93,8 +99,15 @@ public class ChatLayoutAdapter extends RecyclerView.Adapter<ChatLayoutAdapter.Vi
                 }
             }
             usernameOfOther.setText(otherUser.getUsername());
+            chatTaskTitle.setText(message.getTaskIdPointer().getTaskTitle());
             lastMessageInChat.setText(message.getBody());
-            Utilities.roundedImage(mContext,otherUser.getProfilePicture().getUrl(),profileImageOfOther,70);
+            if(message.getTaskIdPointer().getTaskCompleted().equals("true")){
+                completedText.setVisibility(View.VISIBLE);
+            }
+            else{
+                completedText.setVisibility(View.INVISIBLE);
+            }
+            Utilities.roundedImage(mContext,otherUser.getProfilePicture().getUrl(),profileImageOfOther,100);
         }
 
         @Override
@@ -110,6 +123,7 @@ public class ChatLayoutAdapter extends RecyclerView.Adapter<ChatLayoutAdapter.Vi
             } else {
                 otherUser = mMessages.get(getAdapterPosition()).getSenderIdKey();
             }
+            intent.putExtra("task", Parcels.wrap(mMessages.get(getAdapterPosition()).getTaskIdPointer()));
             intent.putExtra("otherUser", otherUser);
             mContext.startActivity(intent);
         }

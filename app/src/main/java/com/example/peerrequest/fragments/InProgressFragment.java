@@ -102,7 +102,6 @@ public class InProgressFragment extends Fragment {
     private void createRateUserDialog(Context context, User user) {
         AlertDialog.Builder dialogBuilder;
         AlertDialog dialog;
-        Toast.makeText(context, "request created by " + requests.getUser().getUsername(), Toast.LENGTH_SHORT).show();
         dialogBuilder = new AlertDialog.Builder(context);
         View popup = View.inflate(context, R.layout.rating_dialog, null);
         RatingBar ratingBar = popup.findViewById(R.id.rating);
@@ -112,19 +111,13 @@ public class InProgressFragment extends Fragment {
         setRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Rating is " + ratingBar.getRating(), Toast.LENGTH_SHORT).show();
-                double rating = ratingBar.getRating(); // this will be added to the total rating
-                double currrentRating = Double.parseDouble(user.getUserRating());
-//                int currentNumberOfRating = Integer.parseInt(user.getNumberOfRating());
-//                String newNumberOfRating = String.valueOf(currentNumberOfRating + 1);
-//                user.setNumberOfRating(newNumberOfRating);
-//                user.setKeyRating(String.valueOf(currrentRating + rating));
-//                dialog.dismiss();
+                int currentNumberOfRating = Integer.parseInt(String.valueOf(user.getNumberOfRating()));
+                String newNumberOfRating = String.valueOf(currentNumberOfRating + 1);
+                user.setNumberOfRating(Integer.parseInt(newNumberOfRating));
+                dialog.dismiss();
             }
         });
         dialog.show();
-
-
     }
 
     private void setUpMessagePosting() {

@@ -73,12 +73,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         public void bind(Task task) {
             User user = task.getUser();
             Ratings currentUserRatings = user.getKeyUserRatingsProperties();
-            Utilities.roundedImage(itemView.getContext(), user.getProfilePicture().getUrl(), profilePicture, 70);
+            if(user.getProfilePicture()!= null) {
+                Utilities.roundedImage(itemView.getContext(), user.getProfilePicture().getUrl(), profilePicture, 70);
+            }
             username.setText(user.getUsername());
             taskTitle.setText(task.getTaskTitle());
             taskDescription.setText(task.getDescription());
             time.setText(Utilities.getSimpleTime(task.getCreatedAt()));
-            rating.setText(String.valueOf(currentUserRatings.getUserRating()));
+            String roundedRating = String.valueOf(Utilities.roundRating(currentUserRatings.getUserRating()));
+            rating.setText(roundedRating);
 
         }
 

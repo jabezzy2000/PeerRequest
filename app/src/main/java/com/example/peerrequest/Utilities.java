@@ -110,7 +110,7 @@ public class Utilities extends TaskDetailActivity {
         }
     }
 
-    public static void createNewSubmitDialog(Requests request, Context context, Activity TaskDetailActivity, User user, String rating) {
+    public static void createNewSubmitDialog(Requests request, Context context, Activity TaskDetailActivity, User user, String rating, Task task) {
         AlertDialog.Builder dialogBuilder;
         AlertDialog dialog;
 
@@ -125,7 +125,7 @@ public class Utilities extends TaskDetailActivity {
         Button popupCancel = popup.findViewById(R.id.cancelRequestBtn);
         submitRequestName.setText(request.getUser().getUsername());
         acceptRequestRating.setText(rating);
-        Utilities.roundedImage(context, requester.getProfilePicture().getUrl(), submitRequestProfileImage, 70);
+        Utilities.roundedImage(context, requester.getProfilePicture().getUrl(), submitRequestProfileImage, 100);
         acceptRequestCoverLetter.setText(request.getKeyCoverLetter());
         dialogBuilder.setView(popup);
         dialog = dialogBuilder.create();
@@ -143,6 +143,7 @@ public class Utilities extends TaskDetailActivity {
                             //move from here to the chat screen
                             Intent intent = new Intent(context, ChatActivity.class);
                             intent.putExtra("request", Parcels.wrap(request));
+                            intent.putExtra("task", Parcels.wrap(task));
                             intent.putExtra("user", Parcels.wrap(user));
                             intent.putExtra("requester", Parcels.wrap(requester));
                             context.startActivity(intent);
@@ -169,8 +170,8 @@ public class Utilities extends TaskDetailActivity {
         //after the request is accepted, A push notification is sent to the user
         //subscribed on the particular channel related to this request
         ParsePush push = new ParsePush();
-        push.setChannel("" + request.getUser().getUsername() + request.getKeyCoverLetter());
-        push.setMessage(user.getUsername() + "just accepted your request! Click to start chat");
+        push.setChannel("" + request.getUser().getUsername());
+        push.setMessage(user.getUsername() + " just accepted your request! Click to start chat");
         push.sendInBackground(new SendCallback() {
             @Override
             public void done(ParseException e) {
@@ -180,6 +181,24 @@ public class Utilities extends TaskDetailActivity {
             }
         });
     }
+
+    public static void sendANotification(User otherUser, Context context, Task taskBeingCompleted) {
+        //after the request is accepted, A push notification is sent to the user
+        //subscribed on the particular channel related to this request
+        ParsePush push = new ParsePush();
+        push.setChannel("" + otherUser.getUsername());
+        push.setMessage("Congratulations! " + taskBeingCompleted.getTaskTitle() + " was just marked as complete!");
+        push.sendInBackground(new SendCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Utilities.showAlert("Error", "" + e.getMessage(), context);
+                }
+            }
+        });
+    }
+
+
 
     public static void showAlert(String title, String message, Context context) {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context)
@@ -249,6 +268,7 @@ public class Utilities extends TaskDetailActivity {
                 task.setUser((User) ParseUser.getCurrentUser());
                 task.setTaskTitle(title);
                 task.setDescription(description);
+                task.setTaskCompleted("false");
                 task.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -321,10 +341,11 @@ public class Utilities extends TaskDetailActivity {
         dialog = dialogBuilder.create();
         Button cancelButton = popup.findViewById(R.id.dialog_cancel_action);
         Button confirmButton = popup.findViewById(R.id.dialog_confirm_action);
+        Requests requestToBeDeleted = requestsList.get(position);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestsList.get(position).deleteInBackground(new DeleteCallback() {
+                requestToBeDeleted.deleteInBackground(new DeleteCallback() {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
@@ -352,5 +373,18 @@ public class Utilities extends TaskDetailActivity {
         });
         dialog.show();
 
+    }
+
+    public static void makeSnackBar(View view, String text){
+        Snackbar snackbar = Snackbar.make(view,text,Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
+    public static void makeToast(Context context, String text){
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+    }
+
+    public static double roundRating(Double rating){
+        double roundOff = (double) Math.round(rating * 100) / 100;
+        return roundOff;
     }
 }

@@ -4,57 +4,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="400dp">
+    android:layout_height="wrap_content">
 
 
     <ImageView
         android:id="@+id/submitRequestProfilePicture"
-        android:layout_width="389dp"
-        android:layout_height="195dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.272"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.012"
         app:srcCompat="@drawable/ic_launcher_background"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/acceptRequestName"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="29dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="4dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/acceptRequestCoverLetter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submitRequestProfilePicture"
-        app:layout_constraintVertical_bias="0.0" />
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/submitRequestProfilePicture"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/acceptRequestRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginTop="4dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/acceptRequestCoverLetter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.252"
-        app:layout_constraintStart_toEndOf="@+id/acceptRequestName"
-        app:layout_constraintTop_toTopOf="@+id/acceptRequestName"
-        app:layout_constraintVertical_bias="0.0" />
+        android:textColor="@color/black"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/acceptRequestName"
+        app:layout_constraintTop_toBottomOf="@+id/acceptRequestName" />
 
     <TextView
         android:id="@+id/acceptRequestCoverLetter"
         android:layout_width="384dp"
         android:layout_height="68dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="4dp"
         android:text="TextView"
-        android:textAlignment="center"
+        android:textAlignment="viewStart"
+        android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/submitRequestProfilePicture"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/submitRequestProfilePicture" />
 
@@ -62,12 +60,12 @@
         android:id="@+id/acceptRequestBtn"
         android:layout_width="87dp"
         android:layout_height="42dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:text="Accept"
-        android:textColor="@android:color/holo_green_dark"
-        android:textSize="8sp"
+        android:textColor="@color/black"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.317"
+        app:layout_constraintHorizontal_bias="0.28"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/acceptRequestCoverLetter" />
 
@@ -77,10 +75,10 @@
         android:layout_height="42dp"
         android:layout_marginStart="16dp"
         android:text="Cancel"
-        android:textColor="@android:color/holo_red_dark"
-        android:textSize="8sp"
+        android:textColor="#E12D2D"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.253"
+        app:layout_constraintHorizontal_bias="0.245"
         app:layout_constraintStart_toEndOf="@+id/acceptRequestBtn"
         app:layout_constraintTop_toTopOf="@+id/acceptRequestBtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

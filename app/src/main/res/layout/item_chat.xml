@@ -1,29 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:paddingVertical="10dp"
+    android:paddingLeft="60dp"
+    android:paddingRight="15dp">
+
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
+
     <ImageView
         android:id="@+id/ivProfileOther"
-        android:contentDescription="@string/profile_other"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:contentDescription="@string/profile_other"
         android:src="@mipmap/ic_launcher" />
+
+
     <TextView
-        android:textSize="16sp"
-        android:id="@+id/tvBody"
-        android:padding="5dp"
-        android:lines="3"
-        android:ellipsize="end"
-        android:layout_marginEnd="64dp"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_weight="1">
-    </TextView>
+        android:id="@+id/tvBodyMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toStartOf="@+id/ivProfileMe"
+        android:background="@drawable/message_outgoing"
+        android:elevation="2dp"
+        android:padding="8dp"
+        android:textColor="@android:color/white"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/tvBodyOtherUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="9dp"
+        android:layout_toEndOf="@+id/ivProfileOther"
+        android:background="@drawable/message_incoming"
+        android:elevation="2dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:textSize="18dp"
+        tools:visibility="visible" />
+
     <ImageView
         android:id="@+id/ivProfileMe"
-        android:contentDescription="@string/profile_me"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/profile_me"
         android:src="@mipmap/ic_launcher" />
-</LinearLayout>
+</RelativeLayout>
+
+</androidx.cardview.widget.CardView>
+
+
+
