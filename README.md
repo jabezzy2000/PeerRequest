@@ -93,3 +93,14 @@ Visuals and interactions: 1. Gesture: Implement pinch to zoom in and out of maps
 
 MVP:
 Users should be able to Sign up, log in and Log out. In addition to these, Users must be able to view listed tasks in the home timeline, add tasks, request to complete tasks and mark tasks as completed.
+
+Walkthrough of app:
+
+1st Walkthrough:
+https://user-images.githubusercontent.com/90366540/182958213-04538055-939f-44d8-b2ff-573b79a66dfd.mov
+
+2nd Walkthrough(Higher Res, Slower speed):
+
+https://user-images.githubusercontent.com/90366540/182958557-e99e2bb3-4442-469c-8b77-d2f402810dfe.mov
+
+
