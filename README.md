@@ -1,12 +1,7 @@
-***Mobile App Dev - App Brainstorming***
-**out of Scope
-Having a very polished UI
-Having a great App Idea that could be a real product
+***Mobile App***
 
  Peer Errands ( Scroll Below For Video Demos)
 
-
-***CATEGORIZE AND EVALUATE***
 ### Peer Errands:
  - **Category:** Delivery/Pick-Up/ Errand Services
  - - **Mobile:** Mobile first experience. If necessary, a website may be developed to complement mobile use
@@ -29,70 +24,6 @@ Person A, after reviewing Person B's profile and satisfied with the reviews and 
 Person B then goes to the laundromat, picks up the laundry, delivers it to the location, takes a picture as proof and marks the task as complete. Person A sees the proof of delivery, sends Person B the money and then marks the task as complete. Both people leave reviews and ratings for each other. Person B walks away 20$ richer and Person A is settled knowing he/she can attend his/her bestfriend's wedding the next day.
 
 
-WIREFRAMES:
-
-![IMG_5370](https://user-images.githubusercontent.com/90366540/174722719-58c721ee-07b4-4e66-9a78-269862100776.JPG)
-
-
-
-**USER CLASS**
-
-   | Property      | Type     | Description |
-   | ------------- | -------- | ------------|
-   | UserID        | String   | unique id for the user post (default field) |
-   | ProfileImage  | File     | profile image of current user |
-   | TaskerRating  | Number   | rating of User who posts tasks |
-   | FreeLanceRating| Number  | rating of User who completes tasks |
-   
-   
-   **REQUEST CLASS**
-   
-   | Property      | Type     | Description |
-   | ------------- | -------- | ------------|
-   | Pointer to UserID| String| pointer to the User |
-   | RequestsTitle | String   | Request's title |
-   | RequestsDes   | String   | Request's description |
-   | CreatedAt     | DateTime | Date when the request was created |
-   | CompletedAt   | DateTime | number of comments that has been posted to an image |
-   | Completed     | Boolean  | whether or not the request has been completed |
-   | ToDo list     | array    | list of things to do to complete the request |
-  
-
-Possible Stretch features:
-- User profile pictures ( on timeline and in detail activity)
-- Implementing a map feature
-- Using the camera app to take a picture after task is completed
-- Chat app integrated for users to hold a conversation ( very improbable...maybe after MU)
-
-
-
-**_NETWORKING_**
-- Home/Timeline Screen
--  * (READ/GET) Query all posts where boolean completed is false
--  * ( Create/POST) Create and post a new Task
--  * (Delete) Delete an existing task
--  *
--  
-
-**_EXISTING API ENDPOINTS_**
-An API of Google Maps
-
-**_PLANNED SDK USAGES_**
-- Camera Implementation
-
-
-
-Requirements:
-SDK/Parse Integration: App intereacts with parse and maps api
-User authentication: App allows users to log in and sign up
-Visuals and interactions: 1. Gesture: Implement pinch to zoom in and out of maps
-                          2. Uses External Library Glide
-                          3. Implements basic fade in/out transitions
-                          4. Might use GIF as visual eye catcher on splash screen
-
-
-MVP:
-Users should be able to Sign up, log in and Log out. In addition to these, Users must be able to view listed tasks in the home timeline, add tasks, request to complete tasks and mark tasks as completed.
 
 Walkthrough of app:
 
